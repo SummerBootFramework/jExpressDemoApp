@@ -53,7 +53,12 @@
         } ],
         "requestBody" : {
           "content" : {
-            "*/*" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RequestDto"
+              }
+            },
+            "application/xml" : {
               "schema" : {
                 "$ref" : "#/components/schemas/RequestDto"
               }
@@ -721,6 +726,18 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "emptyList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "nullList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -756,10 +773,10 @@
           "displayName" : {
             "type" : "string"
           },
-          "uid" : {
+          "jti" : {
             "type" : "string"
           },
-          "jti" : {
+          "uid" : {
             "type" : "string"
           },
           "groups" : {
@@ -772,12 +789,12 @@
           "tenantId" : {
             "type" : "number"
           },
+          "tenantName" : {
+            "type" : "string"
+          },
           "tokenTtlSec" : {
             "type" : "integer",
             "format" : "int64"
-          },
-          "tenantName" : {
-            "type" : "string"
           }
         }
       },
@@ -793,9 +810,9 @@
           "errorDesc" : {
             "type" : "string"
           },
-          "args" : {
-            "type" : "array",
-            "items" : {
+          "serializeAdditionalField" : {
+            "type" : "object",
+            "additionalProperties" : {
               "type" : "object"
             }
           }
@@ -908,6 +925,12 @@
             "items" : {
               "$ref" : "#/components/schemas/Err"
             }
+          },
+          "serializeAdditionalField" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object"
+            }
           }
         }
       },
@@ -1005,6 +1028,9 @@
             "items" : {
               "$ref" : "#/components/schemas/Memo"
             }
+          },
+          "forcePrettyResponse" : {
+            "type" : "boolean"
           },
           "sessionAttributes" : {
             "type" : "object",

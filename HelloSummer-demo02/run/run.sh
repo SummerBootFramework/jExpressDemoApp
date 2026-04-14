@@ -1,4 +1,8 @@
-PATH=/usr/lib/jvm/java21/bin/:$PATH
+#PATH=/usr/lib/jvm/java-21-openjdk-21.0.9.0.10-2.el9.x86_64/bin/:$PATH
+JAVA_PATH=$(find /usr/lib/jvm -name "java-21-openjdk*" -type d | head -1)
+echo "${JAVA_PATH}"
+${JAVA_PATH}/bin/java \
+ -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005 \
  -Djava.awt.headless=true \
  -Xms2G -Xmx2G \
  -XX:+UseZGC -XX:ZUncommitDelay=300 -XX:+ZGenerational -XX:+AlwaysPreTouch \

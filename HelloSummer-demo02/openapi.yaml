@@ -38,7 +38,10 @@ paths:
           type: string
       requestBody:
         content:
-          '*/*':
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDto"
+          application/xml:
             schema:
               $ref: "#/components/schemas/RequestDto"
         required: true
@@ -500,6 +503,14 @@ components:
           type: array
           items:
             type: string
+        emptyList:
+          type: array
+          items:
+            type: string
+        nullList:
+          type: array
+          items:
+            type: string
     RequestDto:
       required:
       - creditCardNumber
@@ -525,9 +536,9 @@ components:
           format: int32
         displayName:
           type: string
-        uid:
-          type: string
         jti:
+          type: string
+        uid:
           type: string
         groups:
           uniqueItems: true
@@ -536,11 +547,11 @@ components:
             type: string
         tenantId:
           type: number
+        tenantName:
+          type: string
         tokenTtlSec:
           type: integer
           format: int64
-        tenantName:
-          type: string
     Err:
       type: object
       properties:
@@ -550,9 +561,9 @@ components:
           type: string
         errorDesc:
           type: string
-        args:
-          type: array
-          items:
+        serializeAdditionalField:
+          type: object
+          additionalProperties:
             type: object
       description: The optional error list
     HttpHeaders:
@@ -636,6 +647,10 @@ components:
           description: The optional error list
           items:
             $ref: "#/components/schemas/Err"
+        serializeAdditionalField:
+          type: object
+          additionalProperties:
+            type: object
     SessionContext:
       type: object
       properties:
@@ -702,6 +717,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Memo"
+        forcePrettyResponse:
+          type: boolean
         sessionAttributes:
           type: object
           additionalProperties:

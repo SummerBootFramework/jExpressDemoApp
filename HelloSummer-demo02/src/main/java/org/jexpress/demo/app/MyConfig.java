@@ -29,7 +29,7 @@ public class MyConfig extends BootConfig {
     protected volatile String licenseKey;
 
     @ConfigHeader(title = "2. Timer")
-    @Config(key = "scheduler.cronExpressions", defaultValue = "0 0/5 14,18 * * ? ; 0 10,44 14 ? 3 WED; 0/5 0 0 ? * * *", collectionDelimiter = ";")
+    @Config(key = "scheduler.cronExpressions", defaultValue = "0 */10 * ? * *;0 0 12 ? * FRI", collectionDelimiter = ";")
     protected volatile String[] cronExpressions;
 
     @Config(key = "idle.hresholdSecond", defaultValue = "7")

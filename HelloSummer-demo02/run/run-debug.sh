@@ -1,5 +1,5 @@
 PATH=/usr/lib/jvm/java21/bin/:$PATH
-java -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 \
+java -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005 \
  -Djava.awt.headless=true \
  -Xms2G -Xmx2G \
  -XX:+UseZGC -XX:ZUncommitDelay=300 -XX:+ZGenerational -XX:+AlwaysPreTouch \

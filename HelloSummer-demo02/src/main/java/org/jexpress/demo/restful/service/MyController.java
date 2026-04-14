@@ -19,13 +19,14 @@ import org.jexpress.demo.app.MyConfig;
 import org.jexpress.demo.restful.service.vo.AppPOI;
 import org.summerboot.jexpress.boot.annotation.Controller;
 import org.summerboot.jexpress.boot.annotation.Log;
+import org.summerboot.jexpress.boot.annotation.ParamCollectionDelimiter;
 import org.summerboot.jexpress.nio.server.SessionContext;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Singleton
-@Controller
+@Controller(responseHeader_ServerTs = "ts", responseHeader_Reference = "ref")
 @Path("/hellosummer2")
 public class MyController {
 
@@ -78,11 +79,13 @@ public class MyController {
      */
     @POST
     @Path("/account2/{name}")
-    //@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})// require request header Content-Type: application/json or Content-Type: application/xml
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+// require request header Content-Type: application/json or Content-Type: application/xml
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 // require request header Accept: application/json or Accept: application/xml
     @Log(maskDataFields = {"creditCardNumber", "clientPrivacy", "secretList"})
-    public ResponseDto hello_auto_validation_protected_logging_markWithPOI(@NotNull @PathParam("name") String myName, @NotNull @Valid RequestDto request, final SessionContext context) {
+    @ParamCollectionDelimiter(";")
+    public ResponseDto hello_auto_validation_protected_logging_markWithPOI(@NotNull @PathParam("name") String myName, @NotNull RequestDto request, final SessionContext context) {
         context.poi(AppPOI.DB_BEGIN);// about POI, see section8.3
         // DB access and it takes time ...
         context.poi(AppPOI.DB_END);
@@ -92,7 +95,7 @@ public class MyController {
         context.poi(AppPOI.GRPC_END);
 
         context.status(HttpResponseStatus.CREATED);// override, default is 200 OK
-        return new ResponseDto("secret: " + MyConfig.cfg.getLicenseKey(), "shared");
+        return new ResponseDto("secret: " + MyConfig.cfg.getLicenseKey(), "shared: " + request.getCreditCardNumber());
     }
 
     @GET
@@ -134,6 +137,8 @@ public class MyController {
         private String clientPrivacy;
         private String clientNonPrivacy;
         private List<String> secretList = List.of("aa", "bb");
+        private List<String> emptyList = List.of();
+        private List<String> nullList = null;
 
         public ResponseDto() {
         }
@@ -165,6 +170,22 @@ public class MyController {
 
         public void setSecretList(List<String> secretList) {
             this.secretList = secretList;
+        }
+
+        public List<String> getEmptyList() {
+            return emptyList;
+        }
+
+        public void setEmptyList(List<String> emptyList) {
+            this.emptyList = emptyList;
+        }
+
+        public List<String> getNullList() {
+            return nullList;
+        }
+
+        public void setNullList(List<String> nullList) {
+            this.nullList = nullList;
         }
     }
 }
