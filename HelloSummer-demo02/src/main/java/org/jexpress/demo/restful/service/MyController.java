@@ -35,6 +35,7 @@ public class MyController {
 
     private final String a = "[a-zA-Z0-9_+&*-]*@gmail.com";
 
+
     @GET
     @Path("/hello/{name}")
     @Produces({MediaType.TEXT_PLAIN})

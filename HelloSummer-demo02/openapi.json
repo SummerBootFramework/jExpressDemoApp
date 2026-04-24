@@ -236,8 +236,19 @@
     },
     "/hellosummer/hello/anonymous/{number}" : {
       "get" : {
+        "tags" : [ "My tag" ],
+        "summary" : "My summary",
+        "description" : "My description",
         "operationId" : "anonymous",
         "parameters" : [ {
+          "name" : "Location",
+          "in" : "header",
+          "description" : "Requested server location",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "name" : "number",
           "in" : "path",
           "required" : true,
@@ -256,8 +267,8 @@
           }
         },
         "responses" : {
-          "default" : {
-            "description" : "default response",
+          "200" : {
+            "description" : "good response",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -270,8 +281,83 @@
                 }
               }
             }
+          },
+          "308" : {
+            "description" : "The client should try again with the new server location in response header Location",
+            "headers" : {
+              "Location" : {
+                "description" : "New server location",
+                "style" : "simple",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized. The client should sign-on again, but not retransmit the same request again",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "Conflict. Client may try again later.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "4xx" : {
+            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "5xx" : {
+            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
           }
-        }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
       }
     },
     "/hellosummer/helloAdmin/employee" : {
@@ -531,29 +617,6 @@
         }
       }
     },
-    "/hellosummer/ping" : {
-      "get" : {
-        "tags" : [ "Load Balancing" ],
-        "summary" : "ping service status",
-        "description" : "Load Balancer (F5, Nginx, etc) will do the health check via this ping service, if Http Status is not 200(OK), the load Balancer will stop sending new request to this service.<br>Below is an example of F5 config: Basically it's one monitor that does the check to each member in the pool . It will mark each server within the pool member down if it does not receive a 200. <br><i>GET /myservices/myapp/ping HTTP/1.1\\r\\nConnection: Close\\r\\n\\r\\n</i>",
-        "operationId" : "ping",
-        "responses" : {
-          "200" : {
-            "description" : "The service status is healthy"
-          },
-          "5XX" : {
-            "description" : "The service status is unhealthy if response code is not 200",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/hellosummer/status" : {
       "put" : {
         "tags" : [ "App Admin" ],
@@ -595,6 +658,29 @@
         "security" : [ {
           "BearerAuth" : [ ]
         } ]
+      }
+    },
+    "/hellosummer/ping" : {
+      "get" : {
+        "tags" : [ "Load Balancing" ],
+        "summary" : "ping service status",
+        "description" : "Load Balancer (F5, Nginx, etc) will do the health check via this ping service, if Http Status is not 200(OK), the load Balancer will stop sending new request to this service.<br>Below is an example of F5 config: Basically it's one monitor that does the check to each member in the pool . It will mark each server within the pool member down if it does not receive a 200. <br><i>GET /myservices/myapp/ping HTTP/1.1\\r\\nConnection: Close\\r\\n\\r\\n</i>",
+        "operationId" : "ping",
+        "responses" : {
+          "200" : {
+            "description" : "The service status is healthy"
+          },
+          "5XX" : {
+            "description" : "The service status is unhealthy if response code is not 200",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/hellosummer/services/appname/v1/aaa/{pa1}/bbb/{pa2}" : {
@@ -773,19 +859,6 @@
           "displayName" : {
             "type" : "string"
           },
-          "jti" : {
-            "type" : "string"
-          },
-          "uid" : {
-            "type" : "string"
-          },
-          "groups" : {
-            "uniqueItems" : true,
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
           "tenantId" : {
             "type" : "number"
           },
@@ -795,6 +868,19 @@
           "tokenTtlSec" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "groups" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "jti" : {
+            "type" : "string"
+          },
+          "uid" : {
+            "type" : "string"
           }
         }
       },
@@ -809,12 +895,6 @@
           },
           "errorDesc" : {
             "type" : "string"
-          },
-          "serializeAdditionalField" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "object"
-            }
           }
         },
         "description" : "The optional error list"
@@ -924,12 +1004,6 @@
             "description" : "The optional error list",
             "items" : {
               "$ref" : "#/components/schemas/Err"
-            }
-          },
-          "serializeAdditionalField" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "object"
             }
           }
         }

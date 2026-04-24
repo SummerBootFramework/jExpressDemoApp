@@ -158,6 +158,15 @@ components:
           format: int32
         displayName:
           type: string
+        groups:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        jti:
+          type: string
+        uid:
+          type: string
         tenantId:
           type: number
         tenantName:
@@ -165,15 +174,6 @@ components:
         tokenTtlSec:
           type: integer
           format: int64
-        groups:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        uid:
-          type: string
-        jti:
-          type: string
     Err:
       type: object
       properties:
@@ -183,10 +183,6 @@ components:
           type: string
         errorDesc:
           type: string
-        args:
-          type: array
-          items:
-            type: object
       description: The optional error list
     HttpHeaders:
       type: object
@@ -335,6 +331,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Memo"
+        forcePrettyResponse:
+          type: boolean
         sessionAttributes:
           type: object
           additionalProperties:

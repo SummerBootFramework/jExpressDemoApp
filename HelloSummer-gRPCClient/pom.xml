@@ -5,7 +5,7 @@
     <packaging>jar</packaging>
     <groupId>org.jexpress</groupId>
     <artifactId>gRPC-Client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Hello Summer - gRPC-Client ${project.version}</name>
     <url>https://github.com/SummerBootFramework/jExpressDemo-HelloSummer</url>
 
@@ -13,19 +13,22 @@
         <!-- common properties and dependencies -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <maven-clean.version>3.4.1</maven-clean.version>
-        <maven-compiler.version>3.14.0</maven-compiler.version>
-        <maven-dependency.version>3.8.1</maven-dependency.version>
-        <maven-jar.version>3.4.2</maven-jar.version>
-        <maven-resources.version>3.3.1</maven-resources.version>
-        <maven-surefire.version>3.5.3</maven-surefire.version>
-        <swagger-maven.version>2.2.41</swagger-maven.version>
-        <jexpress.version>2.6.6</jexpress.version>
+        <maven-clean.version>3.5.0</maven-clean.version>
+        <maven-compiler.version>3.15.0</maven-compiler.version>
+        <maven-dependency.version>3.10.0</maven-dependency.version>
+        <maven-jar.version>3.5.0</maven-jar.version>
+        <maven-resources.version>3.5.0</maven-resources.version>
+        <maven-surefire.version>3.5.5</maven-surefire.version>
+        <maven-failsafe.version>3.5.5</maven-failsafe.version>
+        <swagger-maven.version>2.2.48</swagger-maven.version>
+        <jexpress.version>2.6.9</jexpress.version>
+        <testng.version>7.12.0</testng.version>
 
         <!-- application properties and dependencies-->
         <!-- protobuf and gRPC -->
-        <protobuf.version>4.33.5</protobuf.version>
-        <grpc.version>1.79.0</grpc.version>
+        <protobuf.version>4.34.1</protobuf.version>
+        <grpc.version>1.80.0</grpc.version>
+        <jdbc.version>9.7.0</jdbc.version>
     </properties>
 
     <dependencies>
@@ -228,20 +231,43 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+
+            <!-- Unit Test Plugin -->
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire.version}</version>
                 <configuration>
-                    <argLine>-server -Xms1G -Xmx1G -XX:+UseG1GC -XX:+AlwaysPreTouch -Djava.awt.headless=true
-                        -Djna.nosys=true -Dfile.encoding=UTF-8
+                    <argLine>-Djava.awt.headless=true -Xms2G -Xmx2G -XX:+UseZGC -XX:ZUncommitDelay=300
+                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem
+                        -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
+                        -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
+                        -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
+                        -Duser.timezone=America/Toronto
+                        -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
+                        -Dio.netty.native.workdir=lib
                         -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
-                        -Dopenssl -Dio.netty.leakDetectionLevel=advanced -Dio.netty.noUnsafe=true
-                        -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0 Dio.netty.native.workdir
-                        --add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens
-                        java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens
-                        java.management/sun.management=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <!-- Integration Test Plugin -->
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-failsafe-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe.version}</version>
+                <configuration>
+                    <argLine>-Djava.awt.headless=true -Xms2G -Xmx2G -XX:+UseZGC -XX:ZUncommitDelay=300
+                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem
+                        -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
+                        -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
+                        -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
+                        -Duser.timezone=America/Toronto
+                        -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
+                        -Dio.netty.native.workdir=lib
+                        -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
                     </argLine>
                 </configuration>
             </plugin>

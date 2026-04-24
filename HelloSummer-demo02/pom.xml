@@ -13,25 +13,24 @@
         <!-- common properties and dependencies -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <maven-clean.version>3.4.1</maven-clean.version>
-        <maven-compiler.version>3.14.0</maven-compiler.version>
-        <maven-dependency.version>3.8.1</maven-dependency.version>
-        <maven-jar.version>3.4.2</maven-jar.version>
-        <maven-resources.version>3.3.1</maven-resources.version>
-        <maven-surefire.version>3.5.3</maven-surefire.version>
-        <maven-failsafe.version>3.5.3</maven-failsafe.version>
-        <swagger-maven.version>2.2.44</swagger-maven.version>
-        <jexpress.version>2.6.9-SNAPSHOT</jexpress.version>
-        <elastic-apm.version>1.55.0</elastic-apm.version>
+        <maven-clean.version>3.5.0</maven-clean.version>
+        <maven-compiler.version>3.15.0</maven-compiler.version>
+        <maven-dependency.version>3.10.0</maven-dependency.version>
+        <maven-jar.version>3.5.0</maven-jar.version>
+        <maven-resources.version>3.5.0</maven-resources.version>
+        <maven-surefire.version>3.5.5</maven-surefire.version>
+        <maven-failsafe.version>3.5.5</maven-failsafe.version>
+        <swagger-maven.version>2.2.48</swagger-maven.version>
+        <jexpress.version>2.6.9</jexpress.version>
         <testng.version>7.12.0</testng.version>
 
         <!-- application properties and dependencies-->
         <main.class>${api.package}.app.Main</main.class>
         <api.package>org.jexpress.demo</api.package>
         <!-- protobuf and gRPC -->
-        <protobuf.version>4.34.0</protobuf.version>
-        <grpc.version>1.79.0</grpc.version>
-        <jdbc.version>9.4.0</jdbc.version>
+        <protobuf.version>4.34.1</protobuf.version>
+        <grpc.version>1.80.0</grpc.version>
+        <jdbc.version>9.7.0</jdbc.version>
     </properties>
 
     <dependencies>

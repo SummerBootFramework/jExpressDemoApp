@@ -2,8 +2,16 @@ package org.jexpress.demo.restful.service;
 
 import com.google.inject.Singleton;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -19,6 +27,7 @@ import org.summerboot.jexpress.boot.annotation.Controller;
 import org.summerboot.jexpress.boot.annotation.Daemon;
 import org.summerboot.jexpress.boot.instrumentation.HealthMonitor;
 import org.summerboot.jexpress.nio.server.SessionContext;
+import org.summerboot.jexpress.nio.server.domain.ServiceError;
 import org.summerboot.jexpress.nio.server.ws.rs.BootController;
 
 import java.io.IOException;
@@ -44,14 +53,39 @@ import java.time.OffsetDateTime;
 )
 public class MyControllerRoleBased extends BootController {
 
-    // curl -v -k https://localhost:8311/hellosummer/ping
-    //@Ping //this annotation will override BootController.ping()
-    @GET
-    @Path("/ping")
-    //@Ping
-    public void myPing() {
-    }
-
+    @Operation(
+            tags = {"My tag"},
+            summary = "My summary",
+            description = "My description",
+            security = {
+                    @SecurityRequirement(name = SECURITY_BEARERAUTH)
+            },
+            parameters = {
+                    @Parameter(name = HEADER_LOCATION, in = ParameterIn.HEADER, required = true, description = "Requested server location")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "good response",
+                            content = @Content(schema = @Schema(implementation = Pong.class))
+                    ),
+                    @ApiResponse(responseCode = "308", description = DESC_308,
+                            headers = {
+                                    @Header(name = HEADER_LOCATION, schema = @Schema(type = "string"), description = "New server location")
+                            }
+                    ),
+                    @ApiResponse(responseCode = "401", description = DESC_401,
+                            content = @Content(schema = @Schema(implementation = ServiceError.class))
+                    ),
+                    @ApiResponse(responseCode = "409", description = DESC_409,
+                            content = @Content(schema = @Schema(implementation = ServiceError.class))
+                    ),
+                    @ApiResponse(responseCode = "4xx", description = DESC_4xx,
+                            content = @Content(schema = @Schema(implementation = ServiceError.class))
+                    ),
+                    @ApiResponse(responseCode = "5xx", description = DESC_5xx,
+                            content = @Content(schema = @Schema(implementation = ServiceError.class))
+                    )
+            }
+    )
     /*
      * curl -v -k https://localhost:8311/hellosummer/hello/234 -H "Accept":"application/xml"
      * curl -v -k https://localhost:8311/hellosummer/hello/234 -H "Accept":"application/json"

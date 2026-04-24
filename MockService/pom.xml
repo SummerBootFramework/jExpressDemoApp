@@ -13,21 +13,21 @@
         <!-- common properties and dependencies -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <maven-clean.version>3.4.1</maven-clean.version>
-        <maven-compiler.version>3.14.0</maven-compiler.version>
-        <maven-dependency.version>3.8.1</maven-dependency.version>
-        <maven-jar.version>3.4.2</maven-jar.version>
-        <maven-resources.version>3.3.1</maven-resources.version>
-        <maven-surefire.version>3.5.3</maven-surefire.version>
-        <swagger-maven.version>2.2.42</swagger-maven.version>
-        <jexpress.version>2.6.6</jexpress.version>
-        <elastic-apm.version>1.55.0</elastic-apm.version>
+        <maven-clean.version>3.5.0</maven-clean.version>
+        <maven-compiler.version>3.15.0</maven-compiler.version>
+        <maven-dependency.version>3.10.0</maven-dependency.version>
+        <maven-jar.version>3.5.0</maven-jar.version>
+        <maven-resources.version>3.5.0</maven-resources.version>
+        <maven-surefire.version>3.5.5</maven-surefire.version>
+        <maven-failsafe.version>3.5.5</maven-failsafe.version>
+        <swagger-maven.version>2.2.48</swagger-maven.version>
+        <jexpress.version>2.6.9</jexpress.version>
         <testng.version>7.12.0</testng.version>
 
         <!-- application properties and dependencies-->
         <main.class>${api.package}.app.Main</main.class>
         <api.package>${groupId}</api.package>
-        <graalvm.version>25.0.2</graalvm.version>
+        <graalvm.version>25.0.3</graalvm.version>
     </properties>
 
     <dependencies>
@@ -219,6 +219,9 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+
+            <!-- Unit Test Plugin -->
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -229,7 +232,27 @@
                         -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
                         -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
                         -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
-                        -Duser.timezone=America/Toronto -Djava.security.egd=file:/dev/./urandom
+                        -Duser.timezone=America/Toronto
+                        -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
+                        -Dio.netty.native.workdir=lib
+                        -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <!-- Integration Test Plugin -->
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-failsafe-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe.version}</version>
+                <configuration>
+                    <argLine>-Djava.awt.headless=true -Xms2G -Xmx2G -XX:+UseZGC -XX:ZUncommitDelay=300
+                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem
+                        -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
+                        -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
+                        -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
+                        -Duser.timezone=America/Toronto
                         -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
                         -Dio.netty.native.workdir=lib
                         -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
