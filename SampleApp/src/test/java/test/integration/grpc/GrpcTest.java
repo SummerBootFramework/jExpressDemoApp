@@ -2,10 +2,10 @@ package test.integration.grpc;
 
 import io.grpc.BindableService;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
-import org.jexpress.sampleapp.service.grpc.client.Hello1ClientImpl;
-import org.jexpress.sampleapp.service.grpc.client.Hello2ClientImpl;
-import org.jexpress.sampleapp.service.grpc.impl.Hello1ServiceImpl_A;
-import org.jexpress.sampleapp.service.grpc.impl.Hello2ServiceImpl_A;
+import org.jexpress.sampleapp.controller.grpc.client.Hello1ClientImpl;
+import org.jexpress.sampleapp.controller.grpc.client.Hello2ClientImpl;
+import org.jexpress.sampleapp.controller.grpc.impl.Hello1ServiceImpl_A;
+import org.jexpress.sampleapp.controller.grpc.impl.Hello2ServiceImpl_A;
 import org.summerboot.jexpress.boot.BootConstant;
 import org.summerboot.jexpress.nio.grpc.GRPCTestHelper;
 import org.summerboot.jexpress.security.EncryptorUtil;

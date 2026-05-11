@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Separated Web Page</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="web-resources/styles/style.css">
+    <link rel="stylesheet" href="web-resources/scripts/libs/vakata-jstree-6dce227/dist/themes/default/style.min.css"/>
+    <link href="web-resources/styles/util_loading.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/util_layout.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/util_form.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/util_fileupload.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/app_home.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/app_about.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/app_login.css" rel="stylesheet" type="text/css"/>
+    <link href="web-resources/styles/app_filing.css" rel="stylesheet" type="text/css"/>
+    <!-- Link to external JavaScript file -->
+    <script src="web-resources/scripts/script.js"></script>
+    <script src="web-resources/scripts/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="web-resources/scripts/libs/vakata-jstree-6dce227/dist/jstree.min.js"></script>
+    <script src="web-resources/scripts/util_common.js"></script>
+    <script src="web-resources/scripts/util_layout.js"></script>
+    <script src="web-resources/scripts/util_form.js"></script>
+    <script src="web-resources/scripts/util_fileupload.js"></script>
+    <script src="web-resources/scripts/app_main.js"></script>
+    <style>
+        .appPage:not(.active) {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<button id="myButton">Click Me!</button>
+<div id="app-login" class="">
+    <div class="position-container">
+        <div class="formTitleDiv-h1">
+            <label>............................</label>
+        </div>
+        <form id="loginForm" class="position-center_middle">
+            <div>
+                <div class="lableDiv">
+                    <label class="placeholder" for="email"> Email </label>
+                </div>
+                <input type="email" required="" id="email" name="email" placeholder="Email">
+            </div>
+            <div>
+                <div class="lableDiv">
+                    <label class="placeholder" for="password"> Password </label>
+                </div>
+                <input type="password" required="" id="password" name="password" placeholder="Password">
+            </div>
+            <div>
+                <span class="button enabled" id="loginBtn">Login</span>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="rightPanel" id="fileDropzoneDiv">
+    <div id="path" class="formTitleDiv-h1">
+        <label class="parentFolder formTitleDiv-h2"></label>
+        <label class="currentFolder formTitleDiv-h1"></label>
+    </div>
+    <div class="formTitleDiv-h2 fileSelector">
+        <label>Drop your files here, or </label>
+        <label class="button enabled" for="fileSelectInput">Upload files</label>
+        <input id="fileSelectInput" name="fileSelectInput" type="file" multiple class="visually-hidden">
+        <label> or </label>
+        <label data-jstreeId="jstree_demo" class="jsTreeCreateNodeBtn button enabled">New folder</label>
+        <label data-jstreeId="jstree_demo" class="jsTreeRenameNodeBtn button enabled">Rename folder</label>
+        <label data-jstreeId="jstree_demo" class="jsTreeDelNodeBtn button enabled">Delete folder</label>
+    </div>
+    <div id="priviewSelectedFileListDiv" class="fileUploadPreview"></div>
+    <label id="uploadFileBtn" class="button">Upload</label>
+
+
+    <div class="title"><span id="titleCaseName"></span> (<span id="titleFileNumber"></span>)</div>
+    <div id="filelistDiv"></div>
+</div>
+
+</body>
+</html>

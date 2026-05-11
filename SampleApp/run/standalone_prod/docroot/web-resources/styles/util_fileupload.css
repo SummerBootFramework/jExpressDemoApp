@@ -1,0 +1,76 @@
+/*
+使用 label 元素来触发一个隐藏的 file input 元素
+允许在不使用 JavaScript（click() 方法）来打开文件选择器，可以使用 <label> 元素。注意在这种情况下，input 元素不能使用 display: none（或 visibility: hidden）隐藏，否则 label 将无法通过键盘访问。使用 visually-hidden technique 作为替代。
+*/
+
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Separate rule for compatibility, :focus-within is required on modern Firefox and Chrome */
+input.visually-hidden:focus + label {
+    outline: thin dotted;
+}
+input.visually-hidden:focus-within + label {
+    outline: thin dotted;
+}
+
+.fileUploadPreview .summary {
+    font-family:HelveticaNeueW01-Thin, HelveticaNeueW02-Thin, HelveticaNeueW10-35Thin, sans-serif;
+    font-size:18px;
+    font-weight: 100;
+    -webkit-font-smoothing:antialiased;
+    padding: 0px 0px 20px 40px;
+    margin: 0px 0px 20px 0px;
+}
+.fileUploadPreview li {
+    margin: 10px 10px 10px 0px;
+    padding: 10px 10px 10px 10px;
+    background-color: rgb(245,245,245);
+}
+
+/*
+progress bar
+*/
+.progress-wrapper {
+    border-style: groove;
+    border-color: rgb(153,153,153);
+    background-color: rgb(205,205,205);
+    width:100%;
+}
+.progress-wrapper .progress {
+    background-color:rgb(103,135,227);
+    width:0%;
+    padding:5px 0px 5px 0px;
+    height: 20px;
+    cursor: progress;
+}
+.progress-wrapper .progress.success {
+    background-color: rgb(34, 177, 76);
+    width:0%;
+    padding:5px 0px 5px 0px;
+    cursor: default;
+}
+.progress-wrapper .progress.error {
+    background-color:black;
+    width:0%;
+    padding:5px 0px 5px 0px;
+    cursor: default;
+}
+
+.dragHover {
+    border: 4px groove black;
+    box-shadow: inset 0px 0px 0px 8px grey;
+    box-sizing: border-box; 
+}
+
+.progress-wrapper .progress .info {
+    width: 100% !important;
+    color: white;
+    padding: 0px 10px;
+}

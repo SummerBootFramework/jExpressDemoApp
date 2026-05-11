@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Client v12</title>
+    <p>Use Firefox if your broswer cannot conntect
+        <a href="https://localhost:8311/ws">Connect to Workspace</a>
+</head>
+<body>
+<script type="text/javascript">
+    var socket;
+    //If the browser supports WebSocket
+    if (window.WebSocket) {
+        //The parameter is the address to connect to the server
+        //socket = new WebSocket("wss://localhost:8311/mywebsocket/demo", ["Subprotocol1", "Subprotocol2"]);
+        socket = new WebSocket("wss://localhost:8311/mywebsocket/demo", "Subprotocol");
+
+        //Callback function for connection establishment
+        socket.onopen = function (event) {
+            alert("protocol: " + socket.protocol);
+            var ta = document.getElementById("responseText");
+            ta.value = "connected";
+        };
+
+        //Callback function for connection disconnection
+        socket.onclose = function (event) {
+            var ta = document.getElementById("responseText");
+            ta.value = ta.value + "\n" + "disconnected";
+        };
+
+        //This callback method is executed when the client receives a message from the server
+        socket.onmessage = function (event) {
+            var ta = document.getElementById("responseText");
+            ta.value = ta.value + "\n" + event.data;
+        };
+    } else {
+        alert("The browser does not support WebSocket!");
+    }
+
+    //send data
+    function send(message) {
+        if (!window.WebSocket) {
+            return;
+        }
+
+        //When the websocket state is open
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(message);
+        } else {
+            alert("connection not open: " + socket.readyState);
+        }
+    }
+
+    function sendFile() {
+        if (!window.WebSocket) {
+            return;
+        }
+        //When the websocket state is open
+        if (socket.readyState === WebSocket.OPEN) {
+            var file = document.getElementById('filename').files[0];
+            var reader = new FileReader();
+            reader.addEventListener("loadend", function () {
+                socket.send(reader.result);
+            });
+            reader.readAsArrayBuffer(file);
+        } else {
+            alert("connection not open: " + socket.readyState);
+        }
+    }
+</script>
+<form onsubmit="return false">
+    <textarea name="message" style="width: 400px;height: 200px"></textarea>
+    ​
+    <input type="button" value="Send" onclick="send(this.form.message.value);">
+    ​
+    <h3>Server message：</h3>
+    ​
+    <textarea id="responseText" style="width: 400px;height: 300px;"></textarea>
+    ​
+    <input type="button" onclick="javascript:document.getElementById('responseText').value = ''" value="Clear">
+</form>
+
+<h2>File Upload</h2>Select file
+<input type="file" id="filename"/>
+<br>
+<input type="button" value="Upload" onclick="sendFile()"/>
+</body>
+</html>

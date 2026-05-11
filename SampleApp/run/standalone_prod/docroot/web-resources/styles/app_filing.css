@@ -1,0 +1,22 @@
+/* Override defaults */
+.loading .loading_title {
+    color: white;
+}
+.layout-mainView.app-filing img.position-center_middle_fixed{
+    opacity: 0.02;
+    z-index: -1
+}
+
+
+/* upload  */
+.layout-mainView.app-filing  .formTitleDiv-h1, .layout-mainView.app-filing  .formTitleDiv-h2 {
+    color:rgb(32, 48, 60);
+
+}
+
+#uploadFileBtn {
+    margin: 0px 0px 20px 40px;
+}
+#uploadFileBtn:not(.enabled) {
+    display: none;
+}
