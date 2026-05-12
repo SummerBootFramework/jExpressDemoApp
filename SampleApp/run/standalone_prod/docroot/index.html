@@ -3,81 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Separated Web Page</title>
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="web-resources/styles/style.css">
-    <link rel="stylesheet" href="web-resources/scripts/libs/vakata-jstree-6dce227/dist/themes/default/style.min.css"/>
-    <link href="web-resources/styles/util_loading.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/util_layout.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/util_form.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/util_fileupload.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/app_home.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/app_about.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/app_login.css" rel="stylesheet" type="text/css"/>
-    <link href="web-resources/styles/app_filing.css" rel="stylesheet" type="text/css"/>
-    <!-- Link to external JavaScript file -->
-    <script src="web-resources/scripts/script.js"></script>
-    <script src="web-resources/scripts/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="web-resources/scripts/libs/vakata-jstree-6dce227/dist/jstree.min.js"></script>
-    <script src="web-resources/scripts/util_common.js"></script>
-    <script src="web-resources/scripts/util_layout.js"></script>
-    <script src="web-resources/scripts/util_form.js"></script>
-    <script src="web-resources/scripts/util_fileupload.js"></script>
-    <script src="web-resources/scripts/app_main.js"></script>
-    <style>
-        .appPage:not(.active) {
-            display: none !important;
-        }
-    </style>
+    <title>File Upload Manager</title>
+    <link rel="stylesheet" href="web-resources/styles/app.css">
 </head>
 <body>
-
-<button id="myButton">Click Me!</button>
-<div id="app-login" class="">
-    <div class="position-container">
-        <div class="formTitleDiv-h1">
-            <label>............................</label>
+<div id="appContainer">
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="header-content">
+            <div class="logo">jExpress Sample Application</div>
+            <nav class="navbar">
+                <ul class="menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">Feature</a>
+                        <ul class="submenu">
+                            <li><a href="#" class="submenu-link" data-view-target="sub1">File Upload</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="sub2">Sub 2</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">Root 2</a>
+                        <ul class="submenu">
+                            <li><a href="#" class="submenu-link" data-view-target="sub3">Sub 3</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="sub4">Sub 4</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link">Root 3</a>
+                        <ul class="submenu">
+                            <li><a href="#" class="submenu-link" data-view-target="sub3_1">Sub 3.1</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="sub3_2">Sub 3.2</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div id="userMenu" class="user-menu hidden" aria-label="User menu">
+                <button id="userMenuTrigger" class="user-menu-trigger" type="button" title="">
+                    <span id="userMenuLabel">User</span>
+                </button>
+                <ul class="user-submenu">
+                    <li>
+                        <button id="userLogoutBtn" type="button" class="user-submenu-btn">Logout</button>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <form id="loginForm" class="position-center_middle">
-            <div>
-                <div class="lableDiv">
-                    <label class="placeholder" for="email"> Email </label>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main" class="main-content">
+        <!-- Login View -->
+        <div id="loginView" class="view active">
+            <div class="login-container">
+                <div class="login-form-wrapper">
+                    <h1>Login</h1>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="password" name="password" required placeholder="Enter password">
+                                <button type="button" id="togglePasswordBtn" class="password-toggle-btn" aria-label="Show password">👁</button>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <div id="loginError" class="error-message"></div>
+                        </div>
+                    </form>
                 </div>
-                <input type="email" required="" id="email" name="email" placeholder="Email">
             </div>
-            <div>
-                <div class="lableDiv">
-                    <label class="placeholder" for="password"> Password </label>
+        </div>
+
+        <div id="appViews" class="app-views hidden">
+            <!-- File Upload View (Sub 1) -->
+            <div id="uploadView" class="content-view">
+                <div class="upload-container">
+                    <div class="upload-header">
+                        <h1>File Upload Manager</h1>
+                    </div>
+
+                    <!-- Drop Zone -->
+                    <div id="dropZone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <p class="drop-zone-icon">📁</p>
+                            <p class="drop-zone-text">Drag and drop files here or click below to select</p>
+                        </div>
+                        <input type="file" id="fileInput" multiple style="display: none;">
+                    </div>
+
+                    <!-- Select File Button -->
+                    <div class="file-selector-actions">
+                        <button id="selectFileBtn" class="btn btn-primary">Select Files</button>
+                        <button id="uploadBtn" class="btn btn-success" disabled>Upload</button>
+                    </div>
+
+                    <!-- Selected Files Preview -->
+                    <div id="filePreview" class="file-preview">
+                        <div class="file-preview-title">Selected Files:</div>
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+
+                    <!-- Upload Tasks -->
+                    <div id="uploadTasks" class="upload-tasks">
+                        <div class="upload-tasks-header">
+                            <div class="upload-tasks-title">Upload Progress:</div>
+                            <button id="clearTasksBtn" class="btn btn-secondary" style="display: none;">Clear All</button>
+                        </div>
+                        <div id="taskList" class="task-list"></div>
+                    </div>
                 </div>
-                <input type="password" required="" id="password" name="password" placeholder="Password">
             </div>
-            <div>
-                <span class="button enabled" id="loginBtn">Login</span>
+
+
+            <div id="sub2View" class="content-view placeholder-view">
+                <div class="placeholder-card">
+                    <h2>Sub 2 View</h2>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub
+                        2This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub
+                        2This is the content area for menu item Sub 2</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                    <p>This is the content area for menu item Sub 2.</p>
+                </div>
             </div>
-        </form>
-    </div>
+
+            <div id="sub3View" class="content-view placeholder-view">
+                <div class="placeholder-card">
+                    <h2>Sub 3 View</h2>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                    <p>This is the content area for menu item Sub 3.</p>
+                </div>
+            </div>
+
+            <div id="sub4View" class="content-view placeholder-view">
+                <div class="placeholder-card">
+                    <h2>Sub 4 View</h2>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                    <p>This is the content area for menu item Sub 4.</p>
+                </div>
+            </div>
+
+            <div id="sub31View" class="content-view placeholder-view">
+                <div class="placeholder-card">
+                    <h2>Sub 3.1 View</h2>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                    <p>This is the content area for menu item Sub 3.1.</p>
+                </div>
+            </div>
+
+            <div id="sub32View" class="content-view placeholder-view">
+                <div class="split-parent-card">
+                    <div class="split-parent-header">
+                        <h2>Sub 3.2 Parent View</h2>
+                        <p>Drag the middle slider to resize left and right child views.</p>
+                    </div>
+                    <div id="sub32SplitContainer" class="split-container">
+                        <div id="sub32LeftPane" class="split-pane split-pane-left" style="width: 50%;">
+                            <div class="split-pane-content">
+                                <h3>Left Child View</h3>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                                <p>This is the left child view inside Sub 3.2.</p>
+                            </div>
+                        </div>
+                        <div id="sub32Divider" class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panes"></div>
+                        <div id="sub32RightPane" class="split-pane split-pane-right" style="width: 50%;">
+                            <div class="split-pane-content">
+                                <h3>Right Child View</h3>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                                <p>This is the right child view inside Sub 3.2.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 File Management System. All rights reserved.</p>
+        </div>
+    </footer>
 </div>
-<div class="rightPanel" id="fileDropzoneDiv">
-    <div id="path" class="formTitleDiv-h1">
-        <label class="parentFolder formTitleDiv-h2"></label>
-        <label class="currentFolder formTitleDiv-h1"></label>
-    </div>
-    <div class="formTitleDiv-h2 fileSelector">
-        <label>Drop your files here, or </label>
-        <label class="button enabled" for="fileSelectInput">Upload files</label>
-        <input id="fileSelectInput" name="fileSelectInput" type="file" multiple class="visually-hidden">
-        <label> or </label>
-        <label data-jstreeId="jstree_demo" class="jsTreeCreateNodeBtn button enabled">New folder</label>
-        <label data-jstreeId="jstree_demo" class="jsTreeRenameNodeBtn button enabled">Rename folder</label>
-        <label data-jstreeId="jstree_demo" class="jsTreeDelNodeBtn button enabled">Delete folder</label>
-    </div>
-    <div id="priviewSelectedFileListDiv" class="fileUploadPreview"></div>
-    <label id="uploadFileBtn" class="button">Upload</label>
 
-
-    <div class="title"><span id="titleCaseName"></span> (<span id="titleFileNumber"></span>)</div>
-    <div id="filelistDiv"></div>
-</div>
-
+<script src="web-resources/scripts/app.js"></script>
 </body>
 </html>

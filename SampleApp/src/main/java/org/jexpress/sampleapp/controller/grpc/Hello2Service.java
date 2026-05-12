@@ -9,14 +9,14 @@ import org.jexpress.sampleapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.sampleapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.sampleapp.grpc.proto.generated2.Hello2ServiceGrpc;
 import org.summerboot.jexpress.boot.BootErrorCode;
-import org.summerboot.jexpress.boot.annotation.GrpcService;
+import org.summerboot.jexpress.boot.annotation.GrpcController;
 import org.summerboot.jexpress.boot.annotation.Ping;
 import org.summerboot.jexpress.nio.grpc.GRPCServer;
 import org.summerboot.jexpress.nio.server.SessionContext;
 import org.summerboot.jexpress.nio.server.domain.Err;
 import org.summerboot.jexpress.nio.server.domain.ProcessorSettings;
 
-@GrpcService
+@GrpcController
 public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplBase {
 
     static ProcessorSettings settings = new ProcessorSettings();

@@ -472,21 +472,21 @@ components:
           format: int32
         displayName:
           type: string
-        tenantName:
-          type: string
-        tokenTtlSec:
-          type: integer
-          format: int64
-        tenantId:
-          type: number
-        uid:
-          type: string
         groups:
           uniqueItems: true
           type: array
           items:
             type: string
+        uid:
+          type: string
         jti:
+          type: string
+        tenantId:
+          type: number
+        tokenTtlSec:
+          type: integer
+          format: int64
+        tenantName:
           type: string
     LoginVo:
       required:

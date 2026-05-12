@@ -9,14 +9,14 @@ import org.jexpress.sampleapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.sampleapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.sampleapp.grpc.proto.generated1.Hello1ServiceGrpc;
 import org.summerboot.jexpress.boot.BootErrorCode;
-import org.summerboot.jexpress.boot.annotation.GrpcService;
+import org.summerboot.jexpress.boot.annotation.GrpcController;
 import org.summerboot.jexpress.boot.annotation.Ping;
 import org.summerboot.jexpress.nio.grpc.GRPCServer;
 import org.summerboot.jexpress.nio.server.SessionContext;
 import org.summerboot.jexpress.nio.server.domain.Err;
 import org.summerboot.jexpress.nio.server.domain.ProcessorSettings;
 
-@GrpcService
+@GrpcController
 public abstract class Hello1Service extends Hello1ServiceGrpc.Hello1ServiceImplBase {
 
 

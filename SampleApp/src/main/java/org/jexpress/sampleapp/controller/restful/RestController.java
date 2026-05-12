@@ -86,7 +86,7 @@ public class RestController extends BootController {
             summary = "My summary",
             description = "My description",
             security = {
-                    @SecurityRequirement(name = SECURITY_BEARERAUTH)
+                    @SecurityRequirement(name = SecuritySchemeName_BearerAuth)
             },
             parameters = {
                     @Parameter(name = HEADER_LOCATION, in = ParameterIn.HEADER, required = true, description = "Requested server location")
