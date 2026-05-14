@@ -68,31 +68,20 @@ function attachEventListeners() {
     const togglePasswordBtn = document.getElementById('togglePasswordBtn');
     togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
 
-    // File Selection
-    const fileInput = document.getElementById('fileInput');
-    fileInput.addEventListener('change', handleFileSelect);
+    // File Upload module
+    if (typeof attachFileUploadEventListeners === 'function') {
+        attachFileUploadEventListeners();
+    }
 
-    const selectFileBtn = document.getElementById('selectFileBtn');
-    selectFileBtn.addEventListener('click', () => fileInput.click());
-
-    // Drag and Drop
-    const dropZone = document.getElementById('dropZone');
-    dropZone.addEventListener('dragover', handleDragOver);
-    dropZone.addEventListener('dragleave', handleDragLeave);
-    dropZone.addEventListener('drop', handleDrop);
-    dropZone.addEventListener('click', () => fileInput.click());
-
-    // Upload
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.addEventListener('click', handleUpload);
-
-    // Logout
+    // Logout - handle both desktop and mobile logout buttons
     const logoutBtn = document.getElementById('userLogoutBtn');
-    logoutBtn.addEventListener('click', handleLogout);
-
-    // Clear Tasks
-    const clearTasksBtn = document.getElementById('clearTasksBtn');
-    clearTasksBtn.addEventListener('click', handleClearTasks);
+    const logoutBtnDesktop = document.getElementById('userLogoutBtnDesktop');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    if (logoutBtnDesktop) {
+        logoutBtnDesktop.addEventListener('click', handleLogout);
+    }
 
     // Submenu navigation
     document.querySelectorAll('.submenu-link[data-view-target], .menu-link[data-view-target]').forEach(link => {
@@ -101,7 +90,23 @@ function attachEventListeners() {
 
     // Hamburger menu toggle
     const hamburgerBtn = document.getElementById('hamburgerBtn');
-    hamburgerBtn.addEventListener('click', toggleHamburgerMenu);
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', toggleHamburgerMenu);
+    }
+
+    // Logo click → home view
+    const logoLink = document.getElementById('logoLink');
+    if (logoLink) {
+        logoLink.addEventListener('click', e => {
+            e.preventDefault();
+            if (appState.token) {
+                activateSubmenuView('home');
+            }
+        });
+    }
+
+    // Mobile submenu toggle - allow expanding/collapsing submenus on mobile
+    setupMobileSubmenuToggle();
 }
 
 function togglePasswordVisibility() {
@@ -119,6 +124,53 @@ function toggleHamburgerMenu() {
     hamburgerBtn.classList.toggle('open');
     const navbar = document.querySelector('.navbar');
     navbar.classList.toggle('open');
+
+    // Update accessibility attribute
+    const isOpen = hamburgerBtn.classList.contains('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+}
+
+function setupMobileSubmenuToggle() {
+    // On mobile, parent menu items with submenus should toggle expand/collapse
+    // instead of navigating directly
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+        const submenu = item.querySelector('.submenu');
+        if (submenu) {
+            const menuLink = item.querySelector('.menu-link');
+            if (menuLink) {
+                menuLink.addEventListener('click', function(e) {
+                    // Only prevent default on mobile (max-width 768px)
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        item.classList.toggle('expanded');
+
+                        // Collapse other expanded items
+                        document.querySelectorAll('.menu-item.expanded').forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.classList.remove('expanded');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    });
+
+    // Close menu when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navbar = document.querySelector('.navbar');
+        const header = document.querySelector('.header');
+
+        if (hamburgerBtn && navbar && header && window.innerWidth <= 768) {
+            if (!header.contains(e.target)) {
+                hamburgerBtn.classList.remove('open');
+                navbar.classList.remove('open');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
 }
 
 /**
@@ -228,24 +280,6 @@ function handleLogout() {
     showLoginView();
 }
 
-function handleClearTasks() {
-    const taskList = document.getElementById('taskList');
-    const uploadTasks = document.getElementById('uploadTasks');
-    const clearTasksBtn = document.getElementById('clearTasksBtn');
-
-    // Clear all task items
-    taskList.innerHTML = '';
-
-    // Clear task state
-    appState.uploadTasks = {};
-
-    // Hide upload tasks section
-    uploadTasks.classList.remove('active');
-
-    // Hide clear button
-    clearTasksBtn.style.display = 'none';
-}
-
 function handleSubmenuClick(e) {
     e.preventDefault();
 
@@ -276,6 +310,11 @@ function showLoginView() {
     document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active-root'));
     document.querySelector('.navbar')?.classList.add('hidden');
     document.getElementById('userMenu').classList.add('hidden');
+    // Hide hamburger menu during login
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    if (hamburgerBtn) {
+        hamburgerBtn.classList.add('hidden');
+    }
     document.getElementById('username').focus();
 }
 
@@ -283,6 +322,11 @@ function showUploadView() {
     document.getElementById('loginView').classList.remove('active');
     document.getElementById('appViews').classList.remove('hidden');
     document.querySelector('.navbar')?.classList.remove('hidden');
+    // Show hamburger menu after login
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    if (hamburgerBtn) {
+        hamburgerBtn.classList.remove('hidden');
+    }
     activateSubmenuView('home');
     document.getElementById('userMenu').classList.remove('hidden');
 }
@@ -316,352 +360,6 @@ function activateSubmenuView(viewTarget) {
     }
 }
 
-/**
- * FILE SELECTION HANDLING
- */
-function handleFileSelect(e) {
-    const files = Array.from(e.target.files);
-    addFilesToSelection(files);
-    // Reset input so same file can be selected again
-    e.target.value = '';
-}
-
-function handleDragOver(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    document.getElementById('dropZone').classList.add('drag-over');
-}
-
-function handleDragLeave(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    document.getElementById('dropZone').classList.remove('drag-over');
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    document.getElementById('dropZone').classList.remove('drag-over');
-
-    const files = Array.from(e.dataTransfer.files);
-    addFilesToSelection(files);
-}
-
-function addFilesToSelection(files) {
-    files.forEach(file => {
-        // Check if file already selected
-        if (!appState.selectedFiles.find(f => f.name === file.name && f.size === file.size)) {
-            appState.selectedFiles.push(file);
-        }
-    });
-
-    renderFilePreview();
-    updateUploadButtonState();
-}
-
-function removeFileFromSelection(index) {
-    appState.selectedFiles.splice(index, 1);
-    renderFilePreview();
-    updateUploadButtonState();
-}
-
-function renderFilePreview() {
-    const fileList = document.getElementById('fileList');
-    const filePreviewDiv = document.getElementById('filePreview');
-
-    fileList.innerHTML = '';
-
-    if (appState.selectedFiles.length === 0) {
-        filePreviewDiv.classList.remove('active');
-        return;
-    }
-
-    filePreviewDiv.classList.add('active');
-
-    appState.selectedFiles.forEach((file, index) => {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-
-        const fileIcon = getFileIcon(file.type);
-        const fileSize = formatFileSize(file.size);
-        const fileSizeBytes = file.size.toLocaleString() + ' bytes';
-
-        fileItem.innerHTML = `
-            <div class="file-info">
-                <div class="file-icon">${fileIcon}</div>
-                <div class="file-details">
-                    <div class="file-name">${file.name}</div>
-                    <div class="file-size">${fileSize} (${fileSizeBytes})</div>
-                </div>
-            </div>
-            <button type="button" class="remove-btn" data-index="${index}">Remove</button>
-        `;
-
-        fileItem.querySelector('.remove-btn').addEventListener('click', () => {
-            removeFileFromSelection(index);
-        });
-
-        fileList.appendChild(fileItem);
-
-        // Generate thumbnail for image files
-        if (file.type.startsWith('image/')) {
-            generateThumbnail(file, fileItem);
-        }
-    });
-}
-
-function generateThumbnail(file, fileItemElement) {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.className = 'file-thumbnail';
-
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = file.name;
-
-        thumbnailContainer.appendChild(img);
-        fileItemElement.insertBefore(thumbnailContainer, fileItemElement.firstChild);
-    };
-
-    reader.readAsDataURL(file);
-}
-
-function updateUploadButtonState() {
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.disabled = appState.selectedFiles.length === 0;
-}
-
-/**
- * FILE UPLOAD FUNCTIONALITY
- */
-async function handleUpload() {
-    if (appState.selectedFiles.length === 0 || !appState.token) {
-        alert('No files selected or not authenticated');
-        return;
-    }
-
-    const uploadBtn = document.getElementById('uploadBtn');
-    uploadBtn.disabled = true;
-
-    const uploadTasksDiv = document.getElementById('uploadTasks');
-    uploadTasksDiv.classList.add('active');
-
-    // Upload each file
-    for (const file of appState.selectedFiles) {
-        uploadFile(file);
-    }
-
-    // Clear selected files after starting uploads
-    appState.selectedFiles = [];
-    renderFilePreview();
-    updateUploadButtonState();
-    uploadBtn.disabled = false;
-}
-
-function uploadFile(file) {
-    const taskId = appState.taskIdCounter++;
-    const formData = new FormData();
-    formData.append('file', file);
-
-    // Create task item
-    const taskItem = createTaskItem(taskId, file.name, file.size);
-    const taskList = document.getElementById('taskList');
-    taskList.appendChild(taskItem);
-
-    const cancelBtn = taskItem.querySelector('.cancel-upload-btn');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            cancelUploadTask(taskId);
-        });
-    }
-
-    // Store task reference
-    appState.uploadTasks[taskId] = {
-        element: taskItem,
-        xhr: null,
-        status: 'uploading'
-    };
-
-    // Create XMLHttpRequest for upload progress tracking
-    const xhr = new XMLHttpRequest();
-    appState.uploadTasks[taskId].xhr = xhr;
-
-    // Track upload progress
-    xhr.upload.addEventListener('progress', (e) => {
-        if (e.lengthComputable) {
-            const percentComplete = (e.loaded / e.total) * 100;
-            updateTaskProgress(taskId, percentComplete);
-        }
-    });
-
-    // Handle completion
-    xhr.addEventListener('load', () => {
-        if (xhr.status === 200 || xhr.status === 201) {
-            completeTask(taskId);
-        } else {
-            failTask(taskId, `Server returned status ${xhr.status}`);
-        }
-    });
-
-    // Handle error
-    xhr.addEventListener('error', () => {
-        failTask(taskId, 'Upload failed');
-    });
-
-    // Handle abort
-    xhr.addEventListener('abort', () => {
-        failTask(taskId, 'Upload cancelled');
-    });
-
-    // Set up request
-    xhr.open('POST', CONFIG.CONTEXT_ROOT + CONFIG.UPLOAD_ENDPOINT);
-    xhr.setRequestHeader('Authorization', `Bearer ${appState.token}`);
-
-    // Send request
-    xhr.send(formData);
-}
-
-function createTaskItem(taskId, fileName, fileSizeBytes) {
-    const taskItem = document.createElement('div');
-    taskItem.className = 'task-item';
-    taskItem.id = `task-${taskId}`;
-    const fileSizeText = `${formatFileSize(fileSizeBytes)} (${fileSizeBytes.toLocaleString()} bytes)`;
-
-    taskItem.innerHTML = `
-        <div class="task-header">
-            <span class="task-name">${escapeHtml(fileName)}</span>
-            <span class="task-file-size">${escapeHtml(fileSizeText)}</span>
-            <span class="task-percent">0%</span>
-            <span class="task-status uploading">Uploading</span>
-            <button type="button" class="cancel-upload-btn" data-task-id="${taskId}">Cancel</button>
-        </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar" style="width: 0%;">0%</div>
-        </div>
-    `;
-
-    return taskItem;
-}
-
-function updateTaskProgress(taskId, percentage) {
-    const taskElement = appState.uploadTasks[taskId].element;
-    if (!taskElement) return;
-
-    const progressBar = taskElement.querySelector('.progress-bar');
-    const percentDisplay = taskElement.querySelector('.task-percent');
-
-    const roundedPercent = Math.round(percentage);
-    progressBar.style.width = roundedPercent + '%';
-    progressBar.textContent = roundedPercent + '%';
-    percentDisplay.textContent = roundedPercent + '%';
-}
-
-function completeTask(taskId) {
-    const taskElement = appState.uploadTasks[taskId].element;
-    if (!taskElement) return;
-
-    appState.uploadTasks[taskId].status = 'completed';
-
-    const progressBar = taskElement.querySelector('.progress-bar');
-    progressBar.classList.add('completed');
-    progressBar.textContent = '✓ Complete';
-
-    const status = taskElement.querySelector('.task-status');
-    status.classList.remove('uploading');
-    status.classList.add('completed');
-    status.textContent = 'Completed';
-
-    setTaskCancelable(taskElement, false);
-
-    updateClearButtonVisibility();
-}
-
-function failTask(taskId, errorMessage) {
-    const taskElement = appState.uploadTasks[taskId].element;
-    if (!taskElement) return;
-
-    appState.uploadTasks[taskId].status = 'error';
-
-    const progressBar = taskElement.querySelector('.progress-bar');
-    progressBar.classList.add('error');
-    progressBar.textContent = '✕ Error';
-
-    const status = taskElement.querySelector('.task-status');
-    status.classList.remove('uploading');
-    status.classList.add('error');
-    status.textContent = 'Error: ' + errorMessage;
-
-    setTaskCancelable(taskElement, false);
-
-    updateClearButtonVisibility();
-}
-
-function cancelUploadTask(taskId) {
-    const task = appState.uploadTasks[taskId];
-    if (!task || task.status !== 'uploading' || !task.xhr) {
-        return;
-    }
-    task.xhr.abort();
-}
-
-function setTaskCancelable(taskElement, enabled) {
-    const cancelBtn = taskElement.querySelector('.cancel-upload-btn');
-    if (!cancelBtn) {
-        return;
-    }
-    cancelBtn.disabled = !enabled;
-    cancelBtn.style.display = enabled ? 'inline-block' : 'none';
-}
-
-/**
- * UTILITY FUNCTIONS
- */
-function getFileIcon(mimeType) {
-    if (mimeType.startsWith('image/')) return '🖼️';
-    if (mimeType.startsWith('video/')) return '🎬';
-    if (mimeType.startsWith('audio/')) return '🎵';
-    if (mimeType === 'application/pdf') return '📄';
-    if (mimeType.includes('word')) return '📝';
-    if (mimeType.includes('sheet')) return '📊';
-    if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('7z')) return '📦';
-    return '📎';
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-}
-
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-}
-
-function updateClearButtonVisibility() {
-    const clearTasksBtn = document.getElementById('clearTasksBtn');
-    const taskList = document.getElementById('taskList');
-    const hasCompletedOrErrorTasks = Array.from(taskList.children).some(task => {
-        const status = task.querySelector('.task-status');
-        return status && (status.classList.contains('completed') || status.classList.contains('error'));
-    });
-
-    if (hasCompletedOrErrorTasks) {
-        clearTasksBtn.style.display = 'block';
-    }
-}
 
 function updateUserMenu() {
     const userMenu = document.getElementById('userMenu');

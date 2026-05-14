@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jExpress App</title>
     <link rel="stylesheet" href="web-resources/styles/app.css">
+    <link rel="stylesheet" href="web-resources/styles/fileupload.css">
+    <link rel="stylesheet" href="web-resources/styles/feature2.css">
 </head>
 <body>
 <div id="appContainer">
     <!-- Header -->
     <header id="header" class="header">
         <div class="header-content">
-            <div class="logo"></div>
+            <div class="logo"><a href="#" id="logoLink" aria-label="Go to Home"><img src="web-resources/images/jExpress.png" alt="jExpress" class="logo-img"></a></div>
+            <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <nav class="navbar">
                 <ul class="menu">
                     <li class="menu-item">
@@ -21,35 +28,43 @@
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">Feature</a>
+                        <a href="#" class="menu-link">Demo 1</a>
                         <ul class="submenu">
                             <li><a href="#" class="submenu-link" data-view-target="sub1">File Upload</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="sub2">Sub 2</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="sub2">RESTFull</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="sub3_2">Split View</a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">Root 2</a>
+                        <a href="#" class="menu-link">Demo 2</a>
                         <ul class="submenu">
                             <li><a href="#" class="submenu-link" data-view-target="sub3">Sub 3</a></li>
                             <li><a href="#" class="submenu-link" data-view-target="sub4">Sub 4</a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">Root 3</a>
+                        <a href="#" class="menu-link">Demo 3</a>
                         <ul class="submenu">
                             <li><a href="#" class="submenu-link" data-view-target="sub3_1">Sub 3.1</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="sub3_2">Sub 3.2</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item user-menu-item" id="userMenuMobile">
+                        <button id="userMenuTrigger" class="menu-link user-menu-trigger" type="button">
+                            <span id="userMenuLabel">User</span>
+                        </button>
+                        <ul class="submenu user-submenu" id="userSubmenuMobile">
+                            <li><button id="userLogoutBtn" type="button" class="submenu-link user-submenu-btn" style="display: block; width: 100%; text-align: left; border: none; background: transparent; color: white; padding: 12px 20px; cursor: pointer;">Logout</button></li>
                         </ul>
                     </li>
                 </ul>
             </nav>
             <div id="userMenu" class="user-menu hidden" aria-label="User menu">
-                <button id="userMenuTrigger" class="user-menu-trigger" type="button" title="">
-                    <span id="userMenuLabel">User</span>
+                <button id="userMenuTriggerDesktop" class="user-menu-trigger" type="button" title="">
+                    <span id="userMenuLabelDesktop">User</span>
                 </button>
                 <ul class="user-submenu">
                     <li>
-                        <button id="userLogoutBtn" type="button" class="user-submenu-btn">Logout</button>
+                        <button id="userLogoutBtnDesktop" type="button" class="user-submenu-btn">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -89,7 +104,7 @@
             <div id="uploadView" class="content-view">
                 <div class="upload-container">
                     <div class="upload-header">
-                        <h1>File Upload Manager</h1>
+                        <h1>File Upload Demo</h1>
                     </div>
 
                     <!-- Drop Zone -->
@@ -133,58 +148,47 @@
                 </div>
             </div>
 
-            <div id="sub2View" class="content-view placeholder-view">
-                <div class="placeholder-card">
-                    <h2>Sub 2 View</h2>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub
-                        2This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub 2This is the content area for menu item Sub
-                        2This is the content area for menu item Sub 2</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
-                    <p>This is the content area for menu item Sub 2.</p>
+            <div id="sub2View" class="content-view">
+                <div class="feature2-container">
+                    <div class="feature2-section">
+                        <h2>Hello World Service</h2>
+                        <form id="feature2Form" class="feature2-form">
+                            <div class="form-group">
+                                <label for="creditCardInput">Credit Card Number:</label>
+                                <input type="text" id="creditCardInput" name="creditCardNumber" required inputmode="numeric" autocomplete="cc-number" pattern="[0-9\s-]{13,23}" placeholder="Enter credit card number (digits, spaces, or dashes)">
+                                <small class="form-hint">Required field</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="greetingInput">Greeting:</label>
+                                <input type="text" id="greetingInput" name="greeting" required placeholder="Enter greeting (e.g., Hello)">
+                                <small class="form-hint">Required field</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="shoppingListInput">Shopping List:</label>
+                                <textarea id="shoppingListInput" name="shoppingList" required placeholder="Enter items (one per line, or separated by commas)&#10;Example:&#10;Item 1&#10;Item 2&#10;Item 3" rows="5"></textarea>
+                                <small class="form-hint">Enter at least one item (one per line or comma-separated)</small>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="roleBasedCheckbox" name="roleBased">
+                                <label for="roleBasedCheckbox" class="checkbox-label">Role based</label>
+                                <label for="helloWorldApiSelect" class="checkbox-label endpoint-label">API</label>
+                                <select id="helloWorldApiSelect" name="helloWorldApiSelect" class="endpoint-select">
+                                    <option value="helloworld1" selected>helloworld1</option>
+                                    <option value="helloworld2">helloworld2</option>
+                                    <option value="helloworld3">helloworld3</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary feature2-submit-btn">Submit</button>
+                        </form>
+                        <div id="feature2ErrorContainer"></div>
+                    </div>
+
+                    <div id="feature2ResponseSection" class="feature2-section feature2-response-section">
+                        <h3>Response</h3>
+                        <div id="feature2ResponseContent" class="feature2-response-content"></div>
+                    </div>
+
+                    <div id="feature2ReferenceContainer" class="feature2-reference-container"></div>
                 </div>
             </div>
 
@@ -473,5 +477,7 @@
 </div>
 
 <script src="web-resources/scripts/app.js"></script>
+<script src="web-resources/scripts/fileupload.js"></script>
+<script src="web-resources/scripts/feature2.js"></script>
 </body>
 </html>
