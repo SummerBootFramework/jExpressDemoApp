@@ -19,7 +19,8 @@ const SUBMENU_VIEWS = {
     sub3: 'sub3View',
     sub4: 'sub4View',
     sub3_1: 'sub31View',
-    sub3_2: 'sub32View'
+    sub3_2: 'sub32View',
+    home: 'homeView'
 };
 
 // State
@@ -94,9 +95,13 @@ function attachEventListeners() {
     clearTasksBtn.addEventListener('click', handleClearTasks);
 
     // Submenu navigation
-    document.querySelectorAll('.submenu-link[data-view-target]').forEach(link => {
+    document.querySelectorAll('.submenu-link[data-view-target], .menu-link[data-view-target]').forEach(link => {
         link.addEventListener('click', handleSubmenuClick);
     });
+
+    // Hamburger menu toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    hamburgerBtn.addEventListener('click', toggleHamburgerMenu);
 }
 
 function togglePasswordVisibility() {
@@ -109,6 +114,12 @@ function togglePasswordVisibility() {
     togglePasswordBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
 }
 
+function toggleHamburgerMenu() {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    hamburgerBtn.classList.toggle('open');
+    const navbar = document.querySelector('.navbar');
+    navbar.classList.toggle('open');
+}
 
 /**
  * LOGIN FUNCTIONALITY
@@ -198,6 +209,19 @@ function handleLogout() {
     document.getElementById('filePreview').classList.remove('active');
     document.getElementById('uploadTasks').classList.remove('active');
 
+    // Close hamburger menu and add fade out animation
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navbar = document.querySelector('.navbar');
+    if (hamburgerBtn && navbar) {
+        hamburgerBtn.classList.remove('open');
+        navbar.classList.remove('open');
+        navbar.classList.add('fade-out');
+        // Remove fade-out class after animation completes
+        setTimeout(() => {
+            navbar.classList.remove('fade-out');
+        }, 300);
+    }
+
     updateUserMenu();
 
     // Show login view
@@ -231,6 +255,14 @@ function handleSubmenuClick(e) {
 
     const viewTarget = e.currentTarget.getAttribute('data-view-target');
     activateSubmenuView(viewTarget);
+
+    // Close hamburger menu after selecting a menu item
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navbar = document.querySelector('.navbar');
+    if (hamburgerBtn && navbar) {
+        hamburgerBtn.classList.remove('open');
+        navbar.classList.remove('open');
+    }
 }
 
 /**
@@ -241,6 +273,7 @@ function showLoginView() {
     document.getElementById('appViews').classList.add('hidden');
     document.querySelectorAll('.content-view').forEach(view => view.classList.remove('active'));
     document.querySelectorAll('.submenu-link').forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active-root'));
     document.querySelector('.navbar')?.classList.add('hidden');
     document.getElementById('userMenu').classList.add('hidden');
     document.getElementById('username').focus();
@@ -250,7 +283,7 @@ function showUploadView() {
     document.getElementById('loginView').classList.remove('active');
     document.getElementById('appViews').classList.remove('hidden');
     document.querySelector('.navbar')?.classList.remove('hidden');
-    activateSubmenuView('sub1');
+    activateSubmenuView('home');
     document.getElementById('userMenu').classList.remove('hidden');
 }
 
@@ -269,13 +302,16 @@ function activateSubmenuView(viewTarget) {
         targetView.classList.add('active');
     }
 
-    const targetLink = document.querySelector(`.submenu-link[data-view-target="${viewTarget}"]`);
+    const targetLink = document.querySelector(`.submenu-link[data-view-target="${viewTarget}"], .menu-link[data-view-target="${viewTarget}"]`);
     if (targetLink) {
-        targetLink.classList.add('active');
-
-        const rootMenuLink = targetLink.closest('.menu-item')?.querySelector('.menu-link');
-        if (rootMenuLink) {
-            rootMenuLink.classList.add('active-root');
+        if (targetLink.classList.contains('menu-link')) {
+            targetLink.classList.add('active-root');
+        } else {
+            targetLink.classList.add('active');
+            const rootMenuLink = targetLink.closest('.menu-item')?.querySelector('.menu-link');
+            if (rootMenuLink) {
+                rootMenuLink.classList.add('active-root');
+            }
         }
     }
 }
