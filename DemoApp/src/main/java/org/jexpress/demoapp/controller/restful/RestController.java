@@ -124,7 +124,7 @@ public class RestController extends BootController {
     @Path(AppURI.URL_HELLO4)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed( "AppAdmin")
+    @RolesAllowed("AppAdmin")
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
