@@ -11,6 +11,7 @@ public interface AppURI {
     String URL_HELLO1 = "/helloworld1/{greeting}";
     String URL_HELLO2 = "/helloworld2/{greeting}";
     String URL_HELLO3 = "/helloworld3/{greeting}";
+    String URL_HELLO4 = "/helloworld4/{greeting}";
     // String URL_HELLO3_duplicated = "/helloworld3/{greeting}"; // give it a try to run app with this enabled
 
     String API_NF_FILE_UPLOAD = CONTEXT_ROOT + REST_VERSION + "/upload";

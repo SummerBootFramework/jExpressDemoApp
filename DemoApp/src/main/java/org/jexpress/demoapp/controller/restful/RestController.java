@@ -112,11 +112,23 @@ public class RestController extends BootController {
     @Path(AppURI.URL_HELLO3)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("User")
+    @RolesAllowed({"User", "AppAdmin"})
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
     public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) {
+        return businessService.process(greeting, myRequest, context);
+    }
+
+    @POST
+    @Path(AppURI.URL_HELLO4)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed( "AppAdmin")
+    @Daemon(false)
+    @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
+    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
+    public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) {
         return businessService.process(greeting, myRequest, context);
     }
 }
