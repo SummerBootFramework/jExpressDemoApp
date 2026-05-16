@@ -3,6 +3,7 @@ package org.jexpress.demoapp.app.event;
 import com.google.inject.Singleton;
 import org.jexpress.demoapp.app.MyConfig;
 import org.jexpress.demoapp.app.MyInitializer;
+import org.jexpress.demoapp.service.impl.BusinessServiceImpl1;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     private static String[] cronSettings = MyConfig.cfg.getCronExpressions();
 
+
     private static final java.util.logging.Logger jul = java.util.logging.Logger.getLogger(MyInitializer.class.getName());
     private static final String MY_IDLE_EVENT_MONITOR_ID = "MyIdleEventMonitor";
 
@@ -40,6 +42,11 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
         myIdleEventMonitor.onCall("cron@" + lastTransactionId);
     }
 
+    @Override
+    public void beforeApplicationStart(SummerApplication.AppContext context) throws Exception {
+        super.beforeApplicationStart(context);
+        BusinessServiceImpl1.init(context.guiceInjector());
+    }
 
     /**
      * called when application paused or resumed by configuration/pause file or BottController's ${context-root}/status?pause=true|false

@@ -33,6 +33,8 @@ import org.summerboot.jexpress.nio.server.SessionContext;
 import org.summerboot.jexpress.nio.server.domain.ServiceError;
 import org.summerboot.jexpress.nio.server.ws.rs.BootController;
 
+import java.io.IOException;
+
 @OpenAPIDefinition(//OAS v3
         info = @Info(
                 title = "jExpress Sample App",
@@ -70,14 +72,14 @@ public class RestController extends BootController {
     @Path(AppURI.URL_HELLO1)
     public MyResponse hello1(@Parameter(description = "this is greeting message") @NotNull @PathParam("greeting") String greeting,
                              @Parameter(description = "this is request body") @NotNull MyRequest myRequest,
-                             @Parameter(hidden = true) SessionContext context) {
+                             @Parameter(hidden = true) SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
 
     @POST
     @Path(AppURI.URL_HELLO2)
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
-    public MyResponse hello2(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) {
+    public MyResponse hello2(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
 
@@ -116,7 +118,7 @@ public class RestController extends BootController {
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
-    public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) {
+    public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
 
@@ -128,7 +130,7 @@ public class RestController extends BootController {
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
-    public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) {
+    public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
 }

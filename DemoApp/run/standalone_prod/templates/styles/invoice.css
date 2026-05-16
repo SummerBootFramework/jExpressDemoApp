@@ -1,0 +1,67 @@
+* {
+  font-family: "ArialUnicodeMS";
+}
+
+@page {
+  margin: 30px;
+  /* size: A7 portrait; */
+  /* size: 210mm 297mm; */
+}
+body {
+  /* background-image: url("../img/bg.png");
+  background-repeat: repeat-y;
+  background-position: right 0px center; 
+  background-color: rgb(255, 250, 231);*/
+
+  margin: 0;
+  /* margin: auto;
+  width: 90%; 
+  text-rendering: optimize-speed;*/
+  /* width: 400px; */
+  /* width: 95mm;
+  height: 135mm; */
+}
+.root {
+  width: 100%;
+  height: 100%;
+}
+
+/* .root {
+  border: 1px;
+  border-style: solid;
+  border-color: red;
+  padding: 20 33 10 10;
+} */
+img.logo {
+  width: 100%;
+}
+
+.invoiceDiv {
+  width: 240px;
+}
+table.invoiceTalbe {
+  width: 100%;
+  height: 100%;
+}
+div.invoicetitle {
+  font-weight: bold;
+  font-size: 32px;
+}
+div.title {
+  margin-top: 10px;
+  font-weight: bold;
+}
+div.block {
+  margin-top: 30px;
+  font-weight: bold;
+}
+div.amountDue {
+  margin-top: 10px !important;
+  margin-bottom: 30px;
+  margin-right: 40px;
+  text-align: right;
+}
+div.block span.memo {
+  font-weight: normal;
+  font-size: 16px;
+}

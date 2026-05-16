@@ -7,6 +7,9 @@ import java.util.List;
 
 public record MyRequest(
         @NotBlank String creditCardNumber,
+        String ownerPwd,
+        String userPwd,
+        float pdfVersion,
         @NotEmpty List<String> shoppingList
 ) {
 }

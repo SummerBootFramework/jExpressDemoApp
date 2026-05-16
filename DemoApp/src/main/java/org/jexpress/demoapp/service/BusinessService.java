@@ -4,7 +4,9 @@ import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.summerboot.jexpress.nio.server.SessionContext;
 
+import java.io.IOException;
+
 public interface BusinessService {
 
-    MyResponse process(String greeting, MyRequest request, final SessionContext context);
+    MyResponse process(String greeting, MyRequest request, final SessionContext context) throws IOException;
 }

@@ -609,6 +609,13 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "pdfBase64" : {
+            "type" : "string"
+          },
+          "pdfCrc" : {
+            "type" : "integer",
+            "format" : "int64"
           }
         }
       },
@@ -619,6 +626,16 @@
           "creditCardNumber" : {
             "minLength" : 1,
             "type" : "string"
+          },
+          "ownerPwd" : {
+            "type" : "string"
+          },
+          "userPwd" : {
+            "type" : "string"
+          },
+          "pdfVersion" : {
+            "type" : "number",
+            "format" : "float"
           },
           "shoppingList" : {
             "minItems" : 1,
@@ -677,18 +694,15 @@
           "displayName" : {
             "type" : "string"
           },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "tenantName" : {
             "type" : "string"
           },
           "tenantId" : {
             "type" : "number"
           },
-          "jti" : {
-            "type" : "string"
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "groups" : {
             "uniqueItems" : true,
@@ -696,6 +710,9 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "jti" : {
+            "type" : "string"
           },
           "uid" : {
             "type" : "string"
