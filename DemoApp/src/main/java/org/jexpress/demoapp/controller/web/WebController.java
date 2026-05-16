@@ -7,16 +7,21 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.boot.annotation.Controller;
+import org.summerboot.jexpress.nio.server.NioConfig;
 import org.summerboot.jexpress.nio.server.SessionContext;
 import org.summerboot.jexpress.nio.server.ws.rs.WebResourceController;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Controller
 public class WebController extends WebResourceController {
 
-    private static final String WELCOME_PAGE1 = "pages" + File.separator + "page1.html";
-    private static final String WELCOME_PAGE2 = "pages" + File.separator + "page2.html";
+    private static final String File_HTML1 = "pages" + File.separator + "page1.html";
+    private static final String File_HTML2 = "pages" + File.separator + "page2.html";
+    private static final String File_PDF = "pages" + File.separator + "invoice.pdf";
 
     @GET
     @Path("/web")
@@ -31,39 +36,62 @@ public class WebController extends WebResourceController {
     }
 
     @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/page1") // https://localhost:8311/sampleapp/service/v2
-    public void download1(final SessionContext context) {
-        context.response(WELCOME_PAGE1, false);
-    }
-
-    @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/page2") // https://localhost:8311/sampleapp/service/v2/page2
-    public void download2(final SessionContext context) {
-        context.response(WELCOME_PAGE2, false);
-    }
-
-    @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/redirect")
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/redirect") // https://localhost:8311/sampleapp/service/v2/redirect
     public void redirect(final SessionContext context) {
-        context.redirect(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/page2");
+        context.redirect(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/page1/display");
     }
 
     @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/download/{downloadMode}")
-    public void download3(@NotNull @PathParam("downloadMode") boolean isDownloadMode, final SessionContext context) {
-        context.response(WELCOME_PAGE1, isDownloadMode);
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/html/display") // https://localhost:8311/sampleapp/service/v2/html/display
+    public File htmlDownload(final SessionContext context) {
+        context.downloadMode(false);
+        return new File(File_HTML1);
     }
 
     @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/download403")
-    public void download4(final SessionContext context) {
-        context.response(new File("../tree.txt"), false);// 403 forbidden if exists
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/html/download") // https://localhost:8311/sampleapp/service/v2/html/download
+    public File htmlDisplay() {
+        return new File(File_HTML1);
+    }
+
+
+    @GET
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/pdf/display") // https://localhost:8311/sampleapp/service/v2/pdf/display
+    public File pdfDisplay(final SessionContext context) {
+        context.downloadMode(false);
+        return new File(File_PDF);
     }
 
     @GET
-    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/download3")
-    public void download5(@NotNull @QueryParam("file") String filename, final SessionContext context) {
-        context.response(new File(filename), false);// 403 forbidden
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/pdf/download") // https://localhost:8311/sampleapp/service/v2/pdf/download
+    public File pdfDownloadFile() {
+        return new File(File_PDF);
+    }
+
+    @GET
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/pdf/download2") // https://localhost:8311/sampleapp/service/v2/pdf/download2
+    public java.nio.file.Path pdfDownloadPath() {
+        return new File(File_PDF).toPath();
+    }
+
+    @GET
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/pdf/download3/{fileName}") // https://localhost:8311/sampleapp/service/v2/pdf/download3/myfilename
+    public byte[] pdfDownloadData(@PathParam("fileName") String fileName, final SessionContext context) throws IOException {
+        if (fileName != null) {
+            context.downloadFleName(fileName);
+        }
+        java.nio.file.Path path = Paths.get(NioConfig.cfg.getDocrootDir(), File_PDF);
+        byte[] fileBytes = Files.readAllBytes(path);
+        return fileBytes;
+    }
+
+    // https://localhost:8311/sampleapp/service/v2/download?file=pages/page2.html (200 OK)
+    // https://localhost:8311/sampleapp/service/v2/download?file=pages/page3.html (404 not found)
+    // https://localhost:8311/sampleapp/service/v2/download?file=../configuration/jwt_private.key (403 forbidden)
+    @GET
+    @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/download")
+    public File download(@NotNull @QueryParam("file") String filename, final SessionContext context) {
+        return new File(filename);
     }
 
 }

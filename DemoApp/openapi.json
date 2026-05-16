@@ -188,6 +188,40 @@
         } ]
       }
     },
+    "/sampleapp/service/v1/helloworld4/{greeting}" : {
+      "post" : {
+        "operationId" : "hello4",
+        "parameters" : [ {
+          "name" : "greeting",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MyRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/sampleapp/service/v1/inspection" : {
       "get" : {
         "tags" : [ "App Admin" ],
@@ -643,7 +677,17 @@
           "displayName" : {
             "type" : "string"
           },
-          "uid" : {
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tenantName" : {
+            "type" : "string"
+          },
+          "tenantId" : {
+            "type" : "number"
+          },
+          "jti" : {
             "type" : "string"
           },
           "groups" : {
@@ -653,18 +697,8 @@
               "type" : "string"
             }
           },
-          "jti" : {
+          "uid" : {
             "type" : "string"
-          },
-          "tenantName" : {
-            "type" : "string"
-          },
-          "tenantId" : {
-            "type" : "number"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
           }
         }
       },
