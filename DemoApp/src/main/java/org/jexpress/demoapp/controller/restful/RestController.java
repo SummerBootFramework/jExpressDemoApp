@@ -78,7 +78,7 @@ public class RestController extends BootController {
 
     @POST
     @Path(AppURI.URL_HELLO2)
-    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
+    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello2(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
@@ -117,7 +117,7 @@ public class RestController extends BootController {
     @RolesAllowed({"User", "AppAdmin"})
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
-    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
+    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
@@ -129,7 +129,7 @@ public class RestController extends BootController {
     @RolesAllowed("AppAdmin")
     @Daemon(false)
     @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
-    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList"})
+    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }

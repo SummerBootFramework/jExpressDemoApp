@@ -14,13 +14,14 @@ const CONFIG = {
 };
 
 const SUBMENU_VIEWS = {
-    sub1: 'uploadView',
-    sub2: 'sub2View',
-    sub3: 'sub3View',
-    sub4: 'sub4View',
-    sub3_1: 'sub31View',
-    sub3_2: 'sub32View',
-    home: 'homeView'
+    menu0: 'homeView',
+    menu1: 'demo1View',
+    menu2: 'demo2View',
+    menu3: 'demo3View',
+    menu4: 'demo4View',
+    menu5: 'demo5View',
+    menu6: 'demo6View',
+    menu7: 'demo7View'
 };
 
 // State
@@ -100,7 +101,7 @@ function attachEventListeners() {
         logoLink.addEventListener('click', e => {
             e.preventDefault();
             if (appState.token) {
-                activateSubmenuView('home');
+                activateSubmenuView('menu0');
             }
         });
     }
@@ -130,6 +131,16 @@ function toggleHamburgerMenu() {
     hamburgerBtn.setAttribute('aria-expanded', isOpen);
 }
 
+function closeHamburgerMenu() {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navbar = document.querySelector('.navbar');
+    if (hamburgerBtn && navbar) {
+        hamburgerBtn.classList.remove('open');
+        navbar.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+}
+
 function setupMobileSubmenuToggle() {
     // On mobile, parent menu items with submenus should toggle expand/collapse
     // instead of navigating directly
@@ -139,7 +150,7 @@ function setupMobileSubmenuToggle() {
         if (submenu) {
             const menuLink = item.querySelector('.menu-link');
             if (menuLink) {
-                menuLink.addEventListener('click', function(e) {
+                menuLink.addEventListener('click', function (e) {
                     // Only prevent default on mobile (max-width 768px)
                     if (window.innerWidth <= 768) {
                         e.preventDefault();
@@ -158,16 +169,14 @@ function setupMobileSubmenuToggle() {
     });
 
     // Close menu when clicking outside on mobile
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const navbar = document.querySelector('.navbar');
         const header = document.querySelector('.header');
 
         if (hamburgerBtn && navbar && header && window.innerWidth <= 768) {
             if (!header.contains(e.target)) {
-                hamburgerBtn.classList.remove('open');
-                navbar.classList.remove('open');
-                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                closeHamburgerMenu();
             }
         }
     });
@@ -250,23 +259,15 @@ function handleLogout() {
     localStorage.removeItem(CONFIG.STORAGE_KEY_DISPLAY_NAME);
     localStorage.removeItem(CONFIG.STORAGE_KEY_TENANT_NAME);
 
-    // Reset state
-    appState.selectedFiles = [];
-    appState.uploadTasks = {};
-    appState.taskIdCounter = 0;
-
-    // Clear UI
-    document.getElementById('fileList').innerHTML = '';
-    document.getElementById('taskList').innerHTML = '';
-    document.getElementById('filePreview').classList.remove('active');
-    document.getElementById('uploadTasks').classList.remove('active');
+    // Reset state and clear file upload UI
+    if (typeof resetFileUploadState === 'function') {
+        resetFileUploadState();
+    }
 
     // Close hamburger menu and add fade out animation
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navbar = document.querySelector('.navbar');
-    if (hamburgerBtn && navbar) {
-        hamburgerBtn.classList.remove('open');
-        navbar.classList.remove('open');
+    closeHamburgerMenu();
+    if (navbar) {
         navbar.classList.add('fade-out');
         // Remove fade-out class after animation completes
         setTimeout(() => {
@@ -278,6 +279,11 @@ function handleLogout() {
 
     // Show login view
     showLoginView();
+
+    // Final step: force a fresh page load after logout.
+    const url = new URL(window.location.href);
+    url.searchParams.set('_reload', Date.now().toString());
+    window.location.replace(url.toString());
 }
 
 function handleSubmenuClick(e) {
@@ -291,12 +297,7 @@ function handleSubmenuClick(e) {
     activateSubmenuView(viewTarget);
 
     // Close hamburger menu after selecting a menu item
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navbar = document.querySelector('.navbar');
-    if (hamburgerBtn && navbar) {
-        hamburgerBtn.classList.remove('open');
-        navbar.classList.remove('open');
-    }
+    closeHamburgerMenu();
 }
 
 /**
@@ -327,7 +328,7 @@ function showUploadView() {
     if (hamburgerBtn) {
         hamburgerBtn.classList.remove('hidden');
     }
-    activateSubmenuView('home');
+    activateSubmenuView('menu0');
     document.getElementById('userMenu').classList.remove('hidden');
 }
 
@@ -364,11 +365,15 @@ function activateSubmenuView(viewTarget) {
 function updateUserMenu() {
     const userMenu = document.getElementById('userMenu');
     const userMenuLabel = document.getElementById('userMenuLabel');
+    const userMenuLabelDesktop = document.getElementById('userMenuLabelDesktop');
     const userMenuTrigger = document.getElementById('userMenuTrigger');
     const displayName = appState.displayName || 'User';
     const tenantName = appState.tenantName || '';
 
     userMenuLabel.textContent = displayName;
+    if (userMenuLabelDesktop) {
+        userMenuLabelDesktop.textContent = displayName;
+    }
     userMenuTrigger.setAttribute('data-tenant', tenantName);
 
     if (appState.token) {

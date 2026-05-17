@@ -36,6 +36,22 @@ function handleClearTasks() {
     clearTasksBtn.style.display = 'none';
 }
 
+function resetFileUploadState() {
+    appState.selectedFiles = [];
+    appState.uploadTasks = {};
+    appState.taskIdCounter = 0;
+
+    const fileList = document.getElementById('fileList');
+    const taskList = document.getElementById('taskList');
+    const filePreview = document.getElementById('filePreview');
+    const uploadTasks = document.getElementById('uploadTasks');
+
+    if (fileList) fileList.innerHTML = '';
+    if (taskList) taskList.innerHTML = '';
+    if (filePreview) filePreview.classList.remove('active');
+    if (uploadTasks) uploadTasks.classList.remove('active');
+}
+
 function handleFileSelect(e) {
     const files = Array.from(e.target.files);
     addFilesToSelection(files);
@@ -333,16 +349,6 @@ function formatFileSize(bytes) {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-}
 
 function updateClearButtonVisibility() {
     const clearTasksBtn = document.getElementById('clearTasksBtn');

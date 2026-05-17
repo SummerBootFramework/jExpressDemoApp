@@ -9,6 +9,10 @@ let feature2State = {
     isSubmitting: false
 };
 
+const FEATURE2_ERROR_CONTAINER_ID = 'feature2ErrorContainer';
+const FEATURE2_MODAL_ID = 'feature2ErrorModal';
+const FEATURE2_ERROR_BOX_STYLE = 'color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 12px; border-radius: 4px; margin-top: 10px;';
+
 // Initialize Feature 2
 function initializeFeature2() {
     const form = document.getElementById('feature2Form');
@@ -51,6 +55,9 @@ async function handleFeature2Submit(e) {
     setFeature2Submitting(true, submitBtn);
 
     const creditCardNumberInput = document.getElementById('creditCardInput').value.trim();
+    const ownerPwd = document.getElementById('ownerPwdInput').value;
+    const userPwd = document.getElementById('userPwdInput').value;
+    const pdfVersion = parseFloat(document.getElementById('pdfVersionSelect').value);
     const greeting = document.getElementById('greetingInput').value.trim();
     const shoppingListInput = document.getElementById('shoppingListInput').value.trim();
     const helloWorldApi = document.getElementById('helloWorldApiSelect').value;
@@ -68,26 +75,42 @@ async function handleFeature2Submit(e) {
 
     // Validate inputs
     if (!creditCardNumberInput) {
-        showFeature2Error('Please enter a credit card number');
+        showFormError('Please enter a credit card number', {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            inputId: 'creditCardInput',
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
         setFeature2Submitting(false, submitBtn);
         return;
     }
 
     const normalizedCardNumber = normalizeCreditCardNumber(creditCardNumberInput);
     if (!isValidCreditCardNumber(normalizedCardNumber)) {
-        showFeature2Error('Please enter a valid credit card number');
+        showFormError('Please enter a valid credit card number', {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            inputId: 'creditCardInput',
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
         setFeature2Submitting(false, submitBtn);
         return;
     }
 
     if (!greeting) {
-        showFeature2Error('Please enter a greeting');
+        showFormError('Please enter a greeting', {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            inputId: 'greetingInput',
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
         setFeature2Submitting(false, submitBtn);
         return;
     }
 
     if (!shoppingListInput) {
-        showFeature2Error('Please enter at least one shopping list item');
+        showFormError('Please enter at least one shopping list item', {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            inputId: 'shoppingListInput',
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
         setFeature2Submitting(false, submitBtn);
         return;
     }
@@ -99,7 +122,11 @@ async function handleFeature2Submit(e) {
         .filter(item => item.length > 0);
 
     if (shoppingList.length === 0) {
-        showFeature2Error('Please enter at least one valid shopping list item');
+        showFormError('Please enter at least one valid shopping list item', {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            inputId: 'shoppingListInput',
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
         setFeature2Submitting(false, submitBtn);
         return;
     }
@@ -108,6 +135,9 @@ async function handleFeature2Submit(e) {
         // Construct the MyRequest DTO
         const myRequest = {
             creditCardNumber: normalizedCardNumber,
+            ownerPwd: ownerPwd || null,
+            userPwd: userPwd || null,
+            pdfVersion: pdfVersion,
             shoppingList: shoppingList
         };
 
@@ -144,19 +174,35 @@ async function handleFeature2Submit(e) {
             // Handle 4xx or 5xx response
             const errorData = await response.json();
             if (errorData.errors && Array.isArray(errorData.errors)) {
-                showFeature2ErrorModal(errorData.errors);
+                showErrorModal({
+                    modalId: FEATURE2_MODAL_ID,
+                    title: 'Error Response',
+                    reference: errorData.ref,
+                    httpStatus: response.status,
+                    httpStatusText: response.statusText,
+                    errors: errorData.errors,
+                    codeLabel: 'Error Code',
+                    tagLabel: 'Tag',
+                    descriptionLabel: 'Description',
+                    closeButtonText: 'Close'
+                });
             } else {
-                showFeature2Error('An error occurred: ' + (errorData.message || 'Unknown error'));
+                showFormError('An error occurred: ' + (errorData.message || 'Unknown error'), {
+                    errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+                    errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+                });
             }
         }
 
         // Update reference container
-        updateFeature2Reference();
-
+        updateXReference(response.ok, feature2State.lastReference, 'feature2ReferenceContainer')
     } catch (error) {
         console.error('Feature 2 Error:', error);
-        showFeature2Error('Error: ' + error.message);
-        updateFeature2Reference();
+        showFormError('Error: ' + error.message, {
+            errorContainerId: FEATURE2_ERROR_CONTAINER_ID,
+            errorBoxStyle: FEATURE2_ERROR_BOX_STYLE
+        });
+        updateXReference(false, feature2State.lastReference, 'feature2ReferenceContainer')
     } finally {
         setFeature2Submitting(false, submitBtn);
     }
@@ -278,6 +324,19 @@ function displayFeature2Response(responseData) {
         `;
     }
 
+    // PDF
+    if (responseData.pdfBase64 !== undefined) {
+        displayBase64PDF(responseData.pdfBase64, 'pdfViewerContainer');
+    }
+
+    // Images
+    if (responseData.imageBase64 !== undefined) {
+        responseData.imageBase64.forEach((item, index) => {
+            displayBase64Image(index, item, 'imageViewContainer');
+        });
+    }
+
+
     html += '</div>';
 
     // Also show raw JSON for reference
@@ -298,109 +357,80 @@ function formatListItems(items) {
     if (!items || !Array.isArray(items) || items.length === 0) {
         return '<span class="list-empty">[empty]</span>';
     }
-    
+
     return items
         .map(item => `<div class="list-item">${escapeHtml(String(item))}</div>`)
         .join('');
 }
 
 /**
- * Show error message in form
+ * Display PDF from base64 string inside a container element.
+ * Creates a Blob URL and embeds it in an <iframe>.
+ * Also provides a Download button.
+ * @param {string} pdfBase64 - Base64-encoded PDF content
+ * @param {string} pdfViewerContainerId - ID of the container element
  */
-function showFeature2Error(message) {
-    const errorContainer = document.getElementById('feature2ErrorContainer');
-    const creditCardInputEl = document.getElementById('creditCardInput');
-    if (creditCardInputEl) {
-        creditCardInputEl.classList.add('input-error');
-        creditCardInputEl.setAttribute('aria-invalid', 'true');
-    }
-    errorContainer.innerHTML = `<div style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 12px; border-radius: 4px; margin-top: 10px;">${escapeHtml(message)}</div>`;
-}
-
-/**
- * Show error modal with error list
- */
-function showFeature2ErrorModal(errors) {
-    // Create modal if it doesn't exist
-    let modal = document.getElementById('feature2ErrorModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'feature2ErrorModal';
-        modal.className = 'modal-overlay';
-        document.body.appendChild(modal);
+function displayBase64PDF(pdfBase64, pdfViewerContainerId) {
+    const container = document.getElementById(pdfViewerContainerId);
+    if (!container) {
+        console.warn('displayBase64PDF: container not found:', pdfViewerContainerId);
+        return;
     }
 
-    // Clear previous content
-    let modalContent = modal.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.remove();
+    // Revoke any previous blob URL to avoid memory leaks
+    const prevIframe = container.querySelector('iframe.pdf-viewer-frame');
+    if (prevIframe && prevIframe.src && prevIframe.src.startsWith('blob:')) {
+        URL.revokeObjectURL(prevIframe.src);
     }
 
-    // Create modal content
-    const errorItemsHtml = errors.map(error => {
-        const hasErrorTag = typeof error.errorTag === 'string' && error.errorTag.trim() !== '';
-        return `
-        <div class="error-item">
-            <strong>Error Code: <span class="error-code">${error.errorCode || 'N/A'}</span></strong>
-            ${hasErrorTag ? `<strong>Tag: <span class="error-tag">${escapeHtml(error.errorTag)}</span></strong>` : ''}
-            <div class="error-desc"><strong>Description:</strong> ${escapeHtml(error.errorDesc || 'N/A')}</div>
+    // Decode base64 → Uint8Array → Blob → object URL
+    const byteChars = atob(pdfBase64);
+    const byteNums = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+        byteNums[i] = byteChars.charCodeAt(i);
+    }
+    const blob = new Blob([byteNums], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(blob);
+
+    container.innerHTML = `
+        <div class="pdf-viewer-toolbar">
+            <span class="pdf-viewer-title">📄 PDF Preview</span>
+            <a href="${blobUrl}" download="document.pdf" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
         </div>
+        <iframe
+            src="${blobUrl}"
+            class="pdf-viewer-frame"
+            title="PDF Preview"
+            type="application/pdf"
+        ></iframe>
     `;
-    }).join('');
-
-    modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    modalContent.innerHTML = `
-        <span class="modal-close-icon" onclick="closeFeature2ErrorModal()">×</span>
-        <div class="modal-header">
-            <h2>Error Response</h2>
-        </div>
-        <div class="modal-body">
-            ${errorItemsHtml}
-        </div>
-        <div class="modal-footer">
-            <button class="modal-close-btn" onclick="closeFeature2ErrorModal()">Close</button>
-        </div>
-    `;
-
-    modal.appendChild(modalContent);
-    modal.classList.add('active');
+    container.classList.add('active');
 }
 
 /**
- * Close error modal
+ * Display image from base64 string inside a container element.
+ * @param {number} index - Image index (for labelling)
+ * @param {string} imageBase64 - Base64-encoded image (assumed JPEG/PNG)
+ * @param {string} imageViewContainerId - ID of the container element
  */
-function closeFeature2ErrorModal() {
-    const modal = document.getElementById('feature2ErrorModal');
-    if (modal) {
-        modal.classList.remove('active');
+function displayBase64Image(index, imageBase64, imageViewContainerId) {
+    const container = document.getElementById(imageViewContainerId);
+    if (!container) {
+        console.warn('displayBase64Image: container not found:', imageViewContainerId);
+        return;
     }
-}
-
-/**
- * Update reference display
- */
-function updateFeature2Reference() {
-    const refContainer = document.getElementById('feature2ReferenceContainer');
-    if (feature2State.lastReference) {
-        refContainer.innerHTML = `<strong>X-Reference Header:</strong> <code>${escapeHtml(feature2State.lastReference)}</code>`;
-    } else {
-        refContainer.innerHTML = `<span class="feature2-reference-empty">No reference available yet</span>`;
+    if (index === 0) {
+        // Clear on first image
+        container.innerHTML = '<div class="image-viewer-grid"></div>';
+        container.classList.add('active');
     }
-}
-
-/**
- * Escape HTML special characters
- */
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    const grid = container.querySelector('.image-viewer-grid') || container;
+    const img = document.createElement('img');
+    img.src = `data:image/png;base64,${imageBase64}`;
+    img.alt = `Image ${index + 1}`;
+    img.className = 'image-viewer-img';
+    img.title = `Image ${index + 1}`;
+    grid.appendChild(img);
 }
 
 /**
@@ -410,8 +440,34 @@ function clearFeature2Form() {
     document.getElementById('feature2Form').reset();
     document.getElementById('feature2ResponseSection').classList.remove('active');
     document.getElementById('feature2ErrorContainer').innerHTML = '';
+    // Also clear any input-error highlights
+    document.querySelectorAll('#feature2Form .input-error').forEach(el => {
+        el.classList.remove('input-error');
+        el.removeAttribute('aria-invalid');
+    });
+    // Reset password toggle eye buttons back to hidden state
+    ['ownerPwdInput', 'userPwdInput'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.type = 'password';
+            const btn = input.nextElementSibling;
+            if (btn) {
+                btn.textContent = '👁';
+                btn.setAttribute('aria-label', 'Show password');
+            }
+        }
+    });
     feature2State.lastReference = null;
-    updateFeature2Reference();
+    updateXReference(true, null, 'feature2ReferenceContainer');
+    // Clear PDF/image viewers and revoke any blob URLs
+    const pdfFrame = document.querySelector('#pdfViewerContainer iframe.pdf-viewer-frame');
+    if (pdfFrame && pdfFrame.src && pdfFrame.src.startsWith('blob:')) {
+        URL.revokeObjectURL(pdfFrame.src);
+    }
+    const pdfContainer = document.getElementById('pdfViewerContainer');
+    if (pdfContainer) { pdfContainer.innerHTML = ''; pdfContainer.classList.remove('active'); }
+    const imgContainer = document.getElementById('imageViewContainer');
+    if (imgContainer) { imgContainer.innerHTML = ''; imgContainer.classList.remove('active'); }
 }
 
 // Initialize when DOM is ready

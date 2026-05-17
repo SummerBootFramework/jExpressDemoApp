@@ -1,0 +1,91 @@
+/* CSS Design Tokens — single source of truth for shared values */
+:root {
+    /* Brand */
+    --color-primary: #667eea;
+    --color-primary-hover: #5568d3;
+    --color-primary-dark: #764ba2;
+
+    /* Navigation */
+    --color-nav-bg: #2c3e50;
+    --color-nav-submenu-bg: #34495e;
+    --color-nav-hover: rgba(255, 255, 255, 0.1);
+    --color-nav-active: rgba(255, 255, 255, 0.2);
+
+    /* Status */
+    --color-danger: #dc3545;
+    --color-danger-hover: #c82333;
+    --color-success: #28a745;
+    --color-success-hover: #218838;
+
+    /* Text */
+    --color-text: #333;
+    --color-text-muted: #666;
+    --color-text-faint: #999;
+
+    /* Surfaces */
+    --color-bg-panel: #f9f9f9;
+    --color-border: #e0e0e0;
+    --color-border-light: #ddd;
+
+    /* Shadows */
+    --shadow-dropdown: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-card: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    /* Focus ring */
+    --focus-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+
+    /* Shape */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+
+    /* Motion */
+    --transition-speed: 0.3s;
+
+    /* Typography */
+    --font-mono: 'Courier New', monospace;
+}
+
+/* Shared panel/section block — used by file-preview, upload-tasks, feature2-section */
+.file-preview,
+.upload-tasks,
+.feature2-section {
+    padding: 20px;
+    background: var(--color-bg-panel);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+}
+
+/* Shared X-Reference display (reusable across views) */
+.xreference-container {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    padding: 1px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    border: 1px solid #333;
+    font-size: 12px;
+    color: #fff;
+    z-index: 100;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+/* Success state — green border */
+.xreference-container.success {
+    border-color: #28a745;
+}
+
+/* Error state — red border */
+.xreference-container.error {
+    border-color: #dc3545;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+
+.xreference-empty {
+    color: var(--color-text-faint);
+    font-style: italic;
+}
+

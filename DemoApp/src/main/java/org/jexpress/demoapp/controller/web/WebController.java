@@ -38,7 +38,7 @@ public class WebController extends WebResourceController {
     @GET
     @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/redirect") // https://localhost:8311/sampleapp/service/v2/redirect
     public void redirect(final SessionContext context) {
-        context.redirect(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/page1/display");
+        context.redirect(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/html/display");
     }
 
     @GET
@@ -91,6 +91,7 @@ public class WebController extends WebResourceController {
     @GET
     @Path(AppURI.CONTEXT_ROOT + AppURI.WEB_VERSION + "/download")
     public File download(@NotNull @QueryParam("file") String filename, final SessionContext context) {
+        context.downloadMode(false);
         return new File(filename);
     }
 
