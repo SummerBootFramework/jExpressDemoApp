@@ -616,6 +616,12 @@
           "pdfCrc" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "imageBase64" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -694,15 +700,11 @@
           "displayName" : {
             "type" : "string"
           },
-          "tenantName" : {
+          "uid" : {
             "type" : "string"
           },
-          "tenantId" : {
-            "type" : "number"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
+          "jti" : {
+            "type" : "string"
           },
           "groups" : {
             "uniqueItems" : true,
@@ -711,10 +713,14 @@
               "type" : "string"
             }
           },
-          "jti" : {
-            "type" : "string"
+          "tenantId" : {
+            "type" : "number"
           },
-          "uid" : {
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tenantName" : {
             "type" : "string"
           }
         }

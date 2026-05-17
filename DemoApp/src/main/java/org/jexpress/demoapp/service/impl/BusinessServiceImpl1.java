@@ -10,6 +10,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import freemarker.template.Template;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.RenderDestination;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.jexpress.demoapp.processor.freemarker.DataProcessor;
@@ -28,6 +30,7 @@ import org.summerboot.jexpress.util.templateengine.FreeMarker;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,10 +111,17 @@ public class BusinessServiceImpl1 implements BusinessService {
             String pdfBase64 = PDFBuilder.base64Encode(pdf);
             Long pdfCrc = PDFBuilder.crc(pdf);
 
+            List<byte[]> imagePages = pdfBuilder.pdf2Images(context.txId(), pdf, cfg.getUserPwd(), ImageType.RGB, 300f, "png", RenderDestination.EXPORT, context);
+            List<String> imageBase64List = new ArrayList<>(imagePages.size());
+            for (byte[] imagePage : imagePages) {
+                String imageBase64 = PDFBuilder.base64Encode(imagePage);
+                imageBase64List.add(imageBase64);
+            }
+
             // step 4a: build GOOD return status and response
             context.status(HttpResponseStatus.CREATED);// override, default is 200 OK
             return new MyResponse("impl1.public." + greeting + myRequest.creditCardNumber(), "impl1.private." + greeting + myRequest.creditCardNumber(),
-                    myRequest.shoppingList(), pdfBase64, pdfCrc);
+                    myRequest.shoppingList(), pdfBase64, pdfCrc, imageBase64List);
         } catch (InterruptedException ex) {
             // Restore interrupted status
             Thread.currentThread().interrupt();

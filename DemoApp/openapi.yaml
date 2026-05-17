@@ -449,6 +449,10 @@ components:
         pdfCrc:
           type: integer
           format: int64
+        imageBase64:
+          type: array
+          items:
+            type: string
     MyRequest:
       required:
       - creditCardNumber
@@ -505,21 +509,21 @@ components:
           format: int32
         displayName:
           type: string
-        tenantName:
+        uid:
           type: string
-        tenantId:
-          type: number
-        tokenTtlSec:
-          type: integer
-          format: int64
+        jti:
+          type: string
         groups:
           uniqueItems: true
           type: array
           items:
             type: string
-        jti:
-          type: string
-        uid:
+        tenantId:
+          type: number
+        tokenTtlSec:
+          type: integer
+          format: int64
+        tenantName:
           type: string
     LoginVo:
       required:
