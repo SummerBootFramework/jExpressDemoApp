@@ -65,7 +65,7 @@ import java.io.IOException;
 @Path(AppURI.CONTEXT_ROOT + AppURI.REST_VERSION)
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@RequiresHealthCheck({Constant.HI_NAME2, Constant.HI_NAME3})
+//@RequiresHealthCheck({Constant.HI_NAME2, Constant.HI_NAME3})
 //@Daemon
 public class RestController extends BootController {
     @Inject
@@ -141,6 +141,7 @@ public class RestController extends BootController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Daemon
+    //@RequiresHealthCheck("")
     public void mockHealCheck(@PathParam("target") String target, @PathParam("error") int errorCode, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         switch (target) {
             case Constant.HC_NAME1 -> MyHealthChecker1.error = errorCode;
