@@ -1,16 +1,21 @@
 package org.jexpress.demoapp.integration.healthcheck;
 
-import org.jexpress.demoapp.app.Constant;
 import org.summerboot.jexpress.boot.annotation.HealthCheck;
 import org.summerboot.jexpress.boot.instrumentation.HealthChecker;
 import org.summerboot.jexpress.nio.server.domain.Err;
 
 import java.util.List;
 
-@HealthCheck(name = Constant.HC_name1)
+@HealthCheck
 public class MyHealthChecker1 implements HealthChecker {
+    public static int error = 0;
+
     @Override
     public List<Err> ping(Object... param) {
-        return null;//List.of(new Err(123, "etag", "eDesc", null));
+        if (error == 0) {
+            return null;
+        }
+
+        return List.of(new Err(error, "checker1.etag", "checker1.eDesc", new Exception("checker1.mock exception")));
     }
 }

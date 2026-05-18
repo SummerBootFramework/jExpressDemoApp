@@ -24,6 +24,10 @@ import jakarta.ws.rs.core.MediaType;
 import org.jexpress.demoapp.app.Constant;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
+import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker1;
+import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker2;
+import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker3;
+import org.jexpress.demoapp.integration.healthcheck.PauseChecker;
 import org.jexpress.demoapp.service.BusinessService;
 import org.summerboot.jexpress.boot.annotation.Controller;
 import org.summerboot.jexpress.boot.annotation.Daemon;
@@ -115,8 +119,7 @@ public class RestController extends BootController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"User", "AppAdmin"})
-    @Daemon(false)
-    @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
+    @RequiresHealthCheck({Constant.HC_NAME1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
@@ -127,10 +130,25 @@ public class RestController extends BootController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("AppAdmin")
-    @Daemon(false)
-    @RequiresHealthCheck({Constant.HC_name1, Constant.HI_NAME2})
+    @RequiresHealthCheck({Constant.HC_NAME1, Constant.HI_NAME2, Constant.PC_NAME})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
+    }
+
+    @POST
+    @Path(AppURI.URL_MockHealthStatus)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Daemon
+    public void mockHealCheck(@PathParam("target") String target, @PathParam("error") int errorCode, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
+        switch (target) {
+            case Constant.HC_NAME1 -> MyHealthChecker1.error = errorCode;
+            case Constant.HI_NAME2 -> MyHealthChecker2.error = errorCode;
+            case Constant.HI_NAME3 -> MyHealthChecker3.error = errorCode;
+            case Constant.PC_NAME -> PauseChecker.error = errorCode;
+            default ->
+                    throw new IllegalArgumentException("unknown target: " + target + ", valid target: " + Constant.HC_NAME1 + ", " + Constant.HI_NAME2 + ", " + Constant.HI_NAME3 + ", " + Constant.PC_NAME);
+        }
     }
 }

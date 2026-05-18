@@ -233,7 +233,7 @@ function uploadFile(file) {
         failTask(taskId, 'Upload cancelled');
     });
 
-    xhr.open('POST', CONFIG.CONTEXT_ROOT + CONFIG.UPLOAD_ENDPOINT);
+    xhr.open('POST', CONFIG.CONTEXT_ROOT + CONFIG.URI_UPLOAD);
     xhr.setRequestHeader('Authorization', `Bearer ${appState.token}`);
     xhr.send(formData);
 }

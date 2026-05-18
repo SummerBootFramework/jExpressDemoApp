@@ -42,7 +42,7 @@ async function handlePingClick() {
     if (responseContainer) responseContainer.innerHTML = '<p class="loading">Loading...</p>';
 
     try {
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.PING;
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_PING;
         const response = await fetch(url, {
             method: 'GET'
         });
@@ -97,7 +97,7 @@ async function handleVersionClick() {
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_VERSION;
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_ADMIN_VERSION;
         const response = await fetch(url, {
             method: 'GET',
             headers: headers
@@ -152,7 +152,7 @@ async function handleHealthCheckClick() {
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_CHECKHEALTH;
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_ADMIN_CHECKHEALTH;
         const response = await fetch(url, {
             method: 'GET',
             headers: headers
@@ -210,7 +210,7 @@ async function handleStatusClick() {
             headers['Authorization'] = `Bearer ${token}`;
         }
         const pauseValue = statusCheckbox && statusCheckbox.checked ? 'true' : 'false';
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_GRACEFULSHUTDOWN;
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_ADMIN_GRACEFULSHUTDOWN;
         const response = await fetch(url, {
             method: pauseValue === 'true' ? 'PUT' : 'DELETE',
             headers: headers

@@ -13,22 +13,13 @@ import java.util.List;
 public class PauseChecker implements HealthChecker {
     public static int error = 0;
 
-    /**
-     * @param param
-     * @return
-     */
     @Override
     public List<Err> ping(Object... param) {
-        List<Err> ret = null;
-        switch (error) {
-            case 2 -> {
-                ret = List.of(new Err(1, "test 2b", null, null));
-            }
-            case 3 -> {
-                ret = List.of(new Err(2, "test 3", null, null));
-            }
+        if (error == 0) {
+            return null;
         }
-        return ret;
+
+        return List.of(new Err(error, "pause.etag", "pause.eDesc", new Exception("pause.mock exception")));
     }
 
     @Override

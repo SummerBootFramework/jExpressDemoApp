@@ -10,12 +10,13 @@ const CONFIG = {
     STORAGE_KEY_DISPLAY_NAME: 'displayName',
     STORAGE_KEY_TENANT_NAME: 'tenantName',
     STORAGE_KEY_GROUP_NAME: 'groupName',
-    LOGIN_ENDPOINT: '/j_security_check',
-    UPLOAD_ENDPOINT: '/upload',
-    PING: 'ping',
-    ADMIN_VERSION: 'version',
-    ADMIN_CHECKHEALTH: 'checkhealth',
-    ADMIN_GRACEFULSHUTDOWN: 'gracefulshutdown'
+    URI_LOGIN: '/j_security_check',
+    URI_UPLOAD: '/upload',
+    URI_PING: '/ping',
+    URI_ADMIN_VERSION: '/version',
+    URI_ADMIN_CHECKHEALTH: '/checkhealth',
+    URI_ADMIN_GRACEFULSHUTDOWN: '/gracefulshutdown',
+    URI_MOCK_HEALTSTATUS: '/mock/health/'
 };
 
 const SUBMENU_VIEWS = {
@@ -204,7 +205,7 @@ async function handleLogin(e) {
     loginError.textContent = '';
 
     try {
-        const response = await fetch(CONFIG.CONTEXT_ROOT + CONFIG.LOGIN_ENDPOINT, {
+        const response = await fetch(CONFIG.CONTEXT_ROOT + CONFIG.URI_LOGIN, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
