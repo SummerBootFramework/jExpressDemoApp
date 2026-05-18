@@ -7,6 +7,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.boot.annotation.Controller;
+import org.summerboot.jexpress.boot.annotation.Daemon;
 import org.summerboot.jexpress.nio.server.NioConfig;
 import org.summerboot.jexpress.nio.server.SessionContext;
 import org.summerboot.jexpress.nio.server.ws.rs.WebResourceController;
@@ -25,6 +26,7 @@ public class WebController extends WebResourceController {
 
     @GET
     @Path("/web")
+    @Daemon
     public void welcomePage(final SessionContext context) {
         context.response("index.html", false);
     }

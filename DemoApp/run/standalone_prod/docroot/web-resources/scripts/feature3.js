@@ -152,7 +152,7 @@ async function handleHealthCheckClick() {
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_HEALTHCHECK;
+        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_CHECKHEALTH;
         const response = await fetch(url, {
             method: 'GET',
             headers: headers
@@ -210,9 +210,9 @@ async function handleStatusClick() {
             headers['Authorization'] = `Bearer ${token}`;
         }
         const pauseValue = statusCheckbox && statusCheckbox.checked ? 'true' : 'false';
-        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_STATUS + '?pause=' + pauseValue;
+        const url = CONFIG.CONTEXT_ROOT + '/' + CONFIG.ADMIN_GRACEFULSHUTDOWN;
         const response = await fetch(url, {
-            method: 'PUT',
+            method: pauseValue === 'true' ? 'PUT' : 'DELETE',
             headers: headers
         });
 

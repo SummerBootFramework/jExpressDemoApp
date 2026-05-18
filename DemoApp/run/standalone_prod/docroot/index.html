@@ -31,7 +31,7 @@
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">Group 1</a>
+                        <a href="#" class="menu-link">Hello World</a>
                         <ul class="submenu">
                             <li><a href="#" class="submenu-link" data-view-target="menu1">File Upload</a></li>
                             <li><a href="#" class="submenu-link" data-view-target="menu2">File Download</a></li>
@@ -39,10 +39,10 @@
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">Group 2</a>
+                        <a href="#" class="menu-link">Back Office</a>
                         <ul class="submenu">
                             <li><a href="#" class="submenu-link" data-view-target="menu4">Ping and Admin only</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="menu5">Demo 5</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu5">Health Check</a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
@@ -89,11 +89,11 @@
                     <h1>Login</h1>
                     <form id="loginForm">
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username">Username (admin.* = admin role, user.* = user role)</label>
                             <input type="text" id="username" name="username" required placeholder="Enter username">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="password">Password ('wrongpwd' = invalid password)</label>
                             <div class="password-input-wrap">
                                 <input type="password" id="password" name="password" required placeholder="Enter password">
                                 <button type="button" id="togglePasswordBtn" class="password-toggle-btn" aria-label="Show password">👁</button>
@@ -110,7 +110,7 @@
 
         <div id="appViews" class="app-views hidden">
             <div id="homeView" class="content-view placeholder-view">
-                <div class="placeholder-card">
+                <div class="placeholder-card home">
                     <h2>Home View</h2>
                     <p>Welcome to the Home page.</p>
                     <p>This is the home view of the application, you just logged in successfully from the service below:</p>
@@ -298,33 +298,33 @@
                         <div class="feature3-features-grid">
                             <!-- Feature 1: Ping Button -->
                             <div class="feature3-feature-card">
-                                <h3>Ping</h3>
+                                <h3>Load balancer health check - Ping</h3>
                                 <button id="pingBtn" class="btn btn-primary feature3-btn">Ping</button>
                                 <div id="pingResponse" class="feature3-response"></div>
                             </div>
 
                             <!-- Feature 2: Version Button -->
                             <div class="feature3-feature-card">
-                                <h3>Version</h3>
+                                <h3>Version (Admin Role)</h3>
                                 <button id="versionBtn" class="btn btn-primary feature3-btn">Get Version</button>
                                 <div id="versionResponse" class="feature3-response"></div>
                             </div>
 
                             <!-- Feature 3: HealthCheck Button -->
                             <div class="feature3-feature-card">
-                                <h3>Health Check</h3>
-                                <button id="healthCheckBtn" class="btn btn-primary feature3-btn">Health Check</button>
+                                <h3>Health Check (Admin Role)</h3>
+                                <button id="healthCheckBtn" class="btn btn-primary feature3-btn">Check Health</button>
                                 <div id="healthCheckResponse" class="feature3-response"></div>
                             </div>
 
                             <!-- Feature 4: Status Button with Checkbox -->
                             <div class="feature3-feature-card">
-                                <h3>Status</h3>
+                                <h3>Graceful Shutdown (Admin Role)</h3>
                                 <div class="status-control">
                                     <input type="checkbox" id="statusPauseCheckbox" class="status-checkbox">
-                                    <label for="statusPauseCheckbox" class="status-label">Pause</label>
+                                    <label for="statusPauseCheckbox" class="status-label">On/Off</label>
                                 </div>
-                                <button id="statusBtn" class="btn btn-primary feature3-btn">Set Status</button>
+                                <button id="statusBtn" class="btn btn-primary feature3-btn">Set Graceful Shutdown</button>
                                 <div id="statusResponse" class="feature3-response"></div>
                             </div>
                         </div>
@@ -336,7 +336,7 @@
 
             <div id="demo5View" class="content-view placeholder-view">
                 <div class="placeholder-card">
-                    <h2>Demo 5 View</h2>
+                    <h2>@HealthCheck and @RequiresHealthCheck</h2>
                     <p>This is the content area for menu item Sub 5.</p>
                     <p>This is the content area for menu item Sub 5.</p>
                     <p>This is the content area for menu item Sub 5.</p>

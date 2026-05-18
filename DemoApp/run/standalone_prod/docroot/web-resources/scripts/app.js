@@ -9,12 +9,13 @@ const CONFIG = {
     STORAGE_KEY_TOKEN: 'authtoken',
     STORAGE_KEY_DISPLAY_NAME: 'displayName',
     STORAGE_KEY_TENANT_NAME: 'tenantName',
+    STORAGE_KEY_GROUP_NAME: 'groupName',
     LOGIN_ENDPOINT: '/j_security_check',
     UPLOAD_ENDPOINT: '/upload',
     PING: 'ping',
     ADMIN_VERSION: 'version',
-    ADMIN_HEALTHCHECK: 'inspection',
-    ADMIN_STATUS: 'status'
+    ADMIN_CHECKHEALTH: 'checkhealth',
+    ADMIN_GRACEFULSHUTDOWN: 'gracefulshutdown'
 };
 
 const SUBMENU_VIEWS = {
@@ -33,6 +34,7 @@ let appState = {
     token: null,
     displayName: '',
     tenantName: '',
+    groupName: '',
     selectedFiles: [],
     uploadTasks: {},
     taskIdCounter: 0
@@ -48,9 +50,11 @@ function initializeApp() {
     const savedToken = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
     const savedDisplayName = localStorage.getItem(CONFIG.STORAGE_KEY_DISPLAY_NAME) || '';
     const savedTenantName = localStorage.getItem(CONFIG.STORAGE_KEY_TENANT_NAME) || '';
+    const savedGroupName = localStorage.getItem(CONFIG.STORAGE_KEY_GROUP_NAME) || '';
 
     appState.displayName = savedDisplayName;
     appState.tenantName = savedTenantName;
+    appState.groupName = savedGroupName;
 
     if (savedToken) {
         appState.token = savedToken;
@@ -211,6 +215,7 @@ async function handleLogin(e) {
         if (!response.ok) {
             throw new Error(`Login failed with status ${response.status}`);
         }
+        const responseData = await response.json();
 
         // Get JWT from response header
         const token = response.headers.get('X-AuthToken');
@@ -220,11 +225,13 @@ async function handleLogin(e) {
 
         // Save token
         appState.token = token;
-        appState.displayName = response.headers.get('displayName') || username;
-        appState.tenantName = response.headers.get('tenantName') || '';
+        appState.displayName = responseData.displayName || username;
+        appState.tenantName = responseData.tenantName || '';
+        appState.groupName = responseData.groups || '';
         localStorage.setItem(CONFIG.STORAGE_KEY_TOKEN, token);
         localStorage.setItem(CONFIG.STORAGE_KEY_DISPLAY_NAME, appState.displayName);
         localStorage.setItem(CONFIG.STORAGE_KEY_TENANT_NAME, appState.tenantName);
+        localStorage.setItem(CONFIG.STORAGE_KEY_GROUP_NAME, appState.groupName);
 
         updateUserMenu();
 
@@ -259,9 +266,11 @@ function handleLogout() {
     appState.token = null;
     appState.displayName = '';
     appState.tenantName = '';
+    appState.groupName = '';
     localStorage.removeItem(CONFIG.STORAGE_KEY_TOKEN);
     localStorage.removeItem(CONFIG.STORAGE_KEY_DISPLAY_NAME);
     localStorage.removeItem(CONFIG.STORAGE_KEY_TENANT_NAME);
+    localStorage.removeItem(CONFIG.STORAGE_KEY_GROUP_NAME);
 
     // Reset state and clear file upload UI
     if (typeof resetFileUploadState === 'function') {
@@ -373,12 +382,16 @@ function updateUserMenu() {
     const userMenuTrigger = document.getElementById('userMenuTrigger');
     const displayName = appState.displayName || 'User';
     const tenantName = appState.tenantName || '';
+    //const groupName = appState.groupName || '';
+    const groupName = (appState.groupName && String(appState.groupName).trim()) ?
+        ` (${String(appState.groupName).trim()})` : '';
 
     userMenuLabel.textContent = displayName;
     if (userMenuLabelDesktop) {
         userMenuLabelDesktop.textContent = displayName;
+        userMenuLabelDesktop.setAttribute('title', tenantName + groupName);
     }
-    userMenuTrigger.setAttribute('data-tenant', tenantName);
+    userMenuTrigger.setAttribute('title', tenantName + groupName);
 
     if (appState.token) {
         userMenu.classList.remove('hidden');

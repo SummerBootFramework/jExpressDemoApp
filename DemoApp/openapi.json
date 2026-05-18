@@ -17,6 +17,132 @@
     "description" : "Default local port2"
   } ],
   "paths" : {
+    "/sampleapp/service/v1/checkhealth" : {
+      "get" : {
+        "tags" : [ "App Admin" ],
+        "summary" : "Run application self inspection",
+        "description" : "get running application health information",
+        "operationId" : "checkHealth",
+        "responses" : {
+          "200" : {
+            "description" : "inspection success with current version"
+          },
+          "4xx" : {
+            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
+            "content" : {
+              "text/html" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "5xx" : {
+            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
+            "content" : {
+              "text/html" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/sampleapp/service/v1/gracefulshutdown" : {
+      "put" : {
+        "tags" : [ "App Admin" ],
+        "summary" : "Put server into graceful shutdown mode",
+        "description" : "pause service",
+        "operationId" : "gracefulShutdownOn",
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "4xx" : {
+            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "5xx" : {
+            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "App Admin" ],
+        "summary" : "Resume the server from graceful shutdown mode",
+        "description" : "resume service",
+        "operationId" : "gracefulShutdownOff",
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "4xx" : {
+            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          },
+          "5xx" : {
+            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceError"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
     "/sampleapp/service/v1/helloworld1/{greeting}" : {
       "post" : {
         "operationId" : "hello1",
@@ -222,42 +348,6 @@
         }
       }
     },
-    "/sampleapp/service/v1/inspection" : {
-      "get" : {
-        "tags" : [ "App Admin" ],
-        "summary" : "Run application self inspection",
-        "description" : "get running application health information",
-        "operationId" : "inspect",
-        "responses" : {
-          "200" : {
-            "description" : "inspection success with current version"
-          },
-          "4xx" : {
-            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
-            "content" : {
-              "text/html" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              }
-            }
-          },
-          "5xx" : {
-            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
-            "content" : {
-              "text/html" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
-      }
-    },
     "/sampleapp/service/v1/login" : {
       "post" : {
         "tags" : [ "App Authentication" ],
@@ -457,59 +547,6 @@
         }
       }
     },
-    "/sampleapp/service/v1/status" : {
-      "put" : {
-        "tags" : [ "App Admin" ],
-        "summary" : "Graceful shutdown by changing service status",
-        "description" : "pause service if pause param is true, otherwise resume service",
-        "operationId" : "pause",
-        "parameters" : [ {
-          "name" : "pause",
-          "in" : "query",
-          "schema" : {
-            "type" : "boolean"
-          }
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "success"
-          },
-          "4xx" : {
-            "description" : "This class of status code is intended for situations in which the error seems to have been caused by the client. Client normally should not retransmit the same request again.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              },
-              "application/xml" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              }
-            }
-          },
-          "5xx" : {
-            "description" : "This class of status code is intended for situations in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. The client can continue and try again with the request without modification.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              },
-              "application/xml" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ServiceError"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
-      }
-    },
     "/sampleapp/service/v1/ping" : {
       "get" : {
         "tags" : [ "Load Balancing" ],
@@ -577,6 +614,38 @@
   },
   "components" : {
     "schemas" : {
+      "Err" : {
+        "type" : "object",
+        "properties" : {
+          "errorCode" : {
+            "type" : "string"
+          },
+          "errorTag" : {
+            "type" : "string"
+          },
+          "errorDesc" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The optional error list"
+      },
+      "ServiceError" : {
+        "required" : [ "ref" ],
+        "type" : "object",
+        "properties" : {
+          "ref" : {
+            "type" : "string",
+            "description" : "The index of requests received by current server since start"
+          },
+          "errors" : {
+            "type" : "array",
+            "description" : "The optional error list",
+            "items" : {
+              "$ref" : "#/components/schemas/Err"
+            }
+          }
+        }
+      },
       "MyResponse" : {
         "type" : "object",
         "properties" : {
@@ -652,38 +721,6 @@
           }
         }
       },
-      "Err" : {
-        "type" : "object",
-        "properties" : {
-          "errorCode" : {
-            "type" : "string"
-          },
-          "errorTag" : {
-            "type" : "string"
-          },
-          "errorDesc" : {
-            "type" : "string"
-          }
-        },
-        "description" : "The optional error list"
-      },
-      "ServiceError" : {
-        "required" : [ "ref" ],
-        "type" : "object",
-        "properties" : {
-          "ref" : {
-            "type" : "string",
-            "description" : "The index of requests received by current server since start"
-          },
-          "errors" : {
-            "type" : "array",
-            "description" : "The optional error list",
-            "items" : {
-              "$ref" : "#/components/schemas/Err"
-            }
-          }
-        }
-      },
       "Caller" : {
         "type" : "object",
         "properties" : {
@@ -700,7 +737,7 @@
           "displayName" : {
             "type" : "string"
           },
-          "jti" : {
+          "uid" : {
             "type" : "string"
           },
           "groups" : {
@@ -710,18 +747,18 @@
               "type" : "string"
             }
           },
-          "uid" : {
+          "jti" : {
             "type" : "string"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
           },
           "tenantId" : {
             "type" : "number"
           },
           "tenantName" : {
             "type" : "string"
+          },
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
           }
         }
       },

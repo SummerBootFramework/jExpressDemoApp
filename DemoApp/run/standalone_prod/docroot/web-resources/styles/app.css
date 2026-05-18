@@ -375,6 +375,15 @@ body {
     padding: 16px;
 }
 
+.placeholder-card.home {
+    background-color: transparent;
+    color: white;
+}
+
+.placeholder-card.home * {
+    color: white;
+}
+
 .placeholder-card h2 {
     margin-bottom: 12px;
     color: var(--color-text);

@@ -33,9 +33,17 @@ public class MyAuthenticator extends BootAuthenticator<Long> {
         String tenantName = "jExpress Org";
         long userId = 456;
         User user = new User(tenantId, tenantName, userId, usename);
-        user.addGroup("AdminGroup");
-        user.addGroup("EmployeeGroup");
-        user.addGroup("myGroup");
+        if (usename.startsWith("admin.")) {
+            user.addGroup("AdminGroup");
+        }
+        if (usename.startsWith("user.")) {
+            user.addGroup("UserGroup");
+        }
+        if (usename.startsWith("employee.")) {
+            user.addGroup("EmployeeGroup");
+        }
+        //user.addGroup("OtherGroup");
+        user.setDisplayName("Hello " + usename);
         return user;
     }
 
