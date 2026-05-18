@@ -13,88 +13,36 @@
 <body>
 <div class="root">
     <div>
-        <img class="logo" src="images/logo.png" alt="logo"/>
+        <img class="logo" src="images/banner.png" alt="banner"/>
     </div>
-    <table class="invoiceTalbe" border="1">
+    <h1>${greeting}</h1>
+
+    <div class="block">Invoice#INV-${txId}</div>
+    <table class="invoiceTalbe">
         <tr>
-            <td>
-                <div class="title">${greeting}</div>
-                <div>http://www.bucunzai.com/</div>
-                <div>http://www.meiyou.com/</div>
-                <div class="title">公司地址/Office Address：</div>
-                <div>
-                    北京市朝阳区东本环北路888号某办公楼 (地铁N号线、十号某站楼B口)
-                </div>
-            </td>
-            <td class="invoiceDiv" rowspan="2">
-                <div class="invoicetitle">商业收据/Invoice</div>
-                <div class="title">Inovice#</div>
-                INV-${txId}
-                <div class="title">Invoice Date:</div>
-                2020-03-15
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="title">委托人/Agent:</div>
-                <div>加拿大某某公司 (Canada)</div>
-                <div class="title">委托人地址/Agent Addr:</div>
-                <div>
-                    123 Town Centre Suite 456 Toronto ON A1B2C3 Canada
-                </div>
-                <div class="title">委托人联系方式/Agent Contact Info:</div>
-                <div>+1(123)456-7890</div>
-            </td>
-        </tr>
-    </table>
-    <div class="block">服务/Service</div>
-    <table class="invoiceTalbe" border="1">
-        <tr>
+            <th>No.</th>
             <th>日期/Date</th>
             <th>服务/Service</th>
             <th>费用/Amount</th>
         </tr>
-        <tr>
-            <td>2020-02-06</td>
-            <td>委托人客户查询单号03836-1 - 婚姻取证调查定金</td>
-            <td>人民币￥50000.00</td>
-        </tr>
-        <#list shoppingList as item>
-        <tr>
-            <td>Item#${item_index}</td>
-            <td>${item}</td>
-            <td>人民币￥0.00</td>
-        </tr>
-        </#list>
+        <#if itemList?? && itemList?size gt 0>
+            <#assign lastItem = itemList[itemList?size - 1]>
+            <#list itemList as item>
+            <tr>
+                <td>Item#${(item_index) + 1}</td>
+                <td>${item.date}</td>
+                <td>${item.desc}</td>
+                <td>${item.amount}</td>
+            </tr>
+            </#list>
+        <#else>
+            <!--列表为空，无法获取数据-->
+        </#if>
     </table>
     <div class="block amountDue">
-        应付金额/Amount Due: 人民币￥700000.00 或等额加币CAD $138051.96
-        (汇率5.071)
+        应付金额/Amount Due: ${totalAmount}
     </div>
-    <div class="block">
-        支付收据/Payment Receipt
-        <span class="memo"
-        >(如付款人与委托人不一致，所产生的银行转账凭证不能用于付款人的委托服务)</span
-        >
-    </div>
-    <table class="invoiceTalbe" border="1">
-        <tr>
-            <th>日期/Date</th>
-            <th>支付信息/Payment Info</th>
-            <th>已付费用/Paid Amount</th>
-        </tr>
-        <tr>
-            <td>2020-02-06</td>
-            <td>经委托人授权，由张三代委托人支付人民币银行转账</td>
-            <td>￥350000.00</td>
-        </tr>
-        <tr>
-            <td>2020-03-15</td>
-            <td>经委托人授权，由张三代委托人支付人民币银行转账</td>
-            <td>￥350000.00</td>
-        </tr>
-    </table>
-    <div class="block amountDue">欠款总额/Total Balance Owed: 0.00</div>
+
 </div>
 </body>
 </html>

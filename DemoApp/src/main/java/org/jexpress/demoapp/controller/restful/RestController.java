@@ -62,7 +62,7 @@ import java.io.IOException;
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @RequiresHealthCheck({Constant.HI_NAME2, Constant.HI_NAME3})
-@Daemon
+//@Daemon
 public class RestController extends BootController {
     @Inject
     private BusinessService businessService;

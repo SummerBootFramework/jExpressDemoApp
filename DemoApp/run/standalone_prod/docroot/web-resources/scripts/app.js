@@ -10,7 +10,11 @@ const CONFIG = {
     STORAGE_KEY_DISPLAY_NAME: 'displayName',
     STORAGE_KEY_TENANT_NAME: 'tenantName',
     LOGIN_ENDPOINT: '/j_security_check',
-    UPLOAD_ENDPOINT: '/upload'
+    UPLOAD_ENDPOINT: '/upload',
+    PING: 'ping',
+    ADMIN_VERSION: 'version',
+    ADMIN_HEALTHCHECK: 'inspection',
+    ADMIN_STATUS: 'status'
 };
 
 const SUBMENU_VIEWS = {
