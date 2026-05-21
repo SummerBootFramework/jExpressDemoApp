@@ -35,10 +35,10 @@
                     <li class="menu-item">
                         <a href="#" class="menu-link">Hello World</a>
                         <ul class="submenu">
-                            <li><a href="#" class="submenu-link" data-view-target="menu1">File Upload</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="menu2">File Download</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="menu3">RESTFul PDF Service</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="menu4">WebSocket </a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu1">RESTFul PDF Service</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu2">WebSocket </a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu3">File Upload</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu4">File Download</a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
@@ -113,8 +113,8 @@
         <div id="appViews" class="app-views hidden">
             <div id="homeView" class="content-view placeholder-view">
                 <div class="placeholder-card home">
-                    <h2>Home View</h2>
-                    <p>Welcome to jExpress Demo Application</p>
+                    <h2>Welcome to jExpress Demo Application</h2>
+                    <p>This demo will demonstrate the following functional and non-functional aspects provided.</p>
 
                     <div class="leftrigth_container">
                         <!-- 左侧列表 -->
@@ -122,12 +122,16 @@
                             <h3>Functional Features</h3>
                             <br/>
                             <ul>
-                                <li>File Transfer - Upload</li>
-                                <li>ile Transfer - Download</li>
-                                <li>RESTFul API</li>
+                                <li>RESTFul service - @Controller with lifecycle hooks (AppLifecycleHandler), include Idle event callback</li>
+                                <li>gRPC service - @GrpcController</li>
+                                <li>WebSocket - OTT (One Time Ticket) based authentication with multiple handlers</li>
                                 <li>Create PDF</li>
                                 <li>PDF to images</li>
-                                <li>WebSocket with multiple handlers</li>
+                                <li>File Transfer - Upload</li>
+                                <li>ile Transfer - Download</li>
+                                <li>LDAP integration via config file or customized auth @Service(binding = Authenticator.class)</li>
+                                <li>IOC - @Service and AlternativeName</li>
+                                <li>Scheduled Tasks — @Scheduled</li>
                             </ul>
                         </div>
 
@@ -138,95 +142,30 @@
                             <ul>
                                 <li>Performance: RESTful Web Services (JAX-RS) with Non-blocking I/O (powered by Netty Reactor)</li>
                                 <li>Bearer authentication (also called token authentication) - login/logout</li>
-                                <li>OTT (One Time Ticket) WebSocket authentication</li>
                                 <li>Role Based Authorization - @RolesAllowed, @PermitAll and @DenyAll</li>
                                 <li>Load Balancer health check - @Ping</li>
                                 <li>Graceful Shutdown and @Daemon</li>
                                 <li>Health Check - @HealthCheck and @RequiresHealthCheck</li>
-                                <li>Idle event callback</li>
                                 <li>Protected logging - @@Log</li>
                                 <li>Logging After Response Sent</li>
                                 <li>Log tracking - X-Reference in response header</li>
                                 <li>Performance tracking - POI (Point of Interest)</li>
-                                <li>RESTFul service - @Controller with lifecycle hooks (AppLifecycleHandler)</li>
-                                <li>gRPC service - @GrpcController</li>
-                                <li>WebSock service</li>
-                                <li>IOC - @Service and AlternativeName</li>
                                 <li>CLI — A/B/Mock Mode</li>
                                 <li>CLI — List and Check Duplicate Error Codes via @Unique</li>
-                                <li>Auto-Generated Configuration Files - @Config</li>
-                                <li>Auto-Protected Configuration</li>
-                                <li>Hot Configuration</li>
+                                <li>Auto-Generated configuration Files - @Config</li>
+                                <li>Auto-Protected configuration sensitive data</li>
+                                <li>Configuration Hot-Reload</li>
                                 <li>Auto-Alert (SMTP)</li>
-                                <li>Scheduled Tasks — @Scheduled</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- File Upload View (Sub 1) -->
-            <div id="demo1View" class="content-view">
-                <div class="upload-container">
-                    <div class="upload-header">
-                        <h1>Demo 1 - File Upload</h1>
-                    </div>
-
-                    <!-- Drop Zone -->
-                    <div id="dropZone" class="drop-zone">
-                        <div class="drop-zone-content">
-                            <p class="drop-zone-icon">📁</p>
-                            <p class="drop-zone-text">Drag and drop files here or click below to select</p>
-                        </div>
-                        <input type="file" id="fileInput" multiple style="display: none;">
-                    </div>
-
-                    <!-- Select File Button -->
-                    <div class="file-selector-actions">
-                        <button id="selectFileBtn" class="btn btn-primary">Select Files</button>
-                        <button id="uploadBtn" class="btn btn-success" disabled>Upload</button>
-                    </div>
-
-                    <!-- Selected Files Preview -->
-                    <div id="filePreview" class="file-preview">
-                        <div class="file-preview-title">Selected Files:</div>
-                        <div id="fileList" class="file-list"></div>
-                    </div>
-
-                    <!-- Upload Tasks -->
-                    <div id="uploadTasks" class="upload-tasks">
-                        <div class="upload-tasks-header">
-                            <div class="upload-tasks-title">Upload Progress:</div>
-                            <button id="clearTasksBtn" class="btn btn-secondary" style="display: none;">Clear All</button>
-                        </div>
-                        <div id="taskList" class="task-list"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="demo2View" class="content-view placeholder-view">
-                <div class="placeholder-card">
-                    <h2>Demo 2 - File Download</h2>
-                    <p><a href="sampleapp/service/v2/html/display" target="_blank">Display HTML content</a></p>
-                    <p><a href="sampleapp/service/v2/html/download">Download HTML content</a></p>
-                    <p><a href="sampleapp/service/v2/pdf/display" target="_blank">Display PDF content</a></p>
-                    <p><a href="sampleapp/service/v2/pdf/download">Download PDF content (File)</a></p>
-                    <p><a href="sampleapp/service/v2/pdf/download2">Download PDF content (Path) </a></p>
-                    <p><a href="sampleapp/service/v2/pdf/download3">Download PDF content (byte[])</a></p>
-                    <br/>
-
-                    <h2>File Download</h2>
-                    <p><a href="sampleapp/service/v2/download?file=pages/page2.html" target="_blank">Access file content (200 OK)</a></p>
-                    <p><a href="sampleapp/service/v2/redirect" target="_blank">redirect (307 temporary redirect) </a></p>
-                    <p><a href="sampleapp/service/v2/download?file=pages/page3.html" target="_blank">Access non-existing file (404 not found)</a></p>
-                    <p><a href="sampleapp/service/v2/download?file=../configuration/jwt_private.key" target="_blank">Access file outside docroot folder (403 forbidden)</a></p>
-                </div>
-            </div>
-
-            <div id="demo3View" class="split-parent-view content-view placeholder-view">
+            <div id="demo1View" class="split-parent-view content-view placeholder-view">
                 <div class="split-parent-card">
                     <div class="split-parent-header">
-                        <h2>Demo 3 - RESTFul</h2>
+                        <h2>Demo 1 - RESTFul</h2>
                         <p>Drag the middle slider to resize left and right child views.</p>
                     </div>
                     <div id="sub32SplitContainer" class="split-container">
@@ -333,11 +272,11 @@
                 </div>
             </div>
 
-            <div id="demo4View" class="content-view">
+            <div id="demo2View" class="content-view">
                 <div class="ws-container">
                     <!-- Connection header -->
                     <div class="ws-header">
-                        <h2>Demo 6 – WebSocket Chat Room</h2>
+                        <h2>Demo 2 – WebSocket Chat Room</h2>
                         <div class="ws-connection-bar">
                             <span id="wsStatus" class="ws-status ws-status-disconnected">Disconnected</span>
                             <button id="wsConnectBtn" class="btn btn-primary">Connect</button>
@@ -370,6 +309,64 @@
                         </div>
 
                     </div>
+                </div>
+            </div>
+
+            <!-- File Upload View (Sub 3) -->
+            <div id="demo3View" class="content-view">
+                <div class="upload-container">
+                    <div class="upload-header">
+                        <h1>Demo 3 - File Upload</h1>
+                    </div>
+
+                    <!-- Drop Zone -->
+                    <div id="dropZone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <p class="drop-zone-icon">📁</p>
+                            <p class="drop-zone-text">Drag and drop files here or click below to select</p>
+                        </div>
+                        <input type="file" id="fileInput" multiple style="display: none;">
+                    </div>
+
+                    <!-- Select File Button -->
+                    <div class="file-selector-actions">
+                        <button id="selectFileBtn" class="btn btn-primary">Select Files</button>
+                        <button id="uploadBtn" class="btn btn-success" disabled>Upload</button>
+                    </div>
+
+                    <!-- Selected Files Preview -->
+                    <div id="filePreview" class="file-preview">
+                        <div class="file-preview-title">Selected Files:</div>
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+
+                    <!-- Upload Tasks -->
+                    <div id="uploadTasks" class="upload-tasks">
+                        <div class="upload-tasks-header">
+                            <div class="upload-tasks-title">Upload Progress:</div>
+                            <button id="clearTasksBtn" class="btn btn-secondary" style="display: none;">Clear All</button>
+                        </div>
+                        <div id="taskList" class="task-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="demo4View" class="content-view placeholder-view">
+                <div class="placeholder-card">
+                    <h2>Demo 4 - File Download</h2>
+                    <p><a href="sampleapp/service/v2/html/display" target="_blank">Display HTML content</a></p>
+                    <p><a href="sampleapp/service/v2/html/download">Download HTML content</a></p>
+                    <p><a href="sampleapp/service/v2/pdf/display" target="_blank">Display PDF content</a></p>
+                    <p><a href="sampleapp/service/v2/pdf/download">Download PDF content (File)</a></p>
+                    <p><a href="sampleapp/service/v2/pdf/download2">Download PDF content (Path) </a></p>
+                    <p><a href="sampleapp/service/v2/pdf/download3">Download PDF content (byte[])</a></p>
+                    <br/>
+
+                    <h2>File Download</h2>
+                    <p><a href="sampleapp/service/v2/download?file=pages/page2.html" target="_blank">Access file content (200 OK)</a></p>
+                    <p><a href="sampleapp/service/v2/redirect" target="_blank">redirect (307 temporary redirect) </a></p>
+                    <p><a href="sampleapp/service/v2/download?file=pages/page3.html" target="_blank">Access non-existing file (404 not found)</a></p>
+                    <p><a href="sampleapp/service/v2/download?file=../configuration/jwt_private.key" target="_blank">Access file outside docroot folder (403 forbidden)</a></p>
                 </div>
             </div>
 
@@ -508,7 +505,7 @@
     <!-- Footer -->
     <footer id="footer" class="footer">
         <div class="footer-content">
-            <p>&copy; 2026 File Management System. All rights reserved.</p>
+            <p>&copy; 2026 jExpress Demo Application. All rights reserved.</p>
         </div>
     </footer>
 </div>

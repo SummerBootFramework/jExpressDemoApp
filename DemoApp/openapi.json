@@ -849,9 +849,6 @@
           "uid" : {
             "type" : "string"
           },
-          "jti" : {
-            "type" : "string"
-          },
           "groups" : {
             "uniqueItems" : true,
             "type" : "array",
@@ -859,8 +856,8 @@
               "type" : "string"
             }
           },
-          "tenantId" : {
-            "type" : "number"
+          "jti" : {
+            "type" : "string"
           },
           "tenantName" : {
             "type" : "string"
@@ -868,6 +865,9 @@
           "tokenTtlSec" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "tenantId" : {
+            "type" : "number"
           }
         }
       },
