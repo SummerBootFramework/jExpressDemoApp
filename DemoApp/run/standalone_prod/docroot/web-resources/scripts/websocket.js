@@ -1,0 +1,217 @@
+/**
+ * Demo 6 - WebSocket Chat Room
+ * Connects to ChatRoomWebSocketHandler at /mywebsocket/demo
+ * The JWT token is passed as the WebSocket subprotocol for auth.
+ */
+async function getOTT() {
+    try {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: headers
+        });
+
+        // Extract X-Reference header (if present)
+        const xReference = response.headers.get('X-Reference');
+        if (xReference) {
+            console.log('OTT X-Reference:', xReference);
+        }
+
+        if (!response.ok) {
+            console.warn('getOTT failed, status:', response.status);
+            return '';
+        }
+
+        const responseText = await response.text();
+        // Return the OTT (or empty string on no content)
+        return responseText || '';
+    } catch (error) {
+        console.error('getOTT Error:', error);
+        return '';
+    }
+}
+
+// ...existing code...
+
+(function () {
+    let wsSocket = null;
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    function getWsUrl(ott) {
+        const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        return proto + '//' + window.location.host + '/ws/chat2/' + (ott || '');
+    }
+
+    function getToken() {
+        return localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN) || '';
+    }
+
+    function el(id) {
+        return document.getElementById(id);
+    }
+
+    // ── UI State ─────────────────────────────────────────────────────────────
+
+    function setConnectedState(connected) {
+        const status = el('wsStatus');
+        const connectBtn = el('wsConnectBtn');
+        const disconnectBtn = el('wsDisconnectBtn');
+        const sendBtn = el('wsSendBtn');
+        const fileInput = el('wsFileInput');
+        const chatInput = el('wsChatInput');
+
+        if (status) {
+            status.textContent = connected ? 'Connected' : 'Disconnected';
+            status.className = 'ws-status ' + (connected ? 'ws-status-connected' : 'ws-status-disconnected');
+        }
+        if (connectBtn) connectBtn.disabled = connected;
+        if (disconnectBtn) disconnectBtn.disabled = !connected;
+        if (sendBtn) sendBtn.disabled = !connected;
+        if (fileInput) fileInput.disabled = !connected;
+        if (chatInput) chatInput.disabled = !connected;
+    }
+
+    function appendMessage(text, cssClass) {
+        const messages = el('wsChatMessages');
+        if (!messages) return;
+
+        const div = document.createElement('div');
+        div.className = 'ws-message ' + (cssClass || '');
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    // ── WebSocket Lifecycle ───────────────────────────────────────────────────
+
+    async function connect() {
+        if (wsSocket) return;
+
+        // Await the OTT so we pass the resolved string to getWsUrl
+        const ott = await getOTT();
+        console.log('Resolved OTT for WS:', ott);
+        const url = getWsUrl(ott);
+        console.log('WebSocket URL:', url);
+        const token = getToken();
+
+        try {
+            wsSocket = token ? new WebSocket(url, token) : new WebSocket(url);
+        } catch (e) {
+            appendMessage('Failed to create WebSocket: ' + e.message, 'ws-message-error');
+            return;
+        }
+
+        wsSocket.binaryType = 'arraybuffer';
+
+        wsSocket.onopen = function () {
+            setConnectedState(true);
+            appendMessage('Connected to chat room.', 'ws-message-system');
+        };
+
+        wsSocket.onclose = function (event) {
+            setConnectedState(false);
+            wsSocket = null;
+            appendMessage('Disconnected (code: ' + event.code + ').', 'ws-message-system');
+        };
+
+        wsSocket.onerror = function () {
+            appendMessage('WebSocket error occurred.', 'ws-message-error');
+        };
+
+        wsSocket.onmessage = function (event) {
+            if (typeof event.data === 'string') {
+                // Server may send multi-line history in one frame
+                const lines = event.data.split('\n');
+                lines.forEach(function (line) {
+                    if (line.trim()) {
+                        appendMessage(line, 'ws-message-incoming');
+                    }
+                });
+            } else {
+                appendMessage('[Binary data received (' + event.data.byteLength + ' bytes)]', 'ws-message-incoming');
+            }
+        };
+    }
+
+    function disconnect() {
+        if (wsSocket) {
+            wsSocket.close();
+            wsSocket = null;
+        }
+    }
+
+    // ── Sending ───────────────────────────────────────────────────────────────
+
+    function sendMessage() {
+        if (!wsSocket || wsSocket.readyState !== WebSocket.OPEN) return;
+        const input = el('wsChatInput');
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) return;
+        wsSocket.send(text);
+        input.value = '';
+        input.focus();
+    }
+
+    function sendFile(file) {
+        if (!wsSocket || wsSocket.readyState !== WebSocket.OPEN || !file) return;
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            wsSocket.send(reader.result);
+            appendMessage('File sent: ' + file.name + ' (' + file.size + ' bytes)', 'ws-message-system');
+        };
+        reader.onerror = function () {
+            appendMessage('Failed to read file: ' + file.name, 'ws-message-error');
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // ── Initialisation ────────────────────────────────────────────────────────
+
+    function initWs() {
+        const connectBtn = el('wsConnectBtn');
+        if (!connectBtn) return;  // View not present
+
+        connectBtn.addEventListener('click', connect);
+        el('wsDisconnectBtn').addEventListener('click', disconnect);
+        el('wsSendBtn').addEventListener('click', sendMessage);
+
+        const chatInput = el('wsChatInput');
+        if (chatInput) {
+            chatInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        const fileInput = el('wsFileInput');
+        if (fileInput) {
+            fileInput.addEventListener('change', function () {
+                const file = fileInput.files[0];
+                if (file) sendFile(file);
+                fileInput.value = '';
+            });
+        }
+
+        const clearBtn = el('wsClearBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                const messages = el('wsChatMessages');
+                if (messages) messages.innerHTML = '';
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initWs);
+})();

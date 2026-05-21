@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="web-resources/styles/feature2.css">
     <link rel="stylesheet" href="web-resources/styles/feature3.css">
     <link rel="stylesheet" href="web-resources/styles/feature4.css">
+    <link rel="stylesheet" href="web-resources/styles/websocket.css">
 </head>
 <body>
 <div id="appContainer">
@@ -37,19 +38,19 @@
                             <li><a href="#" class="submenu-link" data-view-target="menu1">File Upload</a></li>
                             <li><a href="#" class="submenu-link" data-view-target="menu2">File Download</a></li>
                             <li><a href="#" class="submenu-link" data-view-target="menu3">RESTFul PDF Service</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu4">WebSocket </a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
                         <a href="#" class="menu-link">Back Office</a>
                         <ul class="submenu">
-                            <li><a href="#" class="submenu-link" data-view-target="menu4">Ping and Admin only</a></li>
-                            <li><a href="#" class="submenu-link" data-view-target="menu5">Health Check</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu5">Ping and Admin only</a></li>
+                            <li><a href="#" class="submenu-link" data-view-target="menu6">Health Check</a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
                         <a href="#" class="menu-link">Integration</a>
                         <ul class="submenu">
-                            <li><a href="#" class="submenu-link" data-view-target="menu6">Demo 6</a></li>
                             <li><a href="#" class="submenu-link" data-view-target="menu7">Demo 7</a></li>
                         </ul>
                     </li>
@@ -113,14 +114,54 @@
             <div id="homeView" class="content-view placeholder-view">
                 <div class="placeholder-card home">
                     <h2>Home View</h2>
-                    <p>Welcome to the Home page.</p>
-                    <p>This is the home view of the application, you just logged in successfully from the service below:</p>
+                    <p>Welcome to jExpress Demo Application</p>
 
-                    <pre><code>curl -X 'POST' \
-    'https://localhost:8311/sampleapp/service/v1/j_security_check' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/x-www-form-urlencoded' \
-    -d 'j_username=&lt;your user name&gt;&amp;j_password=&lt;your password&gt;'</code></pre>
+                    <div class="leftrigth_container">
+                        <!-- 左侧列表 -->
+                        <div class="leftrigth_list-section">
+                            <h3>Functional Features</h3>
+                            <br/>
+                            <ul>
+                                <li>File Transfer - Upload</li>
+                                <li>ile Transfer - Download</li>
+                                <li>RESTFul API</li>
+                                <li>Create PDF</li>
+                                <li>PDF to images</li>
+                                <li>WebSocket with multiple handlers</li>
+                            </ul>
+                        </div>
+
+                        <!-- 右侧列表（带有左边框作为分割线） -->
+                        <div class="leftrigth_list-section leftrigth_right-section">
+                            <h3>Non-Functional Features</h3>
+                            <br/>
+                            <ul>
+                                <li>Performance: RESTful Web Services (JAX-RS) with Non-blocking I/O (powered by Netty Reactor)</li>
+                                <li>Bearer authentication (also called token authentication) - login/logout</li>
+                                <li>OTT (One Time Ticket) WebSocket authentication</li>
+                                <li>Role Based Authorization - @RolesAllowed, @PermitAll and @DenyAll</li>
+                                <li>Load Balancer health check - @Ping</li>
+                                <li>Graceful Shutdown and @Daemon</li>
+                                <li>Health Check - @HealthCheck and @RequiresHealthCheck</li>
+                                <li>Idle event callback</li>
+                                <li>Protected logging - @@Log</li>
+                                <li>Logging After Response Sent</li>
+                                <li>Log tracking - X-Reference in response header</li>
+                                <li>Performance tracking - POI (Point of Interest)</li>
+                                <li>RESTFul service - @Controller with lifecycle hooks (AppLifecycleHandler)</li>
+                                <li>gRPC service - @GrpcController</li>
+                                <li>WebSock service</li>
+                                <li>IOC - @Service and AlternativeName</li>
+                                <li>CLI — A/B/Mock Mode</li>
+                                <li>CLI — List and Check Duplicate Error Codes via @Unique</li>
+                                <li>Auto-Generated Configuration Files - @Config</li>
+                                <li>Auto-Protected Configuration</li>
+                                <li>Hot Configuration</li>
+                                <li>Auto-Alert (SMTP)</li>
+                                <li>Scheduled Tasks — @Scheduled</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -293,6 +334,46 @@
             </div>
 
             <div id="demo4View" class="content-view">
+                <div class="ws-container">
+                    <!-- Connection header -->
+                    <div class="ws-header">
+                        <h2>Demo 6 – WebSocket Chat Room</h2>
+                        <div class="ws-connection-bar">
+                            <span id="wsStatus" class="ws-status ws-status-disconnected">Disconnected</span>
+                            <button id="wsConnectBtn" class="btn btn-primary">Connect</button>
+                            <button id="wsDisconnectBtn" class="btn btn-secondary" disabled>Disconnect</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat body -->
+                    <div class="ws-body">
+
+                        <!-- Message log -->
+                        <div id="wsChatMessages" class="ws-chat-messages"></div>
+
+                        <!-- Input area -->
+                        <div class="ws-input-area">
+                        <textarea id="wsChatInput"
+                                  class="ws-chat-input"
+                                  rows="2"
+                                  placeholder="Type a message and press Enter (or click Send)…"
+                                  disabled></textarea>
+                            <div class="ws-actions">
+                                <button id="wsSendBtn" class="btn btn-primary" disabled>Send</button>
+                                <label id="wsFileLabel" class="ws-file-label btn btn-secondary">
+                                    📎 Send File
+                                    <input type="file" id="wsFileInput" class="ws-file-input" disabled>
+                                </label>
+                                <button id="wsClearBtn" class="btn btn-secondary">Clear</button>
+                            </div>
+                            <span class="ws-hint">Enter = send message &nbsp;|&nbsp; Shift+Enter = new line &nbsp;|&nbsp; The JWT token from login is used for authentication.</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="demo5View" class="content-view">
                 <div class="feature3-container">
                     <div class="feature3-section">
                         <h2>Ping and Admin Features</h2>
@@ -336,7 +417,7 @@
             </div>
 
 
-            <div id="demo5View" class="content-view">
+            <div id="demo6View" class="content-view">
                 <div class="feature4-container">
                     <div class="feature4-section">
                         <h2>@HealthCheck and @RequiresHealthCheck</h2>
@@ -360,75 +441,6 @@
                         <div id="feature4Response" class="feature4-response"></div>
                     </div>
                     <div id="feature4ReferenceContainer" class="xreference-container">Ready</div>
-                </div>
-            </div>
-
-            <div id="demo6View" class="content-view placeholder-view">
-                <div class="placeholder-card">
-                    <h2>Demo 6 View</h2>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
-                    <p>This is the content area for menu item Sub 6.</p>
                 </div>
             </div>
 
@@ -507,5 +519,6 @@
 <script src="web-resources/scripts/feature2.js"></script>
 <script src="web-resources/scripts/feature3.js"></script>
 <script src="web-resources/scripts/feature4.js"></script>
+<script src="web-resources/scripts/websocket.js"></script>
 </body>
 </html>

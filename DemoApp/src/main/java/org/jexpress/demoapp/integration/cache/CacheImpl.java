@@ -1,15 +1,32 @@
+/*
+ * Copyright 2005-2026 Du Law Office - jExpress, The Summer Boot Framework Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://apache.org
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.jexpress.demoapp.integration.cache;
 
 import com.google.inject.Singleton;
 import org.summerboot.jexpress.boot.annotation.HealthCheck;
 import org.summerboot.jexpress.boot.annotation.Service;
 import org.summerboot.jexpress.integration.cache.AuthTokenCache;
-import org.summerboot.jexpress.integration.cache.SimpleLocalCacheImpl;
+import org.summerboot.jexpress.integration.cache.AuthTokenCacheLocalImpl;
 
 @Singleton
 @Service(binding = AuthTokenCache.class, AlternativeName = "aaa")
 @HealthCheck(name = "cache")
-public class CacheImpl extends SimpleLocalCacheImpl<String, String> implements AuthTokenCache {
+public class CacheImpl extends AuthTokenCacheLocalImpl {
 
     @Override
     public void blacklist(String key, String value, long ttlMilliseconds) {
@@ -22,16 +39,5 @@ public class CacheImpl extends SimpleLocalCacheImpl<String, String> implements A
         return v != null;
     }
 
-//    @Override
-//    public List<Err> ping(Object... params) {
-//        var e = new Err(BootErrorCode.ACCESS_ERROR_CACHE, null, "Cache Access Error - ", null);
-//        List<Err> errors = new ArrayList<>();
-//        errors.add(e);
-//
-//        try {
-//            TimeUnit.SECONDS.sleep(15);
-//        } catch (InterruptedException ex) {
-//        }
-//        return errors;
-//    }
+
 }

@@ -11,6 +11,7 @@ const CONFIG = {
     STORAGE_KEY_TENANT_NAME: 'tenantName',
     STORAGE_KEY_GROUP_NAME: 'groupName',
     URI_LOGIN: '/j_security_check',
+    URI_WS_OTT: '/ott',
     URI_UPLOAD: '/upload',
     URI_PING: '/ping',
     URI_ADMIN_VERSION: '/version',
