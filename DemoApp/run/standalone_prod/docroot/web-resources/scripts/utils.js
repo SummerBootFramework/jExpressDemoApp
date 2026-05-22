@@ -204,3 +204,119 @@ function showErrorModal(options) {
     modal.classList.add('active');
 }
 
+/**
+ * Display PDF from base64 string inside a container element.
+ * Creates a Blob URL and embeds it in an <iframe>.
+ * Also provides a Download button.
+ * @param {string} pdfBase64 - Base64-encoded PDF content
+ * @param {string} pdfViewerContainerId - ID of the container element
+ */
+function displayBase64PDFById(pdfBase64, pdfViewerContainerId) {
+    const container = document.getElementById(pdfViewerContainerId);
+    displayBase64PDF(pdfBase64, container);
+}
+
+function displayBase64PDF(pdfBase64, container) {
+    //const container = document.getElementById(pdfViewerContainerId);
+    if (!container) {
+        console.warn('displayBase64PDF: container not found:', pdfViewerContainerId);
+        return;
+    }
+
+    // Revoke any previous blob URL to avoid memory leaks
+    const prevIframe = container.querySelector('iframe.pdf-viewer-frame');
+    if (prevIframe && prevIframe.src && prevIframe.src.startsWith('blob:')) {
+        URL.revokeObjectURL(prevIframe.src);
+    }
+
+    // Decode base64 → Uint8Array → Blob → object URL
+    const byteChars = atob(pdfBase64);
+    const byteNums = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+        byteNums[i] = byteChars.charCodeAt(i);
+    }
+    const blob = new Blob([byteNums], {type: 'application/pdf'});
+    const blobUrl = URL.createObjectURL(blob);
+
+    container.innerHTML = `
+        <div class="pdf-viewer-toolbar">
+            <span class="pdf-viewer-title">📄 PDF Preview</span>
+            <a href="${blobUrl}" download="document.pdf" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
+        </div>
+        <iframe
+            src="${blobUrl}"
+            class="pdf-viewer-frame"
+            title="PDF Preview"
+            type="application/pdf"
+        ></iframe>
+    `;
+    container.classList.add('active');
+}
+
+
+/**
+ * Display image from base64 string inside a container element.
+ * @param {number} index - Image index (for labelling)
+ * @param {string} imageBase64 - Base64-encoded image (assumed JPEG/PNG)
+ * @param {string} imageViewContainerId - ID of the container element
+ */
+function displayBase64ImageById(index, imageBase64, imageViewContainerId) {
+    const container = document.getElementById(imageViewContainerId);
+    displayBase64Image(index, imageBase64, container);
+}
+
+function displayBase64Image(index, imageBase64, container) {
+    //const container = document.getElementById(imageViewContainerId);
+    if (!container) {
+        console.warn('displayBase64Image: container not found:', imageViewContainerId);
+        return;
+    }
+    if (index === 0) {
+        // Clear on first image
+        container.innerHTML = '<div class="image-viewer-grid"></div>';
+        container.classList.add('active');
+    }
+    const grid = container.querySelector('.image-viewer-grid') || container;
+    const img = document.createElement('img');
+    img.src = `data:image/png;base64,${imageBase64}`;
+    img.alt = `Image ${index + 1}`;
+    img.className = 'image-viewer-img';
+    img.title = `Image ${index + 1}`;
+    grid.appendChild(img);
+}
+
+function displayBase64Video(base64Data, container) {
+    if (!container) {
+        console.warn('displayBase64Video: container not found');
+        return;
+    }
+    const video = document.createElement('video');
+    video.controls = true;
+    video.src = `data:video/mp4;base64,${base64Data}`;
+    video.className = 'video-viewer-video';
+    //container.innerHTML = '';
+    container.appendChild(video);
+}
+
+function displayBase64Audio(base64Data, container) {
+    if (!container) {
+        console.warn('displayBase64Video: container not found');
+        return;
+    }
+    const audio = document.createElement('audio');
+    audio.controls = true;
+    audio.src = `data:audio/mp4;base64,${base64Data}`;
+    audio.className = 'audio-viewer-audio';
+    container.appendChild(audio);
+}
+
+function attachForDownload(base64Data, container, fileName, mimeType) {
+    const blob = new Blob([new Uint8Array(atob(base64Data).split('').map(c => c.charCodeAt(0)))], {type: mimeType});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    container.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(url);
+}

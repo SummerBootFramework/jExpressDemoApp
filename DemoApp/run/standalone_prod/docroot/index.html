@@ -129,7 +129,9 @@
                                 <li>PDF to images</li>
                                 <li>File Transfer - Upload</li>
                                 <li>ile Transfer - Download</li>
-                                <li>LDAP integration via config file or customized auth @Service(binding = Authenticator.class)</li>
+                                <li>LDAP integration via config file or customized auth via @Service(binding = Authenticator.class) or for gRPC: @Service(binding = {Authenticator.class,
+                                    ServerInterceptor.class})
+                                </li>
                                 <li>IOC - @Service and AlternativeName</li>
                                 <li>Scheduled Tasks — @Scheduled</li>
                             </ul>
@@ -155,7 +157,7 @@
                                 <li>Auto-Generated configuration Files - @Config</li>
                                 <li>Auto-Protected configuration sensitive data</li>
                                 <li>Configuration Hot-Reload</li>
-                                <li>Auto-Alert (SMTP)</li>
+                                <li>Auto Email Alert when application start, stop, encounter errors, config file changed, health check and status changed</li>
                             </ul>
                         </div>
                     </div>

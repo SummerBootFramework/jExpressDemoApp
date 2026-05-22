@@ -20,16 +20,16 @@ package org.jexpress.demoapp.controller.websocket;
 import com.google.inject.Singleton;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeTypes;
 import org.summerboot.jexpress.boot.annotation.Service;
 import org.summerboot.jexpress.nio.server.websocket.BootWebSocketHandler;
 import org.summerboot.jexpress.security.auth.Caller;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 
 @ChannelHandler.Sharable
 @Singleton
@@ -68,16 +68,14 @@ public class ChatRoomWebSocketHandler2 extends BootWebSocketHandler {
         return msg;
     }
 
+    private static final Tika TIKA = new Tika();
+    private static final MimeTypes REGISTRY = MimeTypes.getDefaultMimeTypes();
+
     @Override
-    protected String onMessage(ChannelHandlerContext ctx, Caller caller, byte[] data) {
-        File outputFile = new File(ID + "aaa").getAbsoluteFile();
-        System.out.println(outputFile);
-        try {
-            Files.write(outputFile.toPath(), data);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        sendToAllChannels(data, false);
+    protected byte[] onMessage(ChannelHandlerContext ctx, Caller caller, byte[] data, String mimeType, String fileType, String fileExtension, StringBuilder sb) {
+        String msg = ID + getId(caller) + "sent a " + fileExtension + " file of length " + data.length;
+        String base64 = Base64.getEncoder().encodeToString(data);
+        sb.append(msg).append("\n").append("base64," + mimeType + "," + fileType + "," + fileExtension + ",").append(base64);
         return null;
     }
 

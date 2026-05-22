@@ -201,9 +201,16 @@ async function handleLogin(e) {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const loginError = document.getElementById('loginError');
+    const loginBtn = e.target.querySelector('button[type="submit"]');
 
     // Clear previous error
     loginError.textContent = '';
+
+    // Prevent double-submit
+    if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Logging in…';
+    }
 
     try {
         const response = await fetch(CONFIG.CONTEXT_ROOT + CONFIG.URI_LOGIN, {
@@ -246,6 +253,12 @@ async function handleLogin(e) {
     } catch (error) {
         console.error('Login error:', error);
         loginError.textContent = error.message || 'Login failed. Please try again.';
+    } finally {
+        // Re-enable the button so the user can try again
+        if (loginBtn) {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
     }
 }
 

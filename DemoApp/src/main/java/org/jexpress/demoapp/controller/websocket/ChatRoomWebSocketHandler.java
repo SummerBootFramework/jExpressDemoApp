@@ -67,12 +67,11 @@ public class ChatRoomWebSocketHandler extends BootWebSocketHandler {
         log.debug(() -> caller + " sent: " + txt);
         String msg = ID + getId(caller) + txt;
         history.append(msg).append("\n");
-        //sendToAllChannels(msg, true);
         return msg;
     }
 
     @Override
-    protected String onMessage(ChannelHandlerContext ctx, Caller caller, byte[] data) {
+    protected byte[] onMessage(ChannelHandlerContext ctx, Caller caller, byte[] data, String mimeType, String fileType, String fileExtension, StringBuilder sb) {
         File outputFile = new File(ID + "aaa").getAbsoluteFile();
         System.out.println(outputFile);
         try {
@@ -80,8 +79,7 @@ public class ChatRoomWebSocketHandler extends BootWebSocketHandler {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        sendToAllChannels(data, false);
-        return null;
+        return data;
     }
 
 }

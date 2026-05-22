@@ -326,13 +326,13 @@ function displayFeature2Response(responseData) {
 
     // PDF
     if (responseData.pdfBase64 !== undefined) {
-        displayBase64PDF(responseData.pdfBase64, 'pdfViewerContainer');
+        displayBase64PDFById(responseData.pdfBase64, 'pdfViewerContainer');
     }
 
     // Images
     if (responseData.imageBase64 !== undefined) {
         responseData.imageBase64.forEach((item, index) => {
-            displayBase64Image(index, item, 'imageViewContainer');
+            displayBase64ImageById(index, item, 'imageViewContainer');
         });
     }
 
@@ -361,76 +361,6 @@ function formatListItems(items) {
     return items
         .map(item => `<div class="list-item">${escapeHtml(String(item))}</div>`)
         .join('');
-}
-
-/**
- * Display PDF from base64 string inside a container element.
- * Creates a Blob URL and embeds it in an <iframe>.
- * Also provides a Download button.
- * @param {string} pdfBase64 - Base64-encoded PDF content
- * @param {string} pdfViewerContainerId - ID of the container element
- */
-function displayBase64PDF(pdfBase64, pdfViewerContainerId) {
-    const container = document.getElementById(pdfViewerContainerId);
-    if (!container) {
-        console.warn('displayBase64PDF: container not found:', pdfViewerContainerId);
-        return;
-    }
-
-    // Revoke any previous blob URL to avoid memory leaks
-    const prevIframe = container.querySelector('iframe.pdf-viewer-frame');
-    if (prevIframe && prevIframe.src && prevIframe.src.startsWith('blob:')) {
-        URL.revokeObjectURL(prevIframe.src);
-    }
-
-    // Decode base64 → Uint8Array → Blob → object URL
-    const byteChars = atob(pdfBase64);
-    const byteNums = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) {
-        byteNums[i] = byteChars.charCodeAt(i);
-    }
-    const blob = new Blob([byteNums], { type: 'application/pdf' });
-    const blobUrl = URL.createObjectURL(blob);
-
-    container.innerHTML = `
-        <div class="pdf-viewer-toolbar">
-            <span class="pdf-viewer-title">📄 PDF Preview</span>
-            <a href="${blobUrl}" download="document.pdf" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
-        </div>
-        <iframe
-            src="${blobUrl}"
-            class="pdf-viewer-frame"
-            title="PDF Preview"
-            type="application/pdf"
-        ></iframe>
-    `;
-    container.classList.add('active');
-}
-
-/**
- * Display image from base64 string inside a container element.
- * @param {number} index - Image index (for labelling)
- * @param {string} imageBase64 - Base64-encoded image (assumed JPEG/PNG)
- * @param {string} imageViewContainerId - ID of the container element
- */
-function displayBase64Image(index, imageBase64, imageViewContainerId) {
-    const container = document.getElementById(imageViewContainerId);
-    if (!container) {
-        console.warn('displayBase64Image: container not found:', imageViewContainerId);
-        return;
-    }
-    if (index === 0) {
-        // Clear on first image
-        container.innerHTML = '<div class="image-viewer-grid"></div>';
-        container.classList.add('active');
-    }
-    const grid = container.querySelector('.image-viewer-grid') || container;
-    const img = document.createElement('img');
-    img.src = `data:image/png;base64,${imageBase64}`;
-    img.alt = `Image ${index + 1}`;
-    img.className = 'image-viewer-img';
-    img.title = `Image ${index + 1}`;
-    grid.appendChild(img);
 }
 
 /**
@@ -465,9 +395,15 @@ function clearFeature2Form() {
         URL.revokeObjectURL(pdfFrame.src);
     }
     const pdfContainer = document.getElementById('pdfViewerContainer');
-    if (pdfContainer) { pdfContainer.innerHTML = ''; pdfContainer.classList.remove('active'); }
+    if (pdfContainer) {
+        pdfContainer.innerHTML = '';
+        pdfContainer.classList.remove('active');
+    }
     const imgContainer = document.getElementById('imageViewContainer');
-    if (imgContainer) { imgContainer.innerHTML = ''; imgContainer.classList.remove('active'); }
+    if (imgContainer) {
+        imgContainer.innerHTML = '';
+        imgContainer.classList.remove('active');
+    }
 }
 
 // Initialize when DOM is ready
