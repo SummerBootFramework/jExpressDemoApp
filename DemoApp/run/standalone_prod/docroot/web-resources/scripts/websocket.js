@@ -103,8 +103,12 @@ async function getOTT() {
                 case 'image':
                     displayBase64Image(0, base64Data, div);
                     break;
-                case 'pdf':
-                    displayBase64PDF(base64Data, div);
+                case 'application':
+                    switch (fileExt) {
+                        case 'pdf':
+                            displayBase64PDF(base64Data, div);
+                            break;
+                    }
                     break;
                 default:
                     attachForDownload(base64Data, div, 'download', mimeType);
