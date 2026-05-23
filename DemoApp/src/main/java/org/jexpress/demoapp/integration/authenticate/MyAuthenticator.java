@@ -64,4 +64,8 @@ public class MyAuthenticator extends BootAuthenticator<Long> {
         return user;
     }
 
+    @Override
+    protected String oneTimeTicketAuthorize(String wsURI, Caller caller, SessionContext context) {
+        return null;
+    }
 }

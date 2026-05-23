@@ -124,7 +124,7 @@
                             <ul>
                                 <li>RESTFul service - @Controller with lifecycle hooks (AppLifecycleHandler), include Idle event callback</li>
                                 <li>gRPC service - @GrpcController</li>
-                                <li>WebSocket - OTT (One Time Ticket) based authentication with multiple handlers</li>
+                                <li>WebSocket - OTT (One Time Ticket) based authentication with chat room aand large file upload handlers</li>
                                 <li>Create PDF</li>
                                 <li>PDF to images</li>
                                 <li>File Transfer - Upload</li>
@@ -310,6 +310,18 @@
                             <span class="ws-hint">Enter = send message &nbsp;|&nbsp; Shift+Enter = new line &nbsp;|&nbsp; The JWT token from login is used for authentication.</span>
                         </div>
 
+                    </div>
+                    <!-- 进度条容器 -->
+                    <div style="width: 100%; max-width: 500px; background-color: #f3f3f3; border-radius: 8px; overflow: hidden; margin-bottom: 10px;">
+                        <!-- 实际的彩色进度滑块 -->
+                        <div id="progressBar"
+                             style="width: 0%; height: 24px; background-color: #4caf50; transition: width 0.1s ease; text-align: center; color: white; line-height: 24px; font-size: 14px;">
+                            0%
+                        </div>
+                    </div>
+                    <!-- 状态提示文字 -->
+                    <div id="statusText" style="font-family: Arial, sans-serif; font-size: 14px; color: #555;">
+                        等待上传...
                     </div>
                 </div>
             </div>
@@ -519,5 +531,6 @@
 <script src="web-resources/scripts/feature3.js"></script>
 <script src="web-resources/scripts/feature4.js"></script>
 <script src="web-resources/scripts/websocket.js"></script>
+<script src="web-resources/scripts/websocket_hugefileupload.js"></script>
 </body>
 </html>

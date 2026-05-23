@@ -1,63 +1,8 @@
-/**
- * Demo 6 - WebSocket Chat Room
- * Connects to ChatRoomWebSocketHandler at /mywebsocket/demo
- * The JWT token is passed as the WebSocket subprotocol for auth.
- */
-async function getOTT() {
-    try {
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-        const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT;
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: headers
-        });
-
-        // Extract X-Reference header (if present)
-        const xReference = response.headers.get('X-Reference');
-        if (xReference) {
-            console.log('OTT X-Reference:', xReference);
-        }
-
-        if (!response.ok) {
-            console.warn('getOTT failed, status:', response.status);
-            return '';
-        }
-
-        const responseText = await response.text();
-        // Return the OTT (or empty string on no content)
-        return responseText || '';
-    } catch (error) {
-        console.error('getOTT Error:', error);
-        return '';
-    }
-}
-
-// ...existing code...
-
 (function () {
     let wsSocket = null;
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
-    function getWsUrl(ott) {
-        const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        return proto + '//' + window.location.host + '/ws/chat2/' + (ott || '');
-    }
-
-    function getToken() {
-        return localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN) || '';
-    }
-
-    function el(id) {
-        return document.getElementById(id);
-    }
 
     // ── UI State ─────────────────────────────────────────────────────────────
 
@@ -155,9 +100,10 @@ async function getOTT() {
         if (wsSocket) return;
 
         // Await the OTT so we pass the resolved string to getWsUrl
-        const ott = await getOTT();
+        const wsURI = CONFIG.WS_URL_CHATROOM1;
+        const ott = getOTT(wsURI);
         console.log('Resolved OTT for WS:', ott);
-        const url = getWsUrl(ott);
+        const url = getWsUrl(wsURI, ott);
         console.log('WebSocket URL:', url);
         const token = getToken();
 
@@ -243,6 +189,16 @@ async function getOTT() {
     }
 
     function sendFile(file) {
+        //sendHugeFile(file);
+        const fileSize = file.size;
+        if (fileSize > 5242880) {
+            sendHugeFile(file);
+        } else {
+            sendSmallFile(file);
+        }
+    }
+
+    function sendSmallFile(file) {
         if (!wsSocket || wsSocket.readyState !== WebSocket.OPEN || !file) return;
         const reader = new FileReader();
         reader.onloadend = function () {
@@ -253,6 +209,12 @@ async function getOTT() {
             appendMessage('Failed to read file: ' + file.name, 'ws-message-error');
         };
         reader.readAsArrayBuffer(file);
+    }
+
+    function sendHugeFile(file) {
+        const wsURI = CONFIG.WS_URL_LARGEFILEUPLOAD;
+        const uploader = new HugeFileUploader(wsURI, file);
+        uploader.checkBeforeUpload();
     }
 
     // ── Initialisation ────────────────────────────────────────────────────────
@@ -279,7 +241,9 @@ async function getOTT() {
         if (fileInput) {
             fileInput.addEventListener('change', function () {
                 const file = fileInput.files[0];
-                if (file) sendFile(file);
+                if (file) {
+                    sendFile(file);
+                }
                 fileInput.value = '';
             });
         }

@@ -23,27 +23,23 @@ import io.netty.channel.ChannelHandlerContext;
 import org.summerboot.jexpress.boot.annotation.Service;
 import org.summerboot.jexpress.nio.server.websocket.BootWebSocketHandler;
 import org.summerboot.jexpress.security.auth.Caller;
+import org.summerboot.jexpress.util.FileUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 
-/**
- * client - /run/websocket_client.html
- */
 @ChannelHandler.Sharable
 @Singleton
-@Service(binding = ChannelHandler.class, named = "/ws/chat", type = Service.ChannelHandlerType.Websocket)
+@Service(binding = ChannelHandler.class, named = "/ws/chatroom", type = Service.ChannelHandlerType.Websocket)
 public class ChatRoomWebSocketHandler extends BootWebSocketHandler {
 
     private final StringBuilder history = new StringBuilder();
 
     private static final DateTimeFormatter DTF = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-    private static final String ID = "[ws1] ";
+    private static final String ID = "[Room1] ";
 
     private static String getId(Caller caller) {
         return OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DTF) + " [" + caller.getUid() + "]: ";
@@ -67,19 +63,17 @@ public class ChatRoomWebSocketHandler extends BootWebSocketHandler {
         log.debug(() -> caller + " sent: " + txt);
         String msg = ID + getId(caller) + txt;
         history.append(msg).append("\n");
+        //sendToAllChannels(msg, true);
         return msg;
     }
 
     @Override
     protected byte[] onMessage(ChannelHandlerContext ctx, Caller caller, byte[] data, String mimeType, String fileType, String fileExtension, StringBuilder sb) {
-        File outputFile = new File(ID + "aaa").getAbsoluteFile();
-        System.out.println(outputFile);
-        try {
-            Files.write(outputFile.toPath(), data);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return data;
+        String msg = ID + getId(caller) + "sent a " + fileExtension + " file (" + FileUtil.formatFileSize(data.length) + ")";
+        String base64 = Base64.getEncoder().encodeToString(data);
+        sb.append(msg).append("\n").append("base64," + mimeType + "," + fileType + "," + fileExtension + ",").append(base64);
+        history.append(sb).append("\n");
+        return null;
     }
 
 }

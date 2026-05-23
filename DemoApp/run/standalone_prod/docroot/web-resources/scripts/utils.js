@@ -204,6 +204,96 @@ function showErrorModal(options) {
     modal.classList.add('active');
 }
 
+function getOTT(wsURI) {
+    try {
+        const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT + '?wsURI=' + encodeURIComponent(wsURI || '');
+
+        // Synchronous XMLHttpRequest (blocks execution until response)
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false); // false = synchronous
+
+        // Set headers
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        if (token) {
+            xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        }
+
+        xhr.send(null);
+
+        // Extract X-Reference header (if present)
+        const xReference = xhr.getResponseHeader('X-Reference');
+        if (xReference) {
+            console.log('OTT X-Reference:', xReference);
+        }
+
+        if (xhr.status >= 400) {
+            console.warn('getOTT failed, status:', xhr.status);
+            return '';
+        }
+
+        const responseText = xhr.responseText;
+        return responseText || '';
+    } catch (error) {
+        console.error('getOTT Error:', error);
+        return '';
+    }
+}
+
+/**
+ * Demo 6 - WebSocket Chat Room
+ * Connects to ChatRoomWebSocketHandler at /mywebsocket/demo
+ * The JWT token is passed as the WebSocket subprotocol for auth.
+ */
+async function getOTTAsync(wsURI) {
+    try {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT + '?wsURI=' + encodeURIComponent(wsURI || '');
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: headers
+        });
+
+        // Extract X-Reference header (if present)
+        const xReference = response.headers.get('X-Reference');
+        if (xReference) {
+            console.log('OTT X-Reference:', xReference);
+        }
+
+        if (!response.ok) {
+            console.warn('getOTT failed, status:', response.status);
+            return '';
+        }
+
+        const responseText = await response.text();
+        // Return the OTT (or empty string on no content)
+        return responseText || '';
+    } catch (error) {
+        console.error('getOTT Error:', error);
+        return '';
+    }
+}
+
+function getWsUrl(wsURI, ott) {
+    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return proto + '//' + window.location.host + wsURI + '/' + (ott || '');
+}
+
+function getToken() {
+    return localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN) || '';
+}
+
+function el(id) {
+    return document.getElementById(id);
+}
+
 /**
  * Display PDF from base64 string inside a container element.
  * Creates a Blob URL and embeds it in an <iframe>.

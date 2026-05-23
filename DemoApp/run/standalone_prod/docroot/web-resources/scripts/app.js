@@ -17,7 +17,9 @@ const CONFIG = {
     URI_ADMIN_VERSION: '/version',
     URI_ADMIN_CHECKHEALTH: '/checkhealth',
     URI_ADMIN_GRACEFULSHUTDOWN: '/gracefulshutdown',
-    URI_MOCK_HEALTSTATUS: '/mock/health/'
+    URI_MOCK_HEALTSTATUS: '/mock/health/',
+    WS_URL_CHATROOM1: '/ws/chatroom',
+    WS_URL_LARGEFILEUPLOAD: '/ws/largefileupload'
 };
 
 const SUBMENU_VIEWS = {
