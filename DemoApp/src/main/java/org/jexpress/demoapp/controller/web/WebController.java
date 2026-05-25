@@ -41,6 +41,7 @@ public class WebController extends WebResourceController {
     private static final String File_HTML2 = "pages" + File.separator + "page2.html";
     private static final String File_PDF = "pages" + File.separator + "invoice.pdf";
 
+
     @GET
     @Path("/web")
     @Daemon
@@ -114,4 +115,8 @@ public class WebController extends WebResourceController {
         return new File(filename);
     }
 
+    @Override
+    protected String getFaviconPath() {
+        return "web-resources/images/favicon.ico";
+    }
 }

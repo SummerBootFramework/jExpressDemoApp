@@ -279,6 +279,11 @@
                     <!-- Connection header -->
                     <div class="ws-header">
                         <h2>Demo 2 – WebSocket Chat Room</h2>
+                        <div>
+                            <p>If using the Chrome browser in a development environment, inject the certificate into the Windows system with administrator privileges: certutil -addstore -f "Root"
+                                my.cer</p>
+                            <p>Restart Chrome: Type chrome://restart in the Chrome address bar and press Enter. It will automatically close and reopen all tabs.</p>
+                        </div>
                         <div class="ws-connection-bar">
                             <span id="wsStatus" class="ws-status ws-status-disconnected">Disconnected</span>
                             <button id="wsConnectBtn" class="btn btn-primary">Connect</button>
@@ -314,13 +319,13 @@
                     <!-- 进度条容器 -->
                     <div style="width: 100%; max-width: 500px; background-color: #f3f3f3; border-radius: 8px; overflow: hidden; margin-bottom: 10px;">
                         <!-- 实际的彩色进度滑块 -->
-                        <div id="progressBar"
+                        <div id="wsFileUploadProgressBar"
                              style="width: 0%; height: 24px; background-color: #4caf50; transition: width 0.1s ease; text-align: center; color: white; line-height: 24px; font-size: 14px;">
                             0%
                         </div>
                     </div>
                     <!-- 状态提示文字 -->
-                    <div id="statusText" style="font-family: Arial, sans-serif; font-size: 14px; color: #555;">
+                    <div id="wsFileUploadStatusText" style="font-family: Arial, sans-serif; font-size: 14px; color: #555;">
                         等待上传...
                     </div>
                 </div>
@@ -531,6 +536,5 @@
 <script src="web-resources/scripts/feature3.js"></script>
 <script src="web-resources/scripts/feature4.js"></script>
 <script src="web-resources/scripts/websocket.js"></script>
-<script src="web-resources/scripts/websocket_hugefileupload.js"></script>
 </body>
 </html>

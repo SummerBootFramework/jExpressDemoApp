@@ -7,6 +7,7 @@
 const CONFIG = {
     CONTEXT_ROOT: '/sampleapp/service/v1',
     STORAGE_KEY_TOKEN: 'authtoken',
+    STORAGE_KEY_UID: 'uid',
     STORAGE_KEY_DISPLAY_NAME: 'displayName',
     STORAGE_KEY_TENANT_NAME: 'tenantName',
     STORAGE_KEY_GROUP_NAME: 'groupName',
@@ -18,8 +19,8 @@ const CONFIG = {
     URI_ADMIN_CHECKHEALTH: '/checkhealth',
     URI_ADMIN_GRACEFULSHUTDOWN: '/gracefulshutdown',
     URI_MOCK_HEALTSTATUS: '/mock/health/',
-    WS_URL_CHATROOM1: '/ws/chatroom',
-    WS_URL_LARGEFILEUPLOAD: '/ws/largefileupload'
+    WS_URL_CHATROOM1: '/ws/chatroom1',
+    WS_URL_CHATROOM2: '/ws/chatroom2'
 };
 
 const SUBMENU_VIEWS = {
@@ -36,6 +37,7 @@ const SUBMENU_VIEWS = {
 // State
 let appState = {
     token: null,
+    uid: '',
     displayName: '',
     tenantName: '',
     groupName: '',
@@ -52,10 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeApp() {
     // Check for existing token
     const savedToken = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
+    const savedUid = localStorage.getItem(CONFIG.STORAGE_KEY_UID) || '';
+    ``
     const savedDisplayName = localStorage.getItem(CONFIG.STORAGE_KEY_DISPLAY_NAME) || '';
     const savedTenantName = localStorage.getItem(CONFIG.STORAGE_KEY_TENANT_NAME) || '';
     const savedGroupName = localStorage.getItem(CONFIG.STORAGE_KEY_GROUP_NAME) || '';
 
+    appState.uid = savedUid;
     appState.displayName = savedDisplayName;
     appState.tenantName = savedTenantName;
     appState.groupName = savedGroupName;
@@ -236,10 +241,12 @@ async function handleLogin(e) {
 
         // Save token
         appState.token = token;
+        appState.uid = responseData.uid || '';
         appState.displayName = responseData.displayName || username;
         appState.tenantName = responseData.tenantName || '';
         appState.groupName = responseData.groups || '';
         localStorage.setItem(CONFIG.STORAGE_KEY_TOKEN, token);
+        localStorage.setItem(CONFIG.STORAGE_KEY_UID, appState.uid);
         localStorage.setItem(CONFIG.STORAGE_KEY_DISPLAY_NAME, appState.displayName);
         localStorage.setItem(CONFIG.STORAGE_KEY_TENANT_NAME, appState.tenantName);
         localStorage.setItem(CONFIG.STORAGE_KEY_GROUP_NAME, appState.groupName);
@@ -281,10 +288,12 @@ function handleLogout() {
 
     // Clear token
     appState.token = null;
+    appState.uid = '';
     appState.displayName = '';
     appState.tenantName = '';
     appState.groupName = '';
     localStorage.removeItem(CONFIG.STORAGE_KEY_TOKEN);
+    localStorage.removeItem(CONFIG.STORAGE_KEY_UID);
     localStorage.removeItem(CONFIG.STORAGE_KEY_DISPLAY_NAME);
     localStorage.removeItem(CONFIG.STORAGE_KEY_TENANT_NAME);
     localStorage.removeItem(CONFIG.STORAGE_KEY_GROUP_NAME);
@@ -483,3 +492,10 @@ function initSub32SplitResize() {
         document.body.classList.remove('split-resizing');
     });
 }
+
+function initWs() {
+    const wsClient = new WebSocketClient(CONFIG.WS_URL_CHATROOM1);
+    wsClient.apiInitGUI('wsStatus', 'wsConnectBtn', 'wsDisconnectBtn', 'wsSendBtn', 'wsFileInput', 'wsChatInput', 'wsChatMessages', 'wsClearBtn', 'wsFileUploadProgressBar', 'wsFileUploadStatusText');
+}
+
+document.addEventListener('DOMContentLoaded', initWs);

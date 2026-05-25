@@ -2,6 +2,7 @@
  * Shared utility functions
  */
 
+
 /**
  * Toggle password visibility for any password input field.
  * @param {string} inputId - ID of the password input element
@@ -303,10 +304,10 @@ function el(id) {
  */
 function displayBase64PDFById(pdfBase64, pdfViewerContainerId) {
     const container = document.getElementById(pdfViewerContainerId);
-    displayBase64PDF(pdfBase64, container);
+    displayBase64PDF(pdfBase64, container, 'download.pdf');
 }
 
-function displayBase64PDF(pdfBase64, container) {
+function displayBase64PDF(pdfBase64, container, fileName) {
     //const container = document.getElementById(pdfViewerContainerId);
     if (!container) {
         console.warn('displayBase64PDF: container not found:', pdfViewerContainerId);
@@ -331,7 +332,7 @@ function displayBase64PDF(pdfBase64, container) {
     container.innerHTML = `
         <div class="pdf-viewer-toolbar">
             <span class="pdf-viewer-title">📄 PDF Preview</span>
-            <a href="${blobUrl}" download="document.pdf" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
+            <a href="${blobUrl}" download="${fileName}" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
         </div>
         <iframe
             src="${blobUrl}"
@@ -352,10 +353,10 @@ function displayBase64PDF(pdfBase64, container) {
  */
 function displayBase64ImageById(index, imageBase64, imageViewContainerId) {
     const container = document.getElementById(imageViewContainerId);
-    displayBase64Image(index, imageBase64, container);
+    displayBase64Image(index, imageBase64, container, 'download');
 }
 
-function displayBase64Image(index, imageBase64, container) {
+function displayBase64Image(index, imageBase64, container, fileName) {
     //const container = document.getElementById(imageViewContainerId);
     if (!container) {
         console.warn('displayBase64Image: container not found:', imageViewContainerId);
@@ -369,13 +370,13 @@ function displayBase64Image(index, imageBase64, container) {
     const grid = container.querySelector('.image-viewer-grid') || container;
     const img = document.createElement('img');
     img.src = `data:image/png;base64,${imageBase64}`;
-    img.alt = `Image ${index + 1}`;
+    img.alt = `Image ${fileName}`;
     img.className = 'image-viewer-img';
-    img.title = `Image ${index + 1}`;
+    img.title = fileName;
     grid.appendChild(img);
 }
 
-function displayBase64Video(base64Data, container) {
+function displayBase64Video(base64Data, container, fileName) {
     if (!container) {
         console.warn('displayBase64Video: container not found');
         return;
@@ -384,11 +385,12 @@ function displayBase64Video(base64Data, container) {
     video.controls = true;
     video.src = `data:video/mp4;base64,${base64Data}`;
     video.className = 'video-viewer-video';
+    video.title = fileName;
     //container.innerHTML = '';
     container.appendChild(video);
 }
 
-function displayBase64Audio(base64Data, container) {
+function displayBase64Audio(base64Data, container, fileName) {
     if (!container) {
         console.warn('displayBase64Video: container not found');
         return;
@@ -397,16 +399,96 @@ function displayBase64Audio(base64Data, container) {
     audio.controls = true;
     audio.src = `data:audio/mp4;base64,${base64Data}`;
     audio.className = 'audio-viewer-audio';
+    audio.title = fileName;
     container.appendChild(audio);
 }
 
-function attachForDownload(base64Data, container, fileName, mimeType) {
+function attachForDownload(base64Data, container, fileName, mimeType, fileExt) {
     const blob = new Blob([new Uint8Array(atob(base64Data).split('').map(c => c.charCodeAt(0)))], {type: mimeType});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
+    fileName = fileName || 'download' + '.' + fileExt;
     link.download = fileName;
+    link.textContent = fileName;
     container.appendChild(link);
-    link.click();
-    URL.revokeObjectURL(url);
+    //link.click();
+    //URL.revokeObjectURL(url);
+}
+
+function buildVideoDiv(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+    const video = document.createElement('video');
+    video.src = objectURL;
+    video.controls = true;
+    video.style.maxWidth = maxWidth || '300px';
+    ;
+    video.className = 'video-viewer-video';
+    video.alt = `Video ${fileName}`;
+    video.title = fileName;
+    div.appendChild(video);
+    return div;
+}
+
+function buildAudioDiv(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+    const audio = document.createElement('audio');
+    audio.src = objectURL;
+    audio.controls = true;
+    audio.preload = 'metadata';
+    audio.style.maxWidth = maxWidth || '300px';
+    audio.className = 'audio-viewer-audio';
+    audio.alt = `Audio ${fileName}`;
+    audio.title = fileName;
+    div.appendChild(audio);
+    return div;
+}
+
+function buildImageDiv(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+    const img = document.createElement('img');
+    img.src = objectURL;
+    img.style.maxWidth = maxWidth || '300px';
+    img.className = 'image-viewer-img';
+    img.alt = `Image ${fileName}`;
+    img.title = fileName;
+    div.appendChild(img);
+    return div;
+}
+
+function buildPdfDiv(rawBlob, fileName, maxWidth, cssClass) {
+    const pdfBlob = new Blob([rawBlob], {type: 'application/pdf'});
+    const objectURL = URL.createObjectURL(pdfBlob);
+
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+    div.innerHTML = `
+        <div class="pdf-viewer-toolbar">
+            <span class="pdf-viewer-title">📄 PDF Preview</span>
+            <a href="${objectURL}" download="${fileName}" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
+        </div>
+        <iframe
+            src="${objectURL}"
+            class="pdf-viewer-frame"
+            title="PDF Preview"
+            type="application/pdf"
+        ></iframe>
+    `;
+    div.classList.add('active');
+    return div;
+}
+
+
+function buildDownloadDiv(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+    const link = document.createElement('a');
+    link.href = objectURL;
+    link.download = fileName; // 如果后端在流里没带文件名，可自定义
+    link.textContent = fileName + " (click to download)";
+    div.appendChild(link);
+    return div;
 }

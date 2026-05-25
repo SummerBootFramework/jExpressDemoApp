@@ -30,12 +30,14 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * client - /run/websocket_client.html
+ */
 @ChannelHandler.Sharable
 @Singleton
-@Service(binding = ChannelHandler.class, named = "/ws/chatroom1", type = Service.ChannelHandlerType.Websocket)
-public class ChatRoomWebSocketHandler extends WebSocketHandler {
-
-    private static final String ID = "[chat] ";
+@Service(binding = ChannelHandler.class, named = "/ws/chatroom2", type = Service.ChannelHandlerType.Websocket)
+public class ChatRoomWebSocketHandler_v2 extends WebSocketHandler {
+    private static final String ID = "[v2] ";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private static String getId(Caller caller) {
@@ -58,5 +60,4 @@ public class ChatRoomWebSocketHandler extends WebSocketHandler {
         message.append(msg);
         return true;
     }
-
 }
