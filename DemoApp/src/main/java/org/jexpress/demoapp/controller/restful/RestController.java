@@ -50,9 +50,9 @@ import org.summerboot.jexpress.boot.annotation.Controller;
 import org.summerboot.jexpress.boot.annotation.Daemon;
 import org.summerboot.jexpress.boot.annotation.Log;
 import org.summerboot.jexpress.boot.annotation.RequiresHealthCheck;
-import org.summerboot.jexpress.nio.server.SessionContext;
-import org.summerboot.jexpress.nio.server.domain.ServiceError;
-import org.summerboot.jexpress.nio.server.ws.rs.BootController;
+import org.summerboot.jexpress.controller.ServiceError;
+import org.summerboot.jexpress.controller.SessionContext;
+import org.summerboot.jexpress.controller.restful.BootController;
 
 import java.io.IOException;
 

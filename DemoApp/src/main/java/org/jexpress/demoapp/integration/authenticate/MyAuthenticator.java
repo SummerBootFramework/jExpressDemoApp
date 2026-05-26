@@ -20,12 +20,12 @@ package org.jexpress.demoapp.integration.authenticate;
 import com.google.inject.Singleton;
 import io.grpc.ServerInterceptor;
 import org.summerboot.jexpress.boot.annotation.Service;
-import org.summerboot.jexpress.nio.server.SessionContext;
-import org.summerboot.jexpress.security.auth.Authenticator;
-import org.summerboot.jexpress.security.auth.AuthenticatorListener;
-import org.summerboot.jexpress.security.auth.BootAuthenticator;
-import org.summerboot.jexpress.security.auth.Caller;
-import org.summerboot.jexpress.security.auth.User;
+import org.summerboot.jexpress.controller.SessionContext;
+import org.summerboot.jexpress.controller.authenticate.Authenticator;
+import org.summerboot.jexpress.controller.authenticate.AuthenticatorListener;
+import org.summerboot.jexpress.controller.authenticate.BootAuthenticator;
+import org.summerboot.jexpress.controller.authenticate.Caller;
+import org.summerboot.jexpress.controller.authenticate.User;
 
 import javax.naming.NamingException;
 

@@ -27,11 +27,11 @@ import org.quartz.JobExecutionException;
 import org.summerboot.jexpress.boot.SummerApplication;
 import org.summerboot.jexpress.boot.annotation.Scheduled;
 import org.summerboot.jexpress.boot.annotation.Service;
-import org.summerboot.jexpress.boot.event.AppLifecycleHandler;
-import org.summerboot.jexpress.boot.event.AppLifecycleListener;
-import org.summerboot.jexpress.nio.IdleEventMonitor;
-import org.summerboot.jexpress.nio.grpc.GRPCServer;
-import org.summerboot.jexpress.nio.server.NioServer;
+import org.summerboot.jexpress.boot.lifecycle.AppLifecycleHandler;
+import org.summerboot.jexpress.boot.lifecycle.AppLifecycleListener;
+import org.summerboot.jexpress.boot.lifecycle.IdleEventMonitor;
+import org.summerboot.jexpress.controller.grpc.GRPCServer;
+import org.summerboot.jexpress.webserver.netty.NioServer;
 
 import java.util.concurrent.TimeUnit;
 

@@ -28,10 +28,10 @@ import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
 import org.summerboot.jexpress.boot.BootErrorCode;
 import org.summerboot.jexpress.boot.annotation.GrpcController;
 import org.summerboot.jexpress.boot.annotation.Ping;
-import org.summerboot.jexpress.nio.grpc.GRPCServer;
-import org.summerboot.jexpress.nio.server.SessionContext;
-import org.summerboot.jexpress.nio.server.domain.Err;
-import org.summerboot.jexpress.nio.server.domain.ProcessorSettings;
+import org.summerboot.jexpress.controller.Err;
+import org.summerboot.jexpress.controller.SessionContext;
+import org.summerboot.jexpress.controller.grpc.GRPCServer;
+import org.summerboot.jexpress.webserver.domain.ProcessorSettings;
 
 @GrpcController
 public abstract class Hello1Service extends Hello1ServiceGrpc.Hello1ServiceImplBase {

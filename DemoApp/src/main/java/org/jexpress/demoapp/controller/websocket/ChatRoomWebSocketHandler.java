@@ -21,8 +21,9 @@ import com.google.inject.Singleton;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.summerboot.jexpress.boot.annotation.Service;
-import org.summerboot.jexpress.nio.server.websocket.WebSocketHandler;
-import org.summerboot.jexpress.security.auth.Caller;
+
+import org.summerboot.jexpress.controller.authenticate.Caller;
+import org.summerboot.jexpress.controller.websocket.WebSocketHandler;
 import org.summerboot.jexpress.util.FileUtil;
 
 import java.io.File;

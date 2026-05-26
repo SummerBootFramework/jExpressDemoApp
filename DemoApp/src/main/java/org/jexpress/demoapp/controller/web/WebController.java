@@ -25,9 +25,10 @@ import jakarta.ws.rs.QueryParam;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.boot.annotation.Controller;
 import org.summerboot.jexpress.boot.annotation.Daemon;
-import org.summerboot.jexpress.nio.server.NioConfig;
-import org.summerboot.jexpress.nio.server.SessionContext;
-import org.summerboot.jexpress.nio.server.ws.rs.WebResourceController;
+import org.summerboot.jexpress.controller.SessionContext;
+import org.summerboot.jexpress.controller.web.WebResourceController;
+import org.summerboot.jexpress.webserver.netty.NioConfig;
+
 
 import java.io.File;
 import java.io.IOException;

@@ -18,7 +18,7 @@
 package org.jexpress.demoapp.controller.grpc.client;
 
 import org.summerboot.jexpress.boot.config.annotation.ImportResource;
-import org.summerboot.jexpress.nio.grpc.GRPCClientConfig;
+import org.summerboot.jexpress.controller.grpc.GRPCClientConfig;
 
 @ImportResource("cfg_grpcclient2.properties")
 public class Hello2ClientConfig extends GRPCClientConfig {

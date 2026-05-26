@@ -18,8 +18,8 @@
 package org.jexpress.demoapp.integration.healthcheck;
 
 import org.summerboot.jexpress.boot.annotation.HealthCheck;
-import org.summerboot.jexpress.boot.instrumentation.HealthChecker;
-import org.summerboot.jexpress.nio.server.domain.Err;
+import org.summerboot.jexpress.controller.Err;
+import org.summerboot.jexpress.integration.healthcheck.HealthChecker;
 
 import java.util.List;
 
