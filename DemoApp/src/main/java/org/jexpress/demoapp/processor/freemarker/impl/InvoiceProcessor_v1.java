@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
 import org.jexpress.demoapp.dto.ItemDto;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.processor.freemarker.DataProcessor;
-import org.summerboot.jexpress.boot.annotation.Service;
+import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.util.FormatterUtil;
 
 import java.math.BigDecimal;

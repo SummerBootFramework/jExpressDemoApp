@@ -20,7 +20,8 @@ package org.jexpress.demoapp.controller.websocket;
 import com.google.inject.Singleton;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import org.summerboot.jexpress.boot.annotation.Service;
+
+import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.controller.authenticate.Caller;
 import org.summerboot.jexpress.controller.websocket.WebSocketHandler;
 import org.summerboot.jexpress.util.FileUtil;
@@ -30,14 +31,12 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-/**
- * client - /run/websocket_client.html
- */
 @ChannelHandler.Sharable
 @Singleton
-@Service(binding = ChannelHandler.class, named = "/ws/chatroom2", type = Service.ChannelHandlerType.Websocket)
-public class ChatRoomWebSocketHandler_v2 extends WebSocketHandler {
-    private static final String ID = "[v2] ";
+@Service(binding = ChannelHandler.class, named = "/ws/chatroom1", type = Service.ChannelHandlerType.Websocket)
+public class ChatRoomWebSocketHandler_Custom extends WebSocketHandler {
+
+    private static final String ID = "[chat] ";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private static String getId(Caller caller) {
@@ -60,4 +59,5 @@ public class ChatRoomWebSocketHandler_v2 extends WebSocketHandler {
         message.append(msg);
         return true;
     }
+
 }

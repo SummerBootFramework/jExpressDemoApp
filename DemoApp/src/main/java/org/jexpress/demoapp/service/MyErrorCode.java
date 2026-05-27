@@ -17,7 +17,8 @@
 
 package org.jexpress.demoapp.service;
 
-import org.summerboot.jexpress.boot.annotation.Unique;
+
+import org.summerboot.jexpress.annotation.validation.Unique;
 
 @Unique(name = "AppErrorCode", type = int.class)// try cli: java -jar SampleApp-1.0.0.jar -list AppErrorCode
 public interface MyErrorCode {

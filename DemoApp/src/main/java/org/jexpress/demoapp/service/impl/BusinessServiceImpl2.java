@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.jexpress.demoapp.service.BusinessService;
-import org.summerboot.jexpress.boot.annotation.Service;
+import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.controller.SessionContext;
 
 @Singleton

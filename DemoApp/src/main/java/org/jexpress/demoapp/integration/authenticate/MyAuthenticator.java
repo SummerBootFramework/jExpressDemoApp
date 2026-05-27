@@ -19,7 +19,7 @@ package org.jexpress.demoapp.integration.authenticate;
 
 import com.google.inject.Singleton;
 import io.grpc.ServerInterceptor;
-import org.summerboot.jexpress.boot.annotation.Service;
+import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.controller.SessionContext;
 import org.summerboot.jexpress.controller.authenticate.Authenticator;
 import org.summerboot.jexpress.controller.authenticate.AuthenticatorListener;

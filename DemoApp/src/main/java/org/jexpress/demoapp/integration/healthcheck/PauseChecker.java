@@ -19,9 +19,9 @@ package org.jexpress.demoapp.integration.healthcheck;
 
 
 import org.jexpress.demoapp.app.Constant;
-import org.summerboot.jexpress.boot.annotation.HealthCheck;
+import org.summerboot.jexpress.annotation.integration.HealthCheck;
 import org.summerboot.jexpress.controller.Err;
-import org.summerboot.jexpress.integration.healthcheck.HealthChecker;
+import org.summerboot.jexpress.integration.HealthChecker;
 
 import java.util.List;
 

@@ -18,8 +18,8 @@
 package org.jexpress.demoapp.integration.cache;
 
 import com.google.inject.Singleton;
-import org.summerboot.jexpress.boot.annotation.HealthCheck;
-import org.summerboot.jexpress.boot.annotation.Service;
+import org.summerboot.jexpress.annotation.Service;
+import org.summerboot.jexpress.annotation.integration.HealthCheck;
 import org.summerboot.jexpress.integration.cache.AuthTokenCache;
 import org.summerboot.jexpress.integration.cache.AuthTokenCacheLocalImpl;
 

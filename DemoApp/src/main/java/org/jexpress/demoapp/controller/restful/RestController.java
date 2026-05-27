@@ -18,6 +18,7 @@
 package org.jexpress.demoapp.controller.restful;
 
 import com.google.inject.Inject;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,6 +34,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -46,10 +48,10 @@ import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker2;
 import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker3;
 import org.jexpress.demoapp.integration.healthcheck.PauseChecker;
 import org.jexpress.demoapp.service.BusinessService;
-import org.summerboot.jexpress.boot.annotation.Controller;
-import org.summerboot.jexpress.boot.annotation.Daemon;
-import org.summerboot.jexpress.boot.annotation.Log;
-import org.summerboot.jexpress.boot.annotation.RequiresHealthCheck;
+import org.summerboot.jexpress.annotation.Controller;
+import org.summerboot.jexpress.annotation.restful.Daemon;
+import org.summerboot.jexpress.annotation.restful.Log;
+import org.summerboot.jexpress.annotation.restful.RequiresHealthCheck;
 import org.summerboot.jexpress.controller.ServiceError;
 import org.summerboot.jexpress.controller.SessionContext;
 import org.summerboot.jexpress.controller.restful.BootController;
@@ -87,6 +89,18 @@ import java.io.IOException;
 public class RestController extends BootController {
     @Inject
     private BusinessService businessService;
+
+    @GET
+    @Path(AppURI.RET_200)
+    public void return200(@Parameter(hidden = true) SessionContext context) {
+        context.status(HttpResponseStatus.OK, false);
+    }
+
+    @GET
+    @Path(AppURI.RET_204)
+    public void return204(@Parameter(hidden = true) SessionContext context) {
+        context.status(HttpResponseStatus.OK);
+    }
 
 
     @POST

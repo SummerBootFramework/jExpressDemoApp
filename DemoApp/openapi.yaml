@@ -499,6 +499,24 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+  /sampleapp/service/v1/200:
+    get:
+      operationId: return200
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /sampleapp/service/v1/204:
+    get:
+      operationId: return204
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
   /sampleapp/service/v1/version:
     get:
       tags:
@@ -618,6 +636,13 @@ components:
           format: int32
         displayName:
           type: string
+        tenantId:
+          type: number
+        tokenTtlSec:
+          type: integer
+          format: int64
+        tenantName:
+          type: string
         jti:
           type: string
         uid:
@@ -627,13 +652,6 @@ components:
           type: array
           items:
             type: string
-        tenantId:
-          type: number
-        tenantName:
-          type: string
-        tokenTtlSec:
-          type: integer
-          format: int64
     LoginVo:
       required:
       - password

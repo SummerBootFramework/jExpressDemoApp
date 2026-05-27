@@ -17,11 +17,12 @@
 
 package org.jexpress.demoapp.controller.mqtt;
 
-import org.summerboot.jexpress.boot.config.annotation.Config;
-import org.summerboot.jexpress.boot.config.annotation.ConfigHeader;
-import org.summerboot.jexpress.boot.config.annotation.ImportResource;
+import org.summerboot.jexpress.annotation.config.Config;
+import org.summerboot.jexpress.annotation.config.ConfigFilename;
+import org.summerboot.jexpress.annotation.config.ConfigHeader;
 
-@ImportResource("cfg_mqttclient.properties")
+
+@ConfigFilename("cfg_mqttclient.properties")
 public class MyMqttClientConfig extends org.summerboot.jexpress.integration.mqtt.MqttClientConfig {
 
     public static void main(String... args) {

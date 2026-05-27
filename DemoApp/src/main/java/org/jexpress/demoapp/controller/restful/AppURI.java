@@ -17,13 +17,19 @@
 
 package org.jexpress.demoapp.controller.restful;
 
-import org.summerboot.jexpress.boot.annotation.Unique;
+
+import org.summerboot.jexpress.annotation.validation.Unique;
 
 @Unique(type = String.class, name = "URI")// try cli: java -jar SampleApp-1.0.0.jar -list URI
 public interface AppURI {
     String CONTEXT_ROOT = "/sampleapp/service";
     String REST_VERSION = "/v1";
     String WEB_VERSION = "/v2";
+
+
+    String RET_200 = "/200";
+
+    String RET_204 = "/204";
 
     String URL_HELLO1 = "/helloworld1/{greeting}";
     String URL_HELLO2 = "/helloworld2/{greeting}";

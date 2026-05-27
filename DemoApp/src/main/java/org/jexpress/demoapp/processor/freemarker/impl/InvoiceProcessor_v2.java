@@ -20,7 +20,7 @@ package org.jexpress.demoapp.processor.freemarker.impl;
 import com.google.inject.Singleton;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.processor.freemarker.DataProcessor;
-import org.summerboot.jexpress.boot.annotation.Service;
+import org.summerboot.jexpress.annotation.Service;
 
 import java.util.Map;
 

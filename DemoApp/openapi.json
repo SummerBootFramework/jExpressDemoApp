@@ -690,6 +690,34 @@
         }
       }
     },
+    "/sampleapp/service/v1/200" : {
+      "get" : {
+        "operationId" : "return200",
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { },
+              "application/xml" : { }
+            }
+          }
+        }
+      }
+    },
+    "/sampleapp/service/v1/204" : {
+      "get" : {
+        "operationId" : "return204",
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { },
+              "application/xml" : { }
+            }
+          }
+        }
+      }
+    },
     "/sampleapp/service/v1/version" : {
       "get" : {
         "tags" : [ "App Admin" ],
@@ -852,6 +880,16 @@
           "displayName" : {
             "type" : "string"
           },
+          "tenantId" : {
+            "type" : "number"
+          },
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tenantName" : {
+            "type" : "string"
+          },
           "jti" : {
             "type" : "string"
           },
@@ -864,16 +902,6 @@
             "items" : {
               "type" : "string"
             }
-          },
-          "tenantId" : {
-            "type" : "number"
-          },
-          "tenantName" : {
-            "type" : "string"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
           }
         }
       },

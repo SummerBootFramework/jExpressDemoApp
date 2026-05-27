@@ -22,8 +22,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.summerboot.jexpress.annotation.Order;
 import org.summerboot.jexpress.boot.SummerInitializer;
-import org.summerboot.jexpress.boot.annotation.Order;
 
 import java.io.File;
 

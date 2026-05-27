@@ -18,16 +18,16 @@
 package org.jexpress.demoapp.app;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.summerboot.jexpress.annotation.config.Config;
+import org.summerboot.jexpress.annotation.config.ConfigFilename;
+import org.summerboot.jexpress.annotation.config.ConfigHeader;
 import org.summerboot.jexpress.boot.config.BootConfig;
 import org.summerboot.jexpress.boot.config.ConfigUtil;
-import org.summerboot.jexpress.boot.config.annotation.Config;
-import org.summerboot.jexpress.boot.config.annotation.ConfigHeader;
-import org.summerboot.jexpress.boot.config.annotation.ImportResource;
 
 import java.io.File;
 import java.util.Properties;
 
-@ImportResource("cfg_app.properties")
+@ConfigFilename("cfg_app.properties")
 public class MyConfig extends BootConfig {
 
     public static void main(String[] args) {

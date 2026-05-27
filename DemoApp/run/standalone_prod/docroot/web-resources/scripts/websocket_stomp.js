@@ -19,7 +19,7 @@
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
-class WebSocketClient {
+class WebSocketClient_STOMP {
 
     constructor(wsURI) {
         this.wsURI = wsURI;
@@ -158,14 +158,14 @@ class WebSocketClient {
         this.ws.onopen = () => {
             this.onConnectionStatusChanged(true);
             this.utilAppendMessage('Connected to chat room.', 'ws-message-system');
-            this.ws.send(JSON.stringify({
-                status: 'CONNECT',
-                msg: appState.uid
-            }));
-            this.ws.send(JSON.stringify({
-                status: 'SUBSCRIBE',
-                msg: '888'
-            }));
+            this.ws.send('SUBSCRIBE\n' +
+                'destination:/topic/announcements\n' +
+                'subscription:sub-0\n' +
+                'message-id:msg-12345\n' +
+                'content-type:text/plain\n' +
+                'content-length:19\n' +
+                '\n' +
+                'Hello from Server!^@');
         };
 
         this.ws.onclose = (event) => {
@@ -186,8 +186,8 @@ class WebSocketClient {
         // 3. Core: A response listener designed based on the backend CompletableFuture architecture.
         this.ws.onmessage = (event) => {
             if (typeof event.data === 'string') {
+                console.log(event.data);
                 const response = JSON.parse(event.data);
-                console.log(response);
                 this.onTextResponse(response);
             } else if (event.data instanceof Blob) {
                 const fileBlob = event.data;
