@@ -95,39 +95,7 @@ class WebSocketClient_Custom {
 
     // 2.1 connection: auth
     rpcRequestOTT(wsURI) {
-        try {
-            const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
-            const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT + '?wsURI=' + encodeURIComponent(wsURI || '');
-
-            // Synchronous XMLHttpRequest (blocks execution until response)
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false); // false = synchronous
-
-            // Set headers
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            if (token) {
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-            }
-
-            xhr.send(null);
-
-            // Extract X-Reference header (if present)
-            const xReference = xhr.getResponseHeader('X-Reference');
-            if (xReference) {
-                console.log('OTT X-Reference:', xReference);
-            }
-
-            if (xhr.status >= 400) {
-                console.warn('getOTT failed, status:', xhr.status);
-                return '';
-            }
-
-            const responseText = xhr.responseText;
-            return responseText || '';
-        } catch (error) {
-            console.error('getOTT Error:', error);
-            return '';
-        }
+        return getOTT(wsURI);
     }
 
     // 2.2 connection: URI with auth result
@@ -147,7 +115,12 @@ class WebSocketClient_Custom {
     // 1. Establish a WebSocket connection
     apiConnect = async () => {
         console.log('Connecting: ' + this.wsURI);
-        const ott = this.rpcRequestOTT(this.wsURI);
+        //const ott = this.rpcRequestOTT(this.wsURI);
+        const ott = getOTT(this.wsURI);
+        if (!ott) {
+            this.utilAppendMessage('Cannot connect: failed to get OTT token.', 'ws-message-error');
+            return;
+        }
         console.log('got Resolved OTT:', ott);
         const url = this.utilBuildWsURI(this.wsURI, ott);
         console.log('WebSocket URL:', url);

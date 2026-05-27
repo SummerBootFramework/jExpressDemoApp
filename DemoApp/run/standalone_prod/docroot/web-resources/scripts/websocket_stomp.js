@@ -23,22 +23,22 @@ class WebSocketClient_STOMP {
 
     constructor(wsURI) {
         this.wsURI = wsURI;
-        this.ws = null;
-        //this.initGUI('wsStatus', 'wsConnectBtn', 'wsDisconnectBtn', 'wsSendBtn', 'wsFileInput', 'wsChatInput', 'wsChatMessages', 'wsClearBtn', 'wsFileUploadProgressBar', 'wsFileUploadStatusText');
+        this.stompClient = null;
+        this.connected = false;
     }
 
     // 1. GUI: add event listener
     apiInitGUI(statusDivId, connectBtnId, disconnectBtnId, sendBtnId, fileInputId, chatInputId, chatViewDivId, chatMessageClearBtnId, fileUploadProgressBarDivId, fileUploadStatusTextDivId) {
-        this.status = document.getElementById(statusDivId); // 'wsStatus'
-        this.connectBtn = document.getElementById(connectBtnId); // 'wsConnectBtn'
-        this.disconnectBtn = document.getElementById(disconnectBtnId); // 'wsDisconnectBtn'
-        this.sendBtn = document.getElementById(sendBtnId); // 'wsSendBtn'
-        this.fileInput = document.getElementById(fileInputId); // 'fileInput'
-        this.chatInput = document.getElementById(chatInputId); // 'wsChatInput'
-        this.chatMessagesView = document.getElementById(chatViewDivId); // 'wsChatMessages'
-        this.chatMessageClearBtn = document.getElementById(chatMessageClearBtnId); // 'wsClearBtn'
-        this.fileUploadProgressBar = document.getElementById(fileUploadProgressBarDivId); // 'wsFileUploadProgressBar'
-        this.fileUploadStatus = document.getElementById(fileUploadStatusTextDivId); // 'wsFileUploadStatusText'
+        this.status = document.getElementById(statusDivId);
+        this.connectBtn = document.getElementById(connectBtnId);
+        this.disconnectBtn = document.getElementById(disconnectBtnId);
+        this.sendBtn = document.getElementById(sendBtnId);
+        this.fileInput = document.getElementById(fileInputId);
+        this.chatInput = document.getElementById(chatInputId);
+        this.chatMessagesView = document.getElementById(chatViewDivId);
+        this.chatMessageClearBtn = document.getElementById(chatMessageClearBtnId);
+        this.fileUploadProgressBar = document.getElementById(fileUploadProgressBarDivId);
+        this.fileUploadStatus = document.getElementById(fileUploadStatusTextDivId);
 
         this.connectBtn.addEventListener('click', this.apiConnect);
         this.disconnectBtn.addEventListener('click', this.apiDisconnect);
@@ -46,7 +46,6 @@ class WebSocketClient_STOMP {
 
         const chatInput = this.chatInput;
         if (chatInput) {
-            //chatInput.addEventListener('keydown', function (e) {
             chatInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -82,6 +81,7 @@ class WebSocketClient_STOMP {
 
     // 2. GUI: update button status on connection status change
     onConnectionStatusChanged(connected) {
+        this.connected = connected;
         if (this.status) {
             this.status.textContent = connected ? 'Connected' : 'Disconnected';
             this.status.className = 'ws-status ' + (connected ? 'ws-status-connected' : 'ws-status-disconnected');
@@ -93,41 +93,9 @@ class WebSocketClient_STOMP {
         if (this.chatInput) this.chatInput.disabled = !connected;
     }
 
-    // 2.1 connection: auth
+    // 2.1 connection: auth - request One Time Ticket
     rpcRequestOTT(wsURI) {
-        try {
-            const token = localStorage.getItem(CONFIG.STORAGE_KEY_TOKEN);
-            const url = CONFIG.CONTEXT_ROOT + CONFIG.URI_WS_OTT + '?wsURI=' + encodeURIComponent(wsURI || '');
-
-            // Synchronous XMLHttpRequest (blocks execution until response)
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false); // false = synchronous
-
-            // Set headers
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            if (token) {
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-            }
-
-            xhr.send(null);
-
-            // Extract X-Reference header (if present)
-            const xReference = xhr.getResponseHeader('X-Reference');
-            if (xReference) {
-                console.log('OTT X-Reference:', xReference);
-            }
-
-            if (xhr.status >= 400) {
-                console.warn('getOTT failed, status:', xhr.status);
-                return '';
-            }
-
-            const responseText = xhr.responseText;
-            return responseText || '';
-        } catch (error) {
-            console.error('getOTT Error:', error);
-            return '';
-        }
+        return getOTT(wsURI);
     }
 
     // 2.2 connection: URI with auth result
@@ -136,73 +104,152 @@ class WebSocketClient_STOMP {
         return proto + '//' + window.location.host + wsURI + '/' + (ott || '');
     }
 
+    // Disconnect from STOMP server
     apiDisconnect = () => {
-        if (this.ws) {
-            this.ws.send(JSON.stringify({
-                status: 'DISCONNECT'
-            }));
+        console.log('Disconnecting from STOMP server...');
+        if (this.stompClient && this.stompClient.connected) {
+            this.stompClient.disconnect(() => {
+                console.log('Successfully disconnected from STOMP server');
+                this.onConnectionStatusChanged(false);
+                this.utilAppendMessage('Disconnected successfully.', 'ws-message-system');
+            });
+        } else {
+            console.warn('STOMP client not connected or unavailable');
         }
     }
 
-    // 1. Establish a WebSocket connection
+    // 1. Establish a WebSocket connection and connect to STOMP server
     apiConnect = async () => {
-        console.log('Connecting: ' + this.wsURI);
-        const ott = this.rpcRequestOTT(this.wsURI);
-        console.log('got Resolved OTT:', ott);
+        console.log('=== Initiating STOMP Connection ===');
+        console.log('WebSocket URI:', this.wsURI);
+        //const ott = this.rpcRequestOTT(this.wsURI);
+        const ott = getOTT(this.wsURI);
+        if (!ott) {
+            this.utilAppendMessage('Cannot connect: failed to get OTT token.', 'ws-message-error');
+            return;
+        }
+        console.log('OTT received:', ott);
         const url = this.utilBuildWsURI(this.wsURI, ott);
-        console.log('WebSocket URL:', url);
-        this.ws = new WebSocket(url);
-        this.ws.binaryType = 'blob'; // 推荐用于文件处理，直接生成文件对象
-        // this.ws.binaryType = 'arraybuffer'; // 如果你需要逐字节解析或修改文件数据
+        console.log('Full WebSocket URL:', url);
+        console.log('===================================');
 
-        this.ws.onopen = () => {
-            this.onConnectionStatusChanged(true);
-            this.utilAppendMessage('Connected to chat room.', 'ws-message-system');
-            this.ws.send('SUBSCRIBE\n' +
-                'destination:/topic/announcements\n' +
-                'subscription:sub-0\n' +
-                'message-id:msg-12345\n' +
-                'content-type:text/plain\n' +
-                'content-length:19\n' +
-                '\n' +
-                'Hello from Server!^@');
-        };
+        // Check if Stomp library is loaded
+        if (typeof Stomp === 'undefined') {
+            this.utilAppendMessage('Error: STOMP library not loaded. Please refresh the page.', 'ws-message-error');
+            console.error('STOMP library is not available');
+            return;
+        }
 
-        this.ws.onclose = (event) => {
-            console.log("WebSocket channel closed: " + event.code);
-            this.onConnectionStatusChanged(false);
-            this.ws = null;
-            if (event.code === 1000) {
-                this.utilAppendMessage('Disconnected successfully (code: ' + event.code + ').', 'ws-message-system');
-            } else {
-                this.utilAppendMessage('Disconnected unexpected (code: ' + event.code + ').', 'ws-message-error');
+        // Create WebSocket and STOMP client
+        console.log('Creating WebSocket connection...');
+        const ws = new WebSocket(url);
+        this.stompClient = Stomp.over(ws);
+
+        // Suppress connection logs
+        this.stompClient.debug = null;
+
+        console.log('Connecting to STOMP broker...');
+        this.stompClient.connect(
+            {}, // headers
+            this.onStompConnect.bind(this), // onConnect callback
+            this.onStompError.bind(this) // onError callback
+        );
+    }
+
+    // STOMP connection successful callback
+    onStompConnect = (frame) => {
+        console.log('=== STOMP Connected ===');
+        console.log('Frame:', frame);
+        console.log('Frame Headers:', frame.headers);
+        console.log('=======================');
+        console.log('Connected to STOMP server');
+        this.onConnectionStatusChanged(true);
+        this.utilAppendMessage('Connected to chat room.', 'ws-message-system');
+
+        // Subscribe to message topic
+        console.log('Subscribing to /topic/messages');
+        this.stompClient.subscribe('/topic/messages', (message) => {
+            console.log('Received message on /topic/messages:', message);
+            this.onStompMessage(message);
+        });
+
+        // Subscribe to notifications/announcements
+        console.log('Subscribing to /topic/announcements');
+        this.stompClient.subscribe('/topic/announcements', (message) => {
+            console.log('Received message on /topic/announcements:', message);
+            const body = message.body;
+            this.utilAppendMessage('[Announcement] ' + body, 'ws-message-system');
+        });
+
+        // Subscribe to file transfer status
+        console.log('Subscribing to /user/queue/file-status');
+        this.stompClient.subscribe('/user/queue/file-status', (message) => {
+            console.log('Received message on /user/queue/file-status:', message);
+            try {
+                const response = JSON.parse(message.body);
+                this.onFileTransferStatus(response);
+            } catch (e) {
+                console.error('Failed to parse file status:', e);
             }
-        };
+        });
+    }
 
-        this.ws.onerror = () => {
-            this.utilAppendMessage('WebSocket error occurred.', 'ws-message-error');
-        };
+    // Handle STOMP frame from server
+    onStompMessage = (message) => {
+        const body = message.body;
+        console.log('=== STOMP Message Received ===');
+        console.log('Destination:', message.headers.destination);
+        console.log('Message ID:', message.headers['message-id']);
+        console.log('Content-Type:', message.headers['content-type']);
+        console.log('Body:', body);
+        console.log('Full Message Object:', message);
+        console.log('==============================');
 
-        // 3. Core: A response listener designed based on the backend CompletableFuture architecture.
-        this.ws.onmessage = (event) => {
-            if (typeof event.data === 'string') {
-                console.log(event.data);
-                const response = JSON.parse(event.data);
-                this.onTextResponse(response);
-            } else if (event.data instanceof Blob) {
-                const fileBlob = event.data;
-                this.onBlobResponse(fileBlob);
-            } else if (event.data instanceof ArrayBuffer) {
+        try {
+            // Try to parse as JSON first
+            const response = JSON.parse(body);
+            console.log('Parsed JSON Response:', response);
+            this.onTextResponse(response);
+        } catch (e) {
+            // If not JSON, treat as plain text message
+            console.log('Treating as plain text message:', body);
+            this.utilAppendMessage(body, 'ws-message-incoming');
+        }
+    }
 
-            } else {
-                this.utilAppendMessage('[Binary data received unknown type (' + event.data.byteLength + ' bytes)]', 'ws-message-incoming');
-            }
-        };
+    // Handle STOMP errors
+    onStompError = (frame) => {
+        console.error('=== STOMP ERROR ===');
+        console.error('Frame:', frame);
+        console.error('Frame Body:', frame.body);
+        if (frame && frame.headers) {
+            console.error('Frame Headers:', frame.headers);
+        }
+        console.error('===================');
+        if (frame && frame.body) {
+            this.utilAppendMessage('STOMP error: ' + frame.body, 'ws-message-error');
+        } else {
+            this.utilAppendMessage('STOMP connection error occurred.', 'ws-message-error');
+        }
+        this.onConnectionStatusChanged(false);
+    }
+
+    // WebSocket close callback
+    onWebSocketClose = () => {
+        console.log('WebSocket closed');
+        this.onConnectionStatusChanged(false);
+        this.utilAppendMessage('Disconnected (WebSocket closed).', 'ws-message-system');
+    }
+
+    // WebSocket error callback
+    onWebSocketError = (event) => {
+        console.error('WebSocket error:', event);
+        this.onConnectionStatusChanged(false);
+        this.utilAppendMessage('WebSocket error occurred. Disconnected.', 'ws-message-error');
     }
 
     onTextResponse = (response) => {
         if (response.status === "MESSAGE") {
-            // Server may send multi-line history in one frame
             const lines = response.msg.split('\n');
             lines.forEach((line) => {
                 if (line.trim()) {
@@ -214,70 +261,31 @@ class WebSocketClient_STOMP {
             this.fileGroup = response.fileType;
             this.fileExtension = response.fileExtension;
             this.fileName = response.fileName;
-        }
-
-        // Core Branch A: Traditional Physical File Fragmentation to Disk Progress
-        else if (response.status === "UPLOAD_SERVER_RECEIVED_CHUNK") {
-            // Calculate the actual physical upload percentage
+        } else if (response.status === "UPLOAD_SERVER_RECEIVED_CHUNK") {
             let realPercent = (response.num / this.file.size) * 100;
-
-            // [Crucial] As long as the file hasn't passed the global audit, the progress will be locked at a maximum of 99%.
-            // This prevents the interface from reaching 100% while the user is still waiting for backend antivirus and transcoding, creating the illusion of a "freeze".
             let displayPercent = Math.min(realPercent, 99).toFixed(1);
-
             this.utilUpdateProgress(displayPercent, `Uploaded ${(response.num / 1024 / 1024).toFixed(1)}MB / ${(this.file.size / 1024 / 1024).toFixed(1)}MB`);
-
-            // Triggering the back pressure and reverse pressure safety valve: The backend finished writing this 1MB, and the frontend is only now sending the next block.
             this.utilSendNextChunk();
-        }
-
-        // Core branch B: The files have been sent, and we are now entering phase two (the backend has entered the parallel auditing of CompletableFuture.allOf).
-        else if (response.status === "UPLOAD_SERVER_RECEIVED_FULL") {
-            this.fileUploadStatus.style.color = "#ff9800"; // 橙色提示
-            this.fileUploadStatus.innerText = "⚡ Physical file transfer complete! The server is currently performing the following in parallel: antivirus scan and multi-bitrate video transcoding and slicing. Please wait...";
-            // 此时进度条稳稳地悬停在 99%
-        }
-
-        // Core Branch C: [Final Station] All backend multitasking tasks passed!
-        else if (response.status === "UPLOAD_SERVER_AUDIT_COMPLETE") {
-            this.fileUploadProgressBar.style.backgroundColor = "#4caf50"; // 鲜绿色
-            this.utilUpdateProgress("100.0", "🎉 All backend transcoding and security audit tasks have been successfully completed! The files are ready.");
-            //this.ws.close();
+        } else if (response.status === "UPLOAD_SERVER_RECEIVED_FULL") {
+            this.fileUploadStatus.style.color = "#ff9800";
+            this.fileUploadStatus.innerText = "⚡ Physical file transfer complete! The server is currently performing antivirus scan and video transcoding. Please wait...";
+        } else if (response.status === "UPLOAD_SERVER_AUDIT_COMPLETE") {
+            this.fileUploadProgressBar.style.backgroundColor = "#4caf50";
+            this.utilUpdateProgress("100.0", "🎉 All backend transcoding and security audit tasks completed!");
             this.onFileUploaded();
-        }
-
-        // Core Branch D: [Failure Terminal] Security scan intercepts (virus detected) or transcodes completely crashes.
-        else if (response.status === "UPLOAD_SERVER_AUDIT_FAILED") {
-            this.fileUploadProgressBar.style.backgroundColor = "#f44336"; // 红色
+        } else if (response.status === "UPLOAD_SERVER_AUDIT_FAILED") {
+            this.fileUploadProgressBar.style.backgroundColor = "#f44336";
             this.utilUpdateProgress("99.0", `❌ Upload abort: ${response.reason}`);
-            //this.ws.close();
             this.onFileUploaded();
         }
     }
 
-    onLargeRemoteDownloadResponse = (message) => {
-        const container = this.chatMessagesView;
-        const card = document.createElement('div');
-        card.className = 'file-card';
-        card.innerHTML = `
-                <div class="file-info">
-                    <span class="file-icon">📄</span>
-                    <div class="file-detail">
-                        <p class="file-name">大文件分享</p>
-                        <p class="file-size">大小: ${(message.size / 1024 / 1024).toFixed(2)} MB</p>
-                    </div>
-                </div>
-                <a href="${message.url}" target="_blank" download class="download-btn">点击下载</a>
-            `;
-
-        container.appendChild(card);
+    onFileTransferStatus = (response) => {
+        this.onTextResponse(response);
     }
 
     onBlobResponse = (fileBlob) => {
-        // 💡 关键步：为二进制数据生成一个本地临时的 Object URL
         const objectURL = URL.createObjectURL(fileBlob);
-
-        // 2. 根据文件类型（MIME Type）渲染到不同的 HTML 标签中
         const mimeType = this.fileMimeType;
         const fileGroup = this.fileGroup;
         const fileExtension = this.fileExtension;
@@ -313,37 +321,62 @@ class WebSocketClient_STOMP {
                 }
                 break;
         }
-        // const link = document.createElement('a');
-        // link.href = objectURL;
-        // link.download = fileName; // 如果后端在流里没带文件名，可自定义
-        // link.textContent = fileName + " (click to download)";
-        // container.appendChild(link);
+
         const downloadDiv = buildDownloadDiv(objectURL, fileName, 'ws-message-system', container);
         container.appendChild(downloadDiv);
         container.scrollTop = container.scrollHeight;
     }
 
-    //sendMessage() {
+    // Send text message via STOMP
     apiSendMessage = () => {
-        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+        if (!this.stompClient || !this.stompClient.connected) {
+            this.utilAppendMessage('Error: Not connected to server.', 'ws-message-error');
+            console.error('Cannot send message: STOMP client not connected');
+            return;
+        }
+
         const input = this.chatInput;
         if (!input) return;
         const text = input.value.trim();
         if (!text) return;
-        this.ws.send(JSON.stringify({
+
+        const payload = JSON.stringify({
             status: 'SEND',
             msg: text
-        }));
+        });
+
+        console.log('=== Sending STOMP Message ===');
+        console.log('Destination: /app/chat');
+        console.log('Payload:', payload);
+        console.log('=============================');
+
+        // Send message to /app/chat destination (backend will process this)
+        this.stompClient.send('/app/chat', {}, payload);
+
         input.value = '';
         input.focus();
     }
 
     apiSendFile(file) {
-        this.ws.send(JSON.stringify({
+        if (!this.stompClient || !this.stompClient.connected) {
+            this.utilAppendMessage('Error: Not connected to server.', 'ws-message-error');
+            console.error('Cannot send file: STOMP client not connected');
+            return;
+        }
+
+        const payload = JSON.stringify({
             status: 'UPLOAD_CLIENT_START',
             msg: file.name,
             num: file.size
-        }));
+        });
+
+        console.log('=== Sending File Upload Start ===');
+        console.log('Destination: /app/file-upload-start');
+        console.log('Payload:', payload);
+        console.log('==================================');
+
+        // Send file metadata to server
+        this.stompClient.send('/app/file-upload-start', {}, payload);
 
         this.file = file;
         this.offset = 0;
@@ -360,20 +393,23 @@ class WebSocketClient_STOMP {
     onFileUploaded() {
         this.offset = 0;
         this.file = null;
-        this.CHUNK_SIZE = 64 * 1024; // 64KB for Chrome, >= 1MB for Firefox
+        this.CHUNK_SIZE = 64 * 1024;
         this.fileUploadStatus.innerText = "Data transfer finished. You can select another file to upload.";
     }
 
-    // 4. Read slice and fire
+    // 4. Read slice and send via STOMP
     utilSendNextChunk() {
-        console.log(`sendNextChunk ${this.offset}/${this.file.size}`);
-        // 157286400/22410018
+        console.log(`Sending file chunk: ${this.offset}/${this.file.size}`);
         if (this.offset >= this.file.size) {
-            // All chunks sent - notify server
-            console.log("All slices have been sent, and the server is being notified that the upload is complete...");
-            this.ws.send(JSON.stringify({
+            console.log("All file slices sent, notifying server that upload is complete...");
+            const payload = JSON.stringify({
                 status: 'UPLOAD_CLIENT_COMPLETE'
-            }));
+            });
+            console.log('=== Sending File Upload Complete ===');
+            console.log('Destination: /app/file-upload-complete');
+            console.log('Payload:', payload);
+            console.log('====================================');
+            this.stompClient.send('/app/file-upload-complete', {}, payload);
             return;
         }
 
@@ -381,20 +417,26 @@ class WebSocketClient_STOMP {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            this.ws.send(e.target.result);
+            const chunkSize = e.target.result.byteLength;
+            console.log(`Sending file chunk: offset=${this.offset}, chunkSize=${chunkSize} bytes`);
+            // Send binary chunk data
+            this.stompClient.send('/app/file-upload-chunk',
+                {'content-type': 'application/octet-stream'},
+                e.target.result
+            );
             this.offset += this.CHUNK_SIZE;
         };
         reader.readAsArrayBuffer(slice);
     }
 
-    // 5. Core methods for driving UI rendering
+    // 5. Update progress UI
     utilUpdateProgress(percent, text) {
         this.fileUploadProgressBar.style.width = percent + "%";
         this.fileUploadProgressBar.innerText = percent + "%";
         this.fileUploadStatus.innerText = text;
     }
 
-    //appendMessage(text, cssClass) {
+    // Append message to chat view
     utilAppendMessage = (text, cssClass) => {
         const div = document.createElement('div');
         div.className = 'ws-message ' + (cssClass || '');
@@ -402,5 +444,4 @@ class WebSocketClient_STOMP {
         this.chatMessagesView.appendChild(div);
         this.chatMessagesView.scrollTop = this.chatMessagesView.scrollHeight;
     }
-
 }

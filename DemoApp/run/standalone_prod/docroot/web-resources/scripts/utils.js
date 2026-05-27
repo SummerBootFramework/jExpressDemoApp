@@ -229,14 +229,18 @@ function getOTT(wsURI) {
         }
 
         if (xhr.status >= 400) {
+            const msg = `OTT request failed (HTTP ${xhr.status}). Please login again or reconnect.`;
             console.warn('getOTT failed, status:', xhr.status);
+            showFormError(msg, {errorContainerId: 'wsChatMessages'});
             return '';
         }
 
         const responseText = xhr.responseText;
         return responseText || '';
     } catch (error) {
-        console.error('getOTT Error:', error);
+        const msg = `OTT request failed (${error}). Please login again or reconnect.`;
+        console.warn('getOTT failed, status:', xhr.status);
+        showFormError(msg, {errorContainerId: 'wsChatMessages'});
         return '';
     }
 }
@@ -269,7 +273,9 @@ async function getOTTAsync(wsURI) {
         }
 
         if (!response.ok) {
+            const msg = `OTT request failed (HTTP ${response.status}). Please login again or reconnect.`;
             console.warn('getOTT failed, status:', response.status);
+            showFormError(msg, {errorContainerId: 'wsChatMessages'});
             return '';
         }
 
@@ -278,6 +284,9 @@ async function getOTTAsync(wsURI) {
         return responseText || '';
     } catch (error) {
         console.error('getOTT Error:', error);
+        showFormError('OTT request error. Please check network/server and try again.', {
+            errorContainerId: 'wsChatMessages'
+        });
         return '';
     }
 }
