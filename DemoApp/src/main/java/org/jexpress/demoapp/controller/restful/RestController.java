@@ -153,6 +153,7 @@ public class RestController extends BootController {
     @RequiresHealthCheck({Constant.HC_NAME1, Constant.HI_NAME2})
     @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
     public MyResponse hello3(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
+        context.pretty(true);
         return businessService.process(greeting, myRequest, context);
     }
 
@@ -162,7 +163,7 @@ public class RestController extends BootController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("AppAdmin")
     @RequiresHealthCheck({Constant.HC_NAME1, Constant.HI_NAME2, Constant.PC_NAME})
-    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"})
+    @Log(maskDataFields = {"creditCardNumber", "privateInfo", "secretList", "pdfBase64", "imageBase64"}, pretty = Log.Bool.True)
     public MyResponse hello4(@PathParam("greeting") String greeting, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         return businessService.process(greeting, myRequest, context);
     }
