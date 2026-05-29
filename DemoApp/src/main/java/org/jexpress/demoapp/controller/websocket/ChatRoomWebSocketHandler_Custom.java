@@ -23,7 +23,6 @@ import io.netty.channel.ChannelHandlerContext;
 
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.controller.authenticate.Caller;
-import org.summerboot.jexpress.controller.websocket.WebSocketHandler;
 import org.summerboot.jexpress.util.FileUtil;
 
 import java.io.File;
@@ -34,7 +33,7 @@ import java.time.temporal.ChronoUnit;
 @ChannelHandler.Sharable
 @Singleton
 @Service(binding = ChannelHandler.class, named = "/ws/chatroom1", type = Service.ChannelHandlerType.Websocket)
-public class ChatRoomWebSocketHandler_Custom extends WebSocketHandler {
+public class ChatRoomWebSocketHandler_Custom extends ChatRoomWebSocketHandler {
 
     private static final String ID = "[chat] ";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ISO_OFFSET_DATE_TIME;

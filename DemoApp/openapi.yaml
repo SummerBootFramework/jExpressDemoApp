@@ -645,10 +645,10 @@ components:
           type: array
           items:
             type: string
-        tenantId:
-          type: number
         tenantName:
           type: string
+        tenantId:
+          type: number
         tokenTtlSec:
           type: integer
           format: int64

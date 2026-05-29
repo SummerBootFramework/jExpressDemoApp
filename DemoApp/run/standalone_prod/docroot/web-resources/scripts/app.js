@@ -494,8 +494,8 @@ function initSub32SplitResize() {
 }
 
 function initWs() {
-    //const wsClient = new WebSocketClient_Custom(CONFIG.WS_URL_CHATROOM1);
-    const wsClient = new WebSocketClient_STOMP(CONFIG.WS_URL_CHATROOM2);
+    const wsClient = new WebSocketClient_Custom(CONFIG.WS_URL_CHATROOM1);
+    //const wsClient = new WebSocketClient_STOMP(CONFIG.WS_URL_CHATROOM2);
     wsClient.apiInitGUI('wsStatus', 'wsConnectBtn', 'wsDisconnectBtn', 'wsSendBtn', 'wsFileInput', 'wsChatInput', 'wsChatMessages', 'wsClearBtn', 'wsFileUploadProgressBar', 'wsFileUploadStatusText');
 }
 
