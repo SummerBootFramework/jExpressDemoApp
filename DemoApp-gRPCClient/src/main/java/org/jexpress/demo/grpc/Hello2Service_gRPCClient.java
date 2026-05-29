@@ -5,7 +5,7 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
-import org.summerboot.jexpress.nio.grpc.GRPCClient;
+import org.summerboot.jexpress.controller.grpc.GRPCClient;
 
 public class Hello2Service_gRPCClient extends GRPCClient<Hello2Service_gRPCClient> {
     private Hello2ServiceGrpc.Hello2ServiceBlockingStub blockingStub;
