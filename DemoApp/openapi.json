@@ -590,7 +590,7 @@
         "tags" : [ "App Authentication" ],
         "summary" : "WebSocket One Time Ticket Authentication",
         "description" : "Requires Bearer auth header",
-        "operationId" : "oneTimeTicketAuthenticate",
+        "operationId" : "oneTimeTokenAuthenticate",
         "parameters" : [ {
           "name" : "wsURI",
           "in" : "query",
@@ -880,7 +880,7 @@
           "displayName" : {
             "type" : "string"
           },
-          "uid" : {
+          "jti" : {
             "type" : "string"
           },
           "groups" : {
@@ -890,8 +890,11 @@
               "type" : "string"
             }
           },
-          "jti" : {
+          "uid" : {
             "type" : "string"
+          },
+          "tenantId" : {
+            "type" : "number"
           },
           "tokenTtlSec" : {
             "type" : "integer",
@@ -899,9 +902,6 @@
           },
           "tenantName" : {
             "type" : "string"
-          },
-          "tenantId" : {
-            "type" : "number"
           }
         }
       },

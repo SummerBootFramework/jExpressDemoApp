@@ -19,7 +19,7 @@ package org.jexpress.demoapp.integration.healthcheck;
 
 
 import org.summerboot.jexpress.annotation.integration.HealthCheck;
-import org.summerboot.jexpress.controller.Err;
+import org.summerboot.jexpress.api.common.Err;
 import org.summerboot.jexpress.integration.HealthChecker;
 
 import java.util.List;

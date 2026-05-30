@@ -49,12 +49,12 @@ import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker3;
 import org.jexpress.demoapp.integration.healthcheck.PauseChecker;
 import org.jexpress.demoapp.service.BusinessService;
 import org.summerboot.jexpress.annotation.Controller;
-import org.summerboot.jexpress.annotation.restful.Daemon;
-import org.summerboot.jexpress.annotation.restful.Log;
-import org.summerboot.jexpress.annotation.restful.RequiresHealthCheck;
-import org.summerboot.jexpress.controller.ServiceError;
-import org.summerboot.jexpress.controller.SessionContext;
-import org.summerboot.jexpress.controller.restful.BootController;
+import org.summerboot.jexpress.annotation.rest.Daemon;
+import org.summerboot.jexpress.annotation.rest.Log;
+import org.summerboot.jexpress.annotation.rest.RequiresHealthCheck;
+import org.summerboot.jexpress.api.common.ServiceError;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.rest.BootController;
 
 import java.io.IOException;
 

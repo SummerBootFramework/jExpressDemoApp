@@ -32,8 +32,8 @@ import io.netty.handler.codec.stomp.StompHeaders;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.controller.authenticate.Caller;
-import org.summerboot.jexpress.controller.websocket.WebSocketAuthHandler_OTT;
+import org.summerboot.jexpress.api.websocket.WebSocketAuthHandlerOtt;
+import org.summerboot.jexpress.security.auth.Caller;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -174,7 +174,7 @@ public class ChatRoomWebSocketHandler_STOMP extends SimpleChannelInboundHandler<
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, StompFrame msg) {
-        Caller caller = ctx.channel().attr(WebSocketAuthHandler_OTT.USER_ID_KEY).get();
+        Caller caller = ctx.channel().attr(WebSocketAuthHandlerOtt.USER_ID_KEY).get();
 
         // read message
         StompCommand cmd = msg.command();

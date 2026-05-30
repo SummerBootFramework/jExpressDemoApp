@@ -33,11 +33,11 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.summerboot.jexpress.controller.authenticate.Caller;
-import org.summerboot.jexpress.controller.websocket.WebSocketAuthHandler_OTT;
-import org.summerboot.jexpress.util.BeanUtil;
-import org.summerboot.jexpress.util.FileUtil;
-import org.summerboot.jexpress.webserver.netty.NioConfig;
+import org.summerboot.jexpress.api.websocket.WebSocketAuthHandlerOtt;
+import org.summerboot.jexpress.common.util.BeanUtil;
+import org.summerboot.jexpress.common.util.FileUtil;
+import org.summerboot.jexpress.infra.netty.NioConfig;
+import org.summerboot.jexpress.security.auth.Caller;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -91,7 +91,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
         Runnable asyncTask = () -> {
-            Caller caller = ctx.channel().attr(WebSocketAuthHandler_OTT.USER_ID_KEY).get();
+            Caller caller = ctx.channel().attr(WebSocketAuthHandlerOtt.USER_ID_KEY).get();
             if (caller == null) {
                 // It's unlikely you'll encounter this; handlerAdded has already handled it. But we check again to be safe, as the auth process is asynchronous and may not have completed yet.
                 ctx.writeAndFlush(MSG_AUTH_FAILED.retainedDuplicate());
@@ -106,7 +106,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
-        Caller caller = ctx.channel().attr(WebSocketAuthHandler_OTT.USER_ID_KEY).get();
+        Caller caller = ctx.channel().attr(WebSocketAuthHandlerOtt.USER_ID_KEY).get();
         if (caller == null) {
             ctx.writeAndFlush(MSG_AUTH_FAILED.retainedDuplicate());
             ctx.close();
@@ -125,7 +125,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
             String textMessage = ctrl.getMsg();
             switch (ctrl.getStatus()) {
                 case UPLOAD_CLIENT_START -> ctx.channel().attr(TARGET_FILE_NAME_KEY).set(textMessage); // save file name before upload start
-                case UPLOAD_CLIENT_COMPLETE -> fileUploadOnReceviedFullFile(ctx, caller);
+                case UPLOAD_CLIENT_COMPLETE -> fileUploadOnReceivedFullFile(ctx, caller);
                 case CONNECT -> {
                     processUserConnect(ctx, caller);
                 }
@@ -214,7 +214,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
             fileUploadSendServerProcess(ctx, currentSize, continuationFrame.isFinalFragment());
 
             if (continuationFrame.isFinalFragment()) {
-                fileUploadOnReceviedFullFile(ctx, caller);
+                fileUploadOnReceivedFullFile(ctx, caller);
             }
         }
     }
@@ -306,7 +306,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
     /**
      * Shut down resources, perform disk cleanup, and finally trigger the lifecycle cleanup hook.
      */
-    private void fileUploadOnReceviedFullFile(ChannelHandlerContext ctx, Caller caller) throws IOException {
+    private void fileUploadOnReceivedFullFile(ChannelHandlerContext ctx, Caller caller) throws IOException {
         FileChannel fileChannel = ctx.channel().attr(FILE_CHANNEL_KEY).getAndSet(null);
         FileOutputStream fos = ctx.channel().attr(FILE_STREAM_KEY).getAndSet(null);
         File uploadedFile = ctx.channel().attr(TARGET_FILE_KEY).getAndSet(null);
@@ -351,7 +351,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
 
                 // 3. process file
                 StringBuilder message = new StringBuilder();
-                boolean broadcast = onFileRecevied(ctx, roomId, caller, uploadedFile, detectMimeType, message);
+                boolean broadcast = onFileReceived(ctx, roomId, caller, uploadedFile, detectMimeType, message);
                 if (broadcast) {
                     if (!message.isEmpty()) {
                         broadcast(message.toString(), roomId);
@@ -380,7 +380,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
     /**
      * Business callback hook after successful lossless transfer and disk write of large files
      */
-    abstract protected boolean onFileRecevied(ChannelHandlerContext ctx, String roomId, Caller caller, File targetFile, FileUtil.FileTypeInfo detectMimeType, StringBuilder message);
+    abstract protected boolean onFileReceived(ChannelHandlerContext ctx, String roomId, Caller caller, File targetFile, FileUtil.FileTypeInfo detectMimeType, StringBuilder message);
 
     final protected void broadcast(String text, String roomId) {
         this.broadcast(text, getRoomChannels(roomId));

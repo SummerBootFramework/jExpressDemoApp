@@ -3,10 +3,10 @@ package org.jexpress.demo.grpc;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.summerboot.jexpress.annotation.integration.HealthCheck;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.grpc.GRPCClientConfig;
 import org.summerboot.jexpress.boot.BootErrorCode;
-import org.summerboot.jexpress.controller.Err;
-import org.summerboot.jexpress.controller.SessionContext;
-import org.summerboot.jexpress.controller.grpc.GRPCClientConfig;
 import org.summerboot.jexpress.integration.HealthChecker;
 import org.summerboot.jexpress.integration.HealthMonitor;
 

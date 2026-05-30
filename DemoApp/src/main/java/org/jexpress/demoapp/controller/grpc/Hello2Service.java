@@ -26,11 +26,11 @@ import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
 import org.summerboot.jexpress.annotation.GrpcController;
-import org.summerboot.jexpress.annotation.restful.Ping;
+import org.summerboot.jexpress.annotation.rest.Ping;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.grpc.GRPCServer;
 import org.summerboot.jexpress.boot.BootErrorCode;
-import org.summerboot.jexpress.controller.Err;
-import org.summerboot.jexpress.controller.SessionContext;
-import org.summerboot.jexpress.controller.grpc.GRPCServer;
 import org.summerboot.jexpress.webserver.domain.ProcessorSettings;
 
 @GrpcController

@@ -23,12 +23,12 @@ import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.summerboot.jexpress.annotation.Order;
-import org.summerboot.jexpress.boot.SummerInitializer;
+import org.summerboot.jexpress.boot.lifecycle.AppInitializer;
 
 import java.io.File;
 
 @Order(1)
-public class MyInitializer implements SummerInitializer {
+public class MyInitializer implements AppInitializer {
 
     private static final String CLI_CMD = "mycli";
 

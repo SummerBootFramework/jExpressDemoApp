@@ -15,17 +15,17 @@
  *
  */
 
-package org.jexpress.demoapp.integration.authenticate;
+package org.jexpress.demoapp.security.authenticate;
 
 import com.google.inject.Singleton;
 import io.grpc.ServerInterceptor;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.controller.SessionContext;
-import org.summerboot.jexpress.controller.authenticate.Authenticator;
-import org.summerboot.jexpress.controller.authenticate.AuthenticatorListener;
-import org.summerboot.jexpress.controller.authenticate.BootAuthenticator;
-import org.summerboot.jexpress.controller.authenticate.Caller;
-import org.summerboot.jexpress.controller.authenticate.User;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.security.auth.Authenticator;
+import org.summerboot.jexpress.security.auth.AuthenticatorListener;
+import org.summerboot.jexpress.security.auth.BootAuthenticator;
+import org.summerboot.jexpress.security.auth.Caller;
+import org.summerboot.jexpress.security.auth.User;
 
 import javax.naming.NamingException;
 
@@ -65,7 +65,7 @@ public class MyAuthenticator extends BootAuthenticator<Long> {
     }
 
     @Override
-    protected String oneTimeTicketAuthorize(String wsURI, Caller caller, SessionContext context) {
+    protected String oneTimeTokenAuthorize(String wsURI, Caller caller, SessionContext context) {
         return null;
     }
 }

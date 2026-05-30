@@ -22,7 +22,7 @@ import org.jexpress.demoapp.dto.ItemDto;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.processor.freemarker.DataProcessor;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.util.FormatterUtil;
+import org.summerboot.jexpress.common.util.FormatterUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

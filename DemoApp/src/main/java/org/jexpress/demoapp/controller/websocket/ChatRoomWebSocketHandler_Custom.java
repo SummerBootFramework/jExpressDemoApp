@@ -22,8 +22,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.controller.authenticate.Caller;
-import org.summerboot.jexpress.util.FileUtil;
+import org.summerboot.jexpress.common.util.FileUtil;
+import org.summerboot.jexpress.security.auth.Caller;
 
 import java.io.File;
 import java.time.OffsetDateTime;
@@ -53,7 +53,7 @@ public class ChatRoomWebSocketHandler_Custom extends ChatRoomWebSocketHandler {
     }
 
     @Override
-    protected boolean onFileRecevied(ChannelHandlerContext ctx, String roomId, Caller caller, File file, FileUtil.FileTypeInfo fileTypeInfo, StringBuilder message) {
+    protected boolean onFileReceived(ChannelHandlerContext ctx, String roomId, Caller caller, File file, FileUtil.FileTypeInfo fileTypeInfo, StringBuilder message) {
         String msg = ID + getId(caller) + "sent a " + fileTypeInfo.getExtension() + " file (" + FileUtil.formatFileSize(file.length()) + "): " + file.getName();
         message.append(msg);
         return true;
