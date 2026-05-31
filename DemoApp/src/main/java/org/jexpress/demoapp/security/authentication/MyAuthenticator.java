@@ -15,7 +15,7 @@
  *
  */
 
-package org.jexpress.demoapp.security.authenticate;
+package org.jexpress.demoapp.security.authentication;
 
 import com.google.inject.Singleton;
 import io.grpc.ServerInterceptor;

@@ -15,14 +15,14 @@
  *
  */
 
-package test.integration.grpc;
+package org.jexpress.demoapp.integration.grpc;
 
 import io.grpc.BindableService;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
-import org.jexpress.demoapp.controller.grpc.client.Hello1ClientImpl;
-import org.jexpress.demoapp.controller.grpc.client.Hello2ClientImpl;
 import org.jexpress.demoapp.controller.grpc.impl.Hello1ServiceImpl_A;
 import org.jexpress.demoapp.controller.grpc.impl.Hello2ServiceImpl_A;
+import org.jexpress.demoapp.integration.grpc.client.Hello1ClientImpl;
+import org.jexpress.demoapp.integration.grpc.client.Hello2ClientImpl;
 import org.summerboot.jexpress.boot.BootConstants;
 import org.summerboot.jexpress.grpc.test.GrpcTestHelper;
 import org.summerboot.jexpress.security.crypto.EncryptorUtil;

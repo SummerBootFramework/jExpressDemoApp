@@ -31,7 +31,7 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.RenderDestination;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
-import org.jexpress.demoapp.processor.freemarker.DataProcessor;
+import org.jexpress.demoapp.processor.template.DataProcessor;
 import org.jexpress.demoapp.service.BusinessService;
 import org.jexpress.demoapp.service.MyErrorCode;
 import org.summerboot.jexpress.annotation.Service;

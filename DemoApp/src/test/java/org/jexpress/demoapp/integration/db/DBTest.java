@@ -15,12 +15,11 @@
  *
  */
 
-package test.integration.db;
+package org.jexpress.demoapp.integration.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import org.jexpress.demoapp.integration.db.DBConfig;
 import org.jexpress.demoapp.model.FileLocation;
 import org.jexpress.demoapp.model.Tenant;
 import org.summerboot.jexpress.boot.config.ConfigUtil;
@@ -41,13 +40,13 @@ public class DBTest {
     public DBTest() {
     }
 
-    private static final File FILE_CFG__DB = new File("src/test/resources/config/cfg_db.properties");
+    private static final File FILE_CFG_DB = new File("src/test/resources/config/cfg_db.properties");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         EncryptorUtil.setMasterPassword("changeit");
-        ConfigUtil.updatePasswords(FILE_CFG__DB, null, true);
-        DBConfig.cfg.load(FILE_CFG__DB, "org.jexpress");
+        ConfigUtil.updatePasswords(FILE_CFG_DB, null, true);
+        DBConfig.cfg.load(FILE_CFG_DB, "org.jexpress");
     }
 
     @AfterClass

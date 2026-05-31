@@ -15,12 +15,12 @@
  *
  */
 
-package org.jexpress.demoapp.processor.freemarker.impl;
+package org.jexpress.demoapp.processor.template.impl;
 
 import com.google.inject.Singleton;
 import org.jexpress.demoapp.dto.ItemDto;
 import org.jexpress.demoapp.dto.MyRequest;
-import org.jexpress.demoapp.processor.freemarker.DataProcessor;
+import org.jexpress.demoapp.processor.template.DataProcessor;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.util.format.FormatterUtil;
 

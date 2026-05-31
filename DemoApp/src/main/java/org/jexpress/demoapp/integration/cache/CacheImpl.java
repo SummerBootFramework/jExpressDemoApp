@@ -24,7 +24,7 @@ import org.summerboot.jexpress.integration.cache.api.AuthTokenCache;
 import org.summerboot.jexpress.integration.cache.local.AuthTokenCacheLocalImpl;
 
 @Singleton
-@Service(binding = AuthTokenCache.class, AlternativeName = "aaa")
+@Service(binding = AuthTokenCache.class, AlternativeName = "myCacheImpl")
 @HealthCheck(name = "cache")
 public class CacheImpl extends AuthTokenCacheLocalImpl {
 

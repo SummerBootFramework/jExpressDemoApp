@@ -15,21 +15,22 @@
  *
  */
 
-package org.jexpress.demoapp.controller.grpc.client;
+package org.jexpress.demoapp.integration.grpc.client;
 
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
 import org.summerboot.jexpress.grpc.client.GrpcClientConfig;
 
-@ConfigFilename("cfg_grpcclient2.properties")
-public class Hello2ClientConfig extends GrpcClientConfig {
+
+@ConfigFilename("cfg_grpcclient1.properties")
+public class Hello1ClientConfig extends GrpcClientConfig {
 
     public static void main(String... args) {
-        String t = generateTemplate(Hello2ClientConfig.class);
+        String t = generateTemplate(Hello1ClientConfig.class);
         System.out.println(t);
     }
 
-    public static final Hello2ClientConfig cfg = new Hello2ClientConfig();
+    public static final Hello1ClientConfig cfg = new Hello1ClientConfig();
 
-    private Hello2ClientConfig() {
+    private Hello1ClientConfig() {
     }
 }

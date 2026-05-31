@@ -15,7 +15,7 @@
  *
  */
 
-package org.jexpress.demoapp.controller.grpc.client;
+package org.jexpress.demoapp.integration.grpc.client;
 
 import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;

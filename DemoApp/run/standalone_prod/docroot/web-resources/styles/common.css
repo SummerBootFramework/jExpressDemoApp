@@ -90,7 +90,7 @@
 }
 
 /* 父容器：使用 Flex 布局让子元素横向排列 */
-.leftrigth_container {
+.leftright_container {
     display: flex;
     align-items: flex-start; /* 顶部对齐 */
     max-width: 800px;
@@ -99,22 +99,22 @@
 }
 
 /* 列表区域：两边平分宽度 */
-.leftrigth_list-section {
+.leftright_list-section {
     flex: 1;
     padding: 0 20px;
 }
 
 /* 分割线：利用右侧列表的左边框实现 */
-.leftrigth_right-section {
+.leftright_right-section {
     border-left: 2px solid #ccc; /* 颜色、粗细、样式可调 */
 }
 
 /* 移除列表默认边距（可选） */
-.leftrigth_container ul {
+.leftright_container ul {
     margin: 0;
     padding-left: 20px;
 }
 
-.leftrigth_container li {
+.leftright_container li {
     margin-bottom: 8px;
 }
