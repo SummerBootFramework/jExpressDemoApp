@@ -18,11 +18,11 @@
 package org.jexpress.demoapp.controller.grpc.client;
 
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
-import org.summerboot.jexpress.api.grpc.GRPCClientConfig;
+import org.summerboot.jexpress.grpc.client.GrpcClientConfig;
 
 
 @ConfigFilename("cfg_grpcclient1.properties")
-public class Hello1ClientConfig extends GRPCClientConfig {
+public class Hello1ClientConfig extends GrpcClientConfig {
 
     public static void main(String... args) {
         String t = generateTemplate(Hello1ClientConfig.class);

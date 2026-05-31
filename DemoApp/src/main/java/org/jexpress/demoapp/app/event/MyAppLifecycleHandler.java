@@ -26,12 +26,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.summerboot.jexpress.annotation.Scheduled;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.api.grpc.GRPCServer;
 import org.summerboot.jexpress.boot.SummerApplication;
 import org.summerboot.jexpress.boot.lifecycle.AppLifecycleHandler;
 import org.summerboot.jexpress.boot.lifecycle.AppLifecycleListener;
 import org.summerboot.jexpress.boot.lifecycle.IdleEventMonitor;
-import org.summerboot.jexpress.infra.netty.NioServer;
+import org.summerboot.jexpress.grpc.server.GrpcServer;
+import org.summerboot.jexpress.web.netty.server.NioServer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -94,7 +94,7 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     @Override
     public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
         switch (idleEventMonitor.getName()) {
-            case GRPCServer.IDLE_EVENT_MONITOR_ID -> {
+            case GrpcServer.IDLE_EVENT_MONITOR_ID -> {
                 //System.out.println("GRPCServer is idling");
             }
             case NioServer.IDLE_EVENT_MONITOR_ID -> {

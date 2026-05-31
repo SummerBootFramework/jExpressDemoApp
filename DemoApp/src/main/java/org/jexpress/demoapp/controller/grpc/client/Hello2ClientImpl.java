@@ -21,10 +21,10 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
-import org.summerboot.jexpress.api.grpc.BearerAuthCredential;
-import org.summerboot.jexpress.api.grpc.GRPCClient;
+import org.summerboot.jexpress.grpc.client.GrpcClient;
+import org.summerboot.jexpress.grpc.interceptor.BearerAuthCredential;
 
-public class Hello2ClientImpl extends GRPCClient<Hello2ClientImpl> {
+public class Hello2ClientImpl extends GrpcClient<Hello2ClientImpl> {
     private Hello2ServiceGrpc.Hello2ServiceBlockingStub blockingStub;
 
     @Override

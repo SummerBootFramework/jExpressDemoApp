@@ -33,11 +33,11 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.summerboot.jexpress.api.websocket.WebSocketAuthHandlerOtt;
-import org.summerboot.jexpress.common.util.BeanUtil;
-import org.summerboot.jexpress.common.util.FileUtil;
-import org.summerboot.jexpress.infra.netty.NioConfig;
 import org.summerboot.jexpress.security.auth.Caller;
+import org.summerboot.jexpress.util.io.FileUtil;
+import org.summerboot.jexpress.util.lang.BeanUtil;
+import org.summerboot.jexpress.web.netty.server.NioConfig;
+import org.summerboot.jexpress.websocket.handler.WebSocketAuthHandlerOtt;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -20,10 +20,11 @@ package org.jexpress.demoapp.controller.mqtt;
 import org.summerboot.jexpress.annotation.config.Config;
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
 import org.summerboot.jexpress.annotation.config.ConfigHeader;
+import org.summerboot.jexpress.integration.messaging.mqtt.MqttClientConfig;
 
 
 @ConfigFilename("cfg_mqttclient.properties")
-public class MyMqttClientConfig extends org.summerboot.jexpress.integration.mqtt.MqttClientConfig {
+public class MyMqttClientConfig extends MqttClientConfig {
 
     public static void main(String... args) {
         String t = generateTemplate(MyMqttClientConfig.class);

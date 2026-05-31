@@ -19,8 +19,8 @@ package org.jexpress.demoapp.controller.grpc.impl;
 
 import org.jexpress.demoapp.controller.grpc.Hello1Service;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.boot.BootConstant;
-import org.summerboot.jexpress.boot.BootErrorCode;
+import org.summerboot.jexpress.boot.BootConstants;
+import org.summerboot.jexpress.core.error.BootErrorCode;
 
 @Service(binding = Hello1Service.class, AlternativeName = "hawaii_1")
 public class Hello1ServiceImpl_B extends Hello1Service {
@@ -34,7 +34,7 @@ public class Hello1ServiceImpl_B extends Hello1Service {
         if (firstName.startsWith("error")) {
             throw new RuntimeException("my error");
         }
-        return BootConstant.APP_ID + " Aloha1 " + firstName + " " + lastName;
+        return BootConstants.APP_ID + " Aloha1 " + firstName + " " + lastName;
     }
 
 }

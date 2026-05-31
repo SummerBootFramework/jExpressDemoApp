@@ -22,7 +22,7 @@ import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.jexpress.demoapp.service.BusinessService;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.core.session.SessionContext;
 
 @Singleton
 @Service(AlternativeName = "impl2")// give it a try to start app with arg: -use impl2

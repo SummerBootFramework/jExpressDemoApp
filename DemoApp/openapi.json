@@ -588,7 +588,7 @@
     "/sampleapp/service/v1/ott" : {
       "get" : {
         "tags" : [ "App Authentication" ],
-        "summary" : "WebSocket One Time Ticket Authentication",
+        "summary" : "WebSocket One Time Token Authentication",
         "description" : "Requires Bearer auth header",
         "operationId" : "oneTimeTokenAuthenticate",
         "parameters" : [ {
@@ -880,7 +880,14 @@
           "displayName" : {
             "type" : "string"
           },
-          "jti" : {
+          "tenantId" : {
+            "type" : "number"
+          },
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tenantName" : {
             "type" : "string"
           },
           "groups" : {
@@ -893,14 +900,7 @@
           "uid" : {
             "type" : "string"
           },
-          "tenantId" : {
-            "type" : "number"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "tenantName" : {
+          "jti" : {
             "type" : "string"
           }
         }

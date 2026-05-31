@@ -18,10 +18,10 @@
 package org.jexpress.demoapp.integration.cache;
 
 import com.google.inject.Singleton;
+import org.summerboot.jexpress.annotation.HealthCheck;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.annotation.integration.HealthCheck;
-import org.summerboot.jexpress.integration.cache.AuthTokenCache;
-import org.summerboot.jexpress.integration.cache.AuthTokenCacheLocalImpl;
+import org.summerboot.jexpress.integration.cache.api.AuthTokenCache;
+import org.summerboot.jexpress.integration.cache.local.AuthTokenCacheLocalImpl;
 
 @Singleton
 @Service(binding = AuthTokenCache.class, AlternativeName = "aaa")

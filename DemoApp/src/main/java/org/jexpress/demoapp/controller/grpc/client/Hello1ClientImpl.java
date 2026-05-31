@@ -21,12 +21,12 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
-import org.summerboot.jexpress.api.grpc.BearerAuthCredential;
-import org.summerboot.jexpress.api.grpc.GRPCClient;
+import org.summerboot.jexpress.grpc.client.GrpcClient;
+import org.summerboot.jexpress.grpc.interceptor.BearerAuthCredential;
 
 import java.util.concurrent.TimeUnit;
 
-public class Hello1ClientImpl extends GRPCClient<Hello1ClientImpl> {
+public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
 
     private Hello1ServiceGrpc.Hello1ServiceBlockingStub blockingStub;
 

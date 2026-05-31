@@ -19,8 +19,8 @@ package org.jexpress.demoapp.controller.grpc.impl;
 
 import org.jexpress.demoapp.controller.grpc.Hello2Service;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.boot.BootConstant;
-import org.summerboot.jexpress.boot.BootErrorCode;
+import org.summerboot.jexpress.boot.BootConstants;
+import org.summerboot.jexpress.core.error.BootErrorCode;
 
 @Service(binding = Hello2Service.class, AlternativeName = "hawaii_2")
 public class Hello2ServiceImpl_B extends Hello2Service {
@@ -31,7 +31,7 @@ public class Hello2ServiceImpl_B extends Hello2Service {
 
     @Override
     protected String hello(String firstName, String lastName) {
-        return BootConstant.APP_ID + " Aloha2 " + firstName + " " + lastName;
+        return BootConstants.APP_ID + " Aloha2 " + firstName + " " + lastName;
     }
 
 }

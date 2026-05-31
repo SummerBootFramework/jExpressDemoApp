@@ -18,10 +18,10 @@
 package org.jexpress.demoapp.integration.db;
 
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
-import org.summerboot.jexpress.integration.jpa.JPAHibernateConfig;
+import org.summerboot.jexpress.integration.jpa.config.JpaHibernateConfig;
 
 @ConfigFilename(value = "cfg_db.properties", whenUseAlternative = "mockdb", thenLoadConfig = true)
-public class DBConfig extends JPAHibernateConfig {
+public class DBConfig extends JpaHibernateConfig {
 
     public static final DBConfig cfg = new DBConfig();
 

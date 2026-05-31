@@ -5,10 +5,10 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
-import org.summerboot.jexpress.api.grpc.BearerAuthCredential;
-import org.summerboot.jexpress.api.grpc.GRPCClient;
+import org.summerboot.jexpress.grpc.client.GrpcClient;
+import org.summerboot.jexpress.grpc.interceptor.BearerAuthCredential;
 
-public class Hello1Service_gRPCClient extends GRPCClient<Hello1Service_gRPCClient> {
+public class Hello1Service_gRPCClient extends GrpcClient<Hello1Service_gRPCClient> {
     private Hello1ServiceGrpc.Hello1ServiceBlockingStub blockingStub;
 
     @Override

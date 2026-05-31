@@ -24,10 +24,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.annotation.Controller;
-import org.summerboot.jexpress.annotation.rest.Daemon;
-import org.summerboot.jexpress.api.common.SessionContext;
-import org.summerboot.jexpress.api.web.WebResourceController;
-import org.summerboot.jexpress.infra.netty.NioConfig;
+import org.summerboot.jexpress.annotation.Daemon;
+import org.summerboot.jexpress.core.session.SessionContext;
+import org.summerboot.jexpress.web.controller.WebResourceController;
+import org.summerboot.jexpress.web.netty.server.NioConfig;
 
 
 import java.io.File;

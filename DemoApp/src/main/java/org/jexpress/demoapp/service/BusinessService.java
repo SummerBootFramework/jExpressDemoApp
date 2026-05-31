@@ -19,7 +19,7 @@ package org.jexpress.demoapp.service;
 
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
-import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.core.session.SessionContext;
 
 import java.io.IOException;
 

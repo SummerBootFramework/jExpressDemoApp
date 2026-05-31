@@ -18,7 +18,7 @@
 package org.jexpress.demoapp.dto;
 
 
-import org.summerboot.jexpress.common.util.FormatterUtil;
+import org.summerboot.jexpress.util.format.FormatterUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

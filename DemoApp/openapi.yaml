@@ -423,7 +423,7 @@ paths:
     get:
       tags:
       - App Authentication
-      summary: WebSocket One Time Ticket Authentication
+      summary: WebSocket One Time Token Authentication
       description: Requires Bearer auth header
       operationId: oneTimeTokenAuthenticate
       parameters:
@@ -636,7 +636,12 @@ components:
           format: int32
         displayName:
           type: string
-        jti:
+        tenantId:
+          type: number
+        tokenTtlSec:
+          type: integer
+          format: int64
+        tenantName:
           type: string
         groups:
           uniqueItems: true
@@ -645,12 +650,7 @@ components:
             type: string
         uid:
           type: string
-        tenantId:
-          type: number
-        tokenTtlSec:
-          type: integer
-          format: int64
-        tenantName:
+        jti:
           type: string
     LoginVo:
       required:

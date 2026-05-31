@@ -20,9 +20,9 @@ package org.jexpress.demoapp.security.authenticate;
 import com.google.inject.Singleton;
 import io.grpc.ServerInterceptor;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.boot.lifecycle.AuthenticatorListener;
+import org.summerboot.jexpress.core.session.SessionContext;
 import org.summerboot.jexpress.security.auth.Authenticator;
-import org.summerboot.jexpress.security.auth.AuthenticatorListener;
 import org.summerboot.jexpress.security.auth.BootAuthenticator;
 import org.summerboot.jexpress.security.auth.Caller;
 import org.summerboot.jexpress.security.auth.User;
@@ -31,14 +31,14 @@ import javax.naming.NamingException;
 
 @Singleton
 @Service(binding = {Authenticator.class, ServerInterceptor.class})
-public class MyAuthenticator extends BootAuthenticator<Long> {
+public class MyAuthenticator extends BootAuthenticator {
 
     @Override
-    protected Caller authenticate(String usename, String password, Long metaData, AuthenticatorListener listener, SessionContext context) throws NamingException {
+    protected Caller authenticate(String username, String password, Object metaData, AuthenticatorListener listener, SessionContext context) throws NamingException {
         // case1: verify username and password against LDAP
         /*        
         try (LdapAgent ldap = LdapAgent.build()) {
-            return ldap.authenticateUser(usename, password, listener);
+            return ldap.authenticateUser(username, password, listener);
         }*/
 
         // case2: verify username and password with mock logic
@@ -49,18 +49,18 @@ public class MyAuthenticator extends BootAuthenticator<Long> {
         long tenantId = 1;
         String tenantName = "jExpress Org";
         long userId = 456;
-        User user = new User(tenantId, tenantName, userId, usename);
-        if (usename.startsWith("admin.")) {
+        User user = new User(tenantId, tenantName, userId, username);
+        if (username.startsWith("admin.")) {
             user.addGroup("AdminGroup");
         }
-        if (usename.startsWith("user.")) {
+        if (username.startsWith("user.")) {
             user.addGroup("UserGroup");
         }
-        if (usename.startsWith("employee.")) {
+        if (username.startsWith("employee.")) {
             user.addGroup("EmployeeGroup");
         }
         //user.addGroup("OtherGroup");
-        user.setDisplayName("Hello " + usename);
+        user.setDisplayName("Hello " + username);
         return user;
     }
 

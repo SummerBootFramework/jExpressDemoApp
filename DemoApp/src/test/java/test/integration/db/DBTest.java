@@ -24,7 +24,7 @@ import org.jexpress.demoapp.integration.db.DBConfig;
 import org.jexpress.demoapp.model.FileLocation;
 import org.jexpress.demoapp.model.Tenant;
 import org.summerboot.jexpress.boot.config.ConfigUtil;
-import org.summerboot.jexpress.security.EncryptorUtil;
+import org.summerboot.jexpress.security.crypto.EncryptorUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

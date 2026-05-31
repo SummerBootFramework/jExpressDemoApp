@@ -23,9 +23,9 @@ import org.jexpress.demoapp.controller.grpc.client.Hello1ClientImpl;
 import org.jexpress.demoapp.controller.grpc.client.Hello2ClientImpl;
 import org.jexpress.demoapp.controller.grpc.impl.Hello1ServiceImpl_A;
 import org.jexpress.demoapp.controller.grpc.impl.Hello2ServiceImpl_A;
-import org.summerboot.jexpress.api.grpc.GRPCTestHelper;
-import org.summerboot.jexpress.boot.BootConstant;
-import org.summerboot.jexpress.security.EncryptorUtil;
+import org.summerboot.jexpress.boot.BootConstants;
+import org.summerboot.jexpress.grpc.test.GrpcTestHelper;
+import org.summerboot.jexpress.security.crypto.EncryptorUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -37,7 +37,7 @@ import java.security.GeneralSecurityException;
 
 import static org.testng.Assert.assertEquals;
 
-public class GrpcTest extends GRPCTestHelper {
+public class GrpcTest extends GrpcTestHelper {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -76,10 +76,10 @@ public class GrpcTest extends GRPCTestHelper {
         try {
             String g1 = client1.hello("firstName", "lastName");
             System.out.println("g1=" + g1);
-            assertEquals(g1, BootConstant.APP_ID + " Hello1 " + "firstName lastName");
+            assertEquals(g1, BootConstants.APP_ID + " Hello1 " + "firstName lastName");
             String g2 = client2.hello("firstName", "lastName");
             System.out.println("g2=" + g2);
-            assertEquals(g2, BootConstant.APP_ID + " Hello2 " + "firstName lastName");
+            assertEquals(g2, BootConstants.APP_ID + " Hello2 " + "firstName lastName");
         } finally {
             client1.disconnect();
             client2.disconnect();

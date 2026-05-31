@@ -35,15 +35,15 @@ import org.jexpress.demoapp.processor.freemarker.DataProcessor;
 import org.jexpress.demoapp.service.BusinessService;
 import org.jexpress.demoapp.service.MyErrorCode;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.api.common.Err;
-import org.summerboot.jexpress.api.common.SessionContext;
-import org.summerboot.jexpress.boot.BootPOI;
-import org.summerboot.jexpress.infra.netty.NioConfig;
-import org.summerboot.jexpress.integration.pdf.PDFBuilder;
-import org.summerboot.jexpress.integration.pdf.PDFBuilderConfig;
+import org.summerboot.jexpress.boot.BootPoi;
+import org.summerboot.jexpress.core.error.Err;
+import org.summerboot.jexpress.core.session.SessionContext;
+import org.summerboot.jexpress.integration.mail.PostOffice;
+import org.summerboot.jexpress.integration.pdf.PdfBuilder;
+import org.summerboot.jexpress.integration.pdf.PdfBuilderConfig;
 import org.summerboot.jexpress.integration.pdf.ProtectionSpec;
-import org.summerboot.jexpress.integration.smtp.PostOffice;
-import org.summerboot.jexpress.integration.template.FreeMarker;
+import org.summerboot.jexpress.integration.template.freemarker.FreeMarker;
+import org.summerboot.jexpress.web.netty.server.NioConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 @Service // default bind to the interface it is implemented
 public class BusinessServiceImpl1 implements BusinessService {
     protected static Injector injector;
-    protected static PDFBuilder pdfBuilder;
+    protected static PdfBuilder pdfBuilder;
     protected static FreeMarker freeMarker;
     protected final static Map<String, Template> FreeMarkerTemplates = new HashMap<>();
 
@@ -72,7 +72,7 @@ public class BusinessServiceImpl1 implements BusinessService {
         File htmlTemplateDir = new File(domainRoot + File.separator + "templates").getAbsoluteFile();
         File fontDir = new File(domainRoot + File.separator + "templates" + File.separator + "fonts").getAbsoluteFile();
         File fontCacheDir = new File(domainRoot + File.separator + "templates" + File.separator + "fontCache").getAbsoluteFile();
-        pdfBuilder = PDFBuilder.init(htmlTemplateDir, fontDir, fontCacheDir);
+        pdfBuilder = PdfBuilder.init(htmlTemplateDir, fontDir, fontCacheDir);
         freeMarker = freeMarker.init(htmlTemplateDir);
 
         // build FreeMarker (processor <--> templates)
@@ -99,16 +99,16 @@ public class BusinessServiceImpl1 implements BusinessService {
     public MyResponse process(String greeting, MyRequest myRequest, final SessionContext context) throws IOException {
         try {
             // step 1: call gRPC for a transaction
-            context.poi(BootPOI.GRPC_BEGIN);// about POI, see section8.3
+            context.poi(BootPoi.GRPC_BEGIN);// about POI, see section8.3
             long randomMillis = ThreadLocalRandom.current().nextLong(100, 501);
             TimeUnit.MILLISECONDS.sleep(randomMillis);
-            context.poi(BootPOI.GRPC_END);
+            context.poi(BootPoi.GRPC_END);
 
             // step 2: update result in DB
-            context.poi(BootPOI.DB_BEGIN);// about POI, see section8.3
+            context.poi(BootPoi.DB_BEGIN);// about POI, see section8.3
             randomMillis = ThreadLocalRandom.current().nextLong(100, 501);
             TimeUnit.MILLISECONDS.sleep(randomMillis);
-            context.poi(BootPOI.DB_END);
+            context.poi(BootPoi.DB_END);
 
             // step 3a: build HTML template with FreeMarker
             String templateName = DataProcessor.NAME1;
@@ -118,20 +118,20 @@ public class BusinessServiceImpl1 implements BusinessService {
             String htmlContent = freeMarker.generate(template, dataModel);
 
             // step 3b: build PDF with protection
-            PDFBuilderConfig cfg = PDFBuilderConfig.buildProtectedConfig();
+            PdfBuilderConfig cfg = PdfBuilderConfig.buildProtectedConfig();
             cfg.setOwnerPwd(myRequest.ownerPwd());
             cfg.setUserPwd(myRequest.userPwd());
             cfg.setPdfVersion(myRequest.pdfVersion());
             cfg.getDocInfo().setProducer("jExpress");
             cfg.setProtectionSpec(ProtectionSpec.PROTECTED);
             byte[] pdf = pdfBuilder.html2PDF(context.txId(), htmlContent, false, cfg, postOffice, context);
-            String pdfBase64 = PDFBuilder.base64Encode(pdf);
-            Long pdfCrc = PDFBuilder.crc(pdf);
+            String pdfBase64 = PdfBuilder.base64Encode(pdf);
+            Long pdfCrc = PdfBuilder.crc(pdf);
 
             List<byte[]> imagePages = pdfBuilder.pdf2Images(context.txId(), pdf, cfg.getUserPwd(), ImageType.RGB, 300f, "png", RenderDestination.EXPORT, context);
             List<String> imageBase64List = new ArrayList<>(imagePages.size());
             for (byte[] imagePage : imagePages) {
-                String imageBase64 = PDFBuilder.base64Encode(imagePage);
+                String imageBase64 = PdfBuilder.base64Encode(imagePage);
                 imageBase64List.add(imageBase64);
             }
 

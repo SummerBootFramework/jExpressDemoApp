@@ -26,12 +26,12 @@ import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
 import org.summerboot.jexpress.annotation.GrpcController;
-import org.summerboot.jexpress.annotation.rest.Ping;
-import org.summerboot.jexpress.api.common.Err;
-import org.summerboot.jexpress.api.common.SessionContext;
-import org.summerboot.jexpress.api.grpc.GRPCServer;
-import org.summerboot.jexpress.boot.BootErrorCode;
-import org.summerboot.jexpress.webserver.domain.ProcessorSettings;
+import org.summerboot.jexpress.annotation.Ping;
+import org.summerboot.jexpress.core.error.BootErrorCode;
+import org.summerboot.jexpress.core.error.Err;
+import org.summerboot.jexpress.core.model.ProcessorSettings;
+import org.summerboot.jexpress.core.session.SessionContext;
+import org.summerboot.jexpress.grpc.api.GrpcConstants;
 
 @GrpcController
 public abstract class Hello1Service extends Hello1ServiceGrpc.Hello1ServiceImplBase {
@@ -81,7 +81,7 @@ public abstract class Hello1Service extends Hello1ServiceGrpc.Hello1ServiceImplB
         ProcessorSettings processorSettings = new ProcessorSettings();
         serviceContext.processorSettings(processorSettings);*/
 
-        SessionContext context = GRPCServer.SessionContext.get();
+        SessionContext context = GrpcConstants.Key_SessionContext.get();
         context.processorSettings(settings);
         final String serverTxId = context.txId();
         String callerTxId = request.getCallerTxId();
