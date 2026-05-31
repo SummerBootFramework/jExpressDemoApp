@@ -636,21 +636,21 @@ components:
           format: int32
         displayName:
           type: string
-        tenantId:
-          type: number
-        tokenTtlSec:
-          type: integer
-          format: int64
-        tenantName:
+        uid:
+          type: string
+        jti:
           type: string
         groups:
           uniqueItems: true
           type: array
           items:
             type: string
-        uid:
-          type: string
-        jti:
+        tenantId:
+          type: number
+        tokenTtlSec:
+          type: integer
+          format: int64
+        tenantName:
           type: string
     LoginVo:
       required:

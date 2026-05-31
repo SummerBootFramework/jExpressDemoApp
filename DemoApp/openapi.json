@@ -880,14 +880,10 @@
           "displayName" : {
             "type" : "string"
           },
-          "tenantId" : {
-            "type" : "number"
+          "uid" : {
+            "type" : "string"
           },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "tenantName" : {
+          "jti" : {
             "type" : "string"
           },
           "groups" : {
@@ -897,10 +893,14 @@
               "type" : "string"
             }
           },
-          "uid" : {
-            "type" : "string"
+          "tenantId" : {
+            "type" : "number"
           },
-          "jti" : {
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tenantName" : {
             "type" : "string"
           }
         }
