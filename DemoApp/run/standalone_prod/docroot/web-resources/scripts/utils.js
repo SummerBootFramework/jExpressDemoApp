@@ -425,21 +425,6 @@ function attachForDownload(base64Data, container, fileName, mimeType, fileExt) {
     //URL.revokeObjectURL(url);
 }
 
-function buildVideoDiv(objectURL, fileName, maxWidth, cssClass) {
-    const div = document.createElement('div');
-    div.className = 'ws-message ' + (cssClass || '');
-    const video = document.createElement('video');
-    video.src = objectURL;
-    video.controls = true;
-    video.style.maxWidth = maxWidth || '300px';
-    ;
-    video.className = 'video-viewer-video';
-    video.alt = `Video ${fileName}`;
-    video.title = fileName;
-    div.appendChild(video);
-    return div;
-}
-
 function buildAudioDiv(objectURL, fileName, maxWidth, cssClass) {
     const div = document.createElement('div');
     div.className = 'ws-message ' + (cssClass || '');
@@ -455,20 +440,181 @@ function buildAudioDiv(objectURL, fileName, maxWidth, cssClass) {
     return div;
 }
 
-function buildImageDiv(objectURL, fileName, maxWidth, cssClass) {
+function buildVideoDiv(objectURL, fileName, maxWidth, cssClass) {
     const div = document.createElement('div');
     div.className = 'ws-message ' + (cssClass || '');
-    const img = document.createElement('img');
-    img.src = objectURL;
-    img.style.maxWidth = maxWidth || '300px';
-    img.className = 'image-viewer-img';
-    img.alt = `Image ${fileName}`;
-    img.title = fileName;
-    div.appendChild(img);
+    const video = document.createElement('video');
+    video.src = objectURL;
+    video.controls = true;
+    video.style.maxWidth = maxWidth || '300px';
+    ;
+    video.className = 'video-viewer-video';
+    video.alt = `Video ${fileName}`;
+    video.title = fileName;
+    div.appendChild(video);
     return div;
 }
 
-function buildPdfDiv(rawBlob, fileName, maxWidth, cssClass) {
+function buildVideoDiv_v2(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'video-zoom-wrapper';
+
+    const video = document.createElement('video');
+    video.src = objectURL;
+    video.controls = true;
+    video.style.maxWidth = maxWidth || '300px';
+    video.className = 'video-viewer-video';
+    video.alt = `Video ${fileName}`;
+    video.title = fileName;
+
+    const zoomIcon = document.createElement('span');
+    zoomIcon.className = 'video-zoom-icon';
+    zoomIcon.textContent = '🔍+';
+    zoomIcon.title = 'Click to zoom';
+    // Open lightbox only via this icon, so native video controls still work.
+    zoomIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openVideoLightbox(objectURL, fileName);
+    });
+
+    wrapper.appendChild(video);
+    wrapper.appendChild(zoomIcon);
+    div.appendChild(wrapper);
+    return div;
+}
+
+/**
+ * Open a fullscreen lightbox to display a video.
+ * Press Esc or click the × to close.
+ */
+function openVideoLightbox(objectURL, fileName) {
+    const existing = document.getElementById('videoLightboxOverlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'videoLightboxOverlay';
+    overlay.className = 'video-lightbox-overlay';
+
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'video-lightbox-close';
+    closeBtn.textContent = '×';
+    closeBtn.title = 'Close (Esc)';
+
+    const fullVideo = document.createElement('video');
+    fullVideo.src = objectURL;
+    fullVideo.controls = true;
+    fullVideo.autoplay = true;
+    fullVideo.className = 'video-lightbox-video';
+    fullVideo.title = fileName || '';
+
+    const caption = document.createElement('div');
+    caption.className = 'video-lightbox-caption';
+    caption.textContent = fileName || '';
+
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(fullVideo);
+    overlay.appendChild(caption);
+    document.body.appendChild(overlay);
+
+    const close = () => {
+        document.removeEventListener('keydown', onKey);
+        try {
+            fullVideo.pause();
+        } catch (_) {
+        }
+        overlay.remove();
+    };
+    const onKey = (e) => {
+        if (e.key === 'Escape') close();
+    };
+
+    // Close only when clicking outside the video / on the × button.
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target === closeBtn) close();
+    });
+    document.addEventListener('keydown', onKey);
+}
+
+function buildImageDiv(objectURL, fileName, maxWidth, cssClass) {
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'image-zoom-wrapper';
+    wrapper.title = 'Click to zoom';
+
+    const img = document.createElement('img');
+    img.src = objectURL;
+    img.style.maxWidth = maxWidth || '300px';
+    img.className = 'image-viewer-img image-zoomable';
+    img.alt = `Image ${fileName}`;
+    img.title = fileName;
+
+    const zoomIcon = document.createElement('span');
+    zoomIcon.className = 'image-zoom-icon';
+    zoomIcon.textContent = '🔍+';
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(zoomIcon);
+
+    wrapper.addEventListener('click', () => openImageLightbox(objectURL, fileName));
+
+    div.appendChild(wrapper);
+    return div;
+}
+
+/**
+ * Open a fullscreen lightbox to display an image.
+ * Click anywhere or press Esc to close.
+ */
+function openImageLightbox(objectURL, fileName) {
+    // Remove any existing lightbox first
+    const existing = document.getElementById('imageLightboxOverlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'imageLightboxOverlay';
+    overlay.className = 'image-lightbox-overlay';
+
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'image-lightbox-close';
+    closeBtn.textContent = '×';
+    closeBtn.title = 'Close (Esc)';
+
+    const fullImg = document.createElement('img');
+    fullImg.src = objectURL;
+    fullImg.alt = fileName || 'Preview';
+    fullImg.className = 'image-lightbox-img';
+
+    const caption = document.createElement('div');
+    caption.className = 'image-lightbox-caption';
+    caption.textContent = fileName || '';
+
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(fullImg);
+    overlay.appendChild(caption);
+    document.body.appendChild(overlay);
+
+    const close = () => {
+        document.removeEventListener('keydown', onKey);
+        overlay.remove();
+    };
+    const onKey = (e) => {
+        if (e.key === 'Escape') close();
+    };
+
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', onKey);
+
+    // Prevent image click from bubbling (so click on image alone won't close — only outside).
+    // Comment this out if you prefer click-anywhere to close.
+    // fullImg.addEventListener('click', e => e.stopPropagation());
+}
+
+function buildPdfDiv_v1(rawBlob, fileName, maxWidth, cssClass) {
     const pdfBlob = new Blob([rawBlob], {type: 'application/pdf'});
     const objectURL = URL.createObjectURL(pdfBlob);
 
@@ -490,6 +636,97 @@ function buildPdfDiv(rawBlob, fileName, maxWidth, cssClass) {
     return div;
 }
 
+function buildPdfDiv(rawBlob, fileName, maxWidth, cssClass) {
+    const pdfBlob = new Blob([rawBlob], {type: 'application/pdf'});
+    const objectURL = URL.createObjectURL(pdfBlob);
+
+    const div = document.createElement('div');
+    div.className = 'ws-message ' + (cssClass || '');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pdf-zoom-wrapper';
+    wrapper.innerHTML = `
+        <div class="pdf-viewer-toolbar">
+            <span class="pdf-viewer-title">📄 PDF Preview</span>
+            <a href="${objectURL}" download="${fileName}" class="btn btn-secondary pdf-viewer-download-btn">⬇ Download</a>
+        </div>
+        <iframe
+            src="${objectURL}"
+            class="pdf-viewer-frame"
+            title="PDF Preview"
+            type="application/pdf"
+        ></iframe>
+    `;
+
+    const zoomIcon = document.createElement('span');
+    zoomIcon.className = 'pdf-zoom-icon';
+    zoomIcon.textContent = '🔍+';
+    zoomIcon.title = 'Click to zoom';
+    zoomIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPdfLightbox(objectURL, fileName);
+    });
+
+    wrapper.appendChild(zoomIcon);
+    div.appendChild(wrapper);
+    div.classList.add('active');
+    return div;
+}
+
+/**
+ * Open a fullscreen lightbox to display a PDF.
+ * Press Esc or click the × / dim background to close.
+ */
+function openPdfLightbox(objectURL, fileName) {
+    const existing = document.getElementById('pdfLightboxOverlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'pdfLightboxOverlay';
+    overlay.className = 'pdf-lightbox-overlay';
+
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'pdf-lightbox-close';
+    closeBtn.textContent = '×';
+    closeBtn.title = 'Close (Esc)';
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = objectURL;
+    downloadLink.download = fileName || 'download.pdf';
+    downloadLink.className = 'pdf-lightbox-download';
+    downloadLink.textContent = '⬇ Download';
+    downloadLink.title = 'Download PDF';
+
+    const frame = document.createElement('iframe');
+    frame.src = objectURL;
+    frame.className = 'pdf-lightbox-frame';
+    frame.title = fileName || 'PDF Preview';
+    frame.type = 'application/pdf';
+
+    const caption = document.createElement('div');
+    caption.className = 'pdf-lightbox-caption';
+    caption.textContent = fileName || '';
+
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(downloadLink);
+    overlay.appendChild(frame);
+    overlay.appendChild(caption);
+    document.body.appendChild(overlay);
+
+    const close = () => {
+        document.removeEventListener('keydown', onKey);
+        overlay.remove();
+    };
+    const onKey = (e) => {
+        if (e.key === 'Escape') close();
+    };
+
+    // Close only when clicking outside the iframe / on the × button.
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target === closeBtn) close();
+    });
+    document.addEventListener('keydown', onKey);
+}
 
 function buildDownloadDiv(objectURL, fileName, maxWidth, cssClass) {
     const div = document.createElement('div');
