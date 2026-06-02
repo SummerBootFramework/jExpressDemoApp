@@ -20,6 +20,9 @@ package org.jexpress.demoapp.controller.restful;
 
 import org.summerboot.jexpress.annotation.validation.Unique;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Unique(type = String.class, name = "URI")// try cli: java -jar SampleApp-1.0.0.jar -list URI
 public interface AppURI {
     String CONTEXT_ROOT = "/sampleapp/service";

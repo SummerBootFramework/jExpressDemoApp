@@ -19,13 +19,15 @@ package org.jexpress.demoapp.integration.healthcheck;
 
 
 import org.jexpress.demoapp.app.Constant;
-import org.summerboot.jexpress.annotation.HealthCheck;
-import org.summerboot.jexpress.core.error.Err;
-import org.summerboot.jexpress.observability.health.HealthChecker;
+import org.summerboot.jexpress.annotation.health.HealthCheck;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.health.HealthChecker;
 
 import java.util.List;
 
-
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @HealthCheck(name = Constant.PC_NAME)
 public class PauseChecker implements HealthChecker {
     public static int error = 0;

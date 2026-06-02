@@ -25,14 +25,14 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.core.error.BootErrorCode;
-import org.summerboot.jexpress.core.error.Err;
-import org.summerboot.jexpress.core.session.SessionContext;
-import org.summerboot.jexpress.integration.cache.api.AuthTokenCache;
-import org.summerboot.jexpress.security.auth.Authenticator;
-import org.summerboot.jexpress.security.auth.Caller;
-import org.summerboot.jexpress.web.multipart.BootHttpFileUploadHandler;
-import org.summerboot.jexpress.web.netty.server.NioConfig;
+import org.summerboot.jexpress.api.auth.Authenticator;
+import org.summerboot.jexpress.api.auth.Caller;
+import org.summerboot.jexpress.api.cache.AuthTokenCache;
+import org.summerboot.jexpress.api.common.BootErrorCode;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.web.BootHttpFileUploadHandler;
+import org.summerboot.jexpress.infra.netty.config.NioConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +42,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Service(binding = ChannelHandler.class, named = "MyUpload", type = Service.ChannelHandlerType.FileUpload)
 public class HttpFileUploadHandler extends BootHttpFileUploadHandler<Object> {
 
@@ -81,7 +84,7 @@ public class HttpFileUploadHandler extends BootHttpFileUploadHandler<Object> {
         try {
             Path src = file.toPath().toAbsolutePath();
             //Path dest = src.resolveSibling(fileName + "_" + this.hashCode() + "_" + System.currentTimeMillis());
-            Path dest = Paths.get(NioConfig.instance(NioConfig.class).getTempUoloadDir(), String.valueOf(caller.getId()), fileName);
+            Path dest = Paths.get(NioConfig.instance(NioConfig.class).getTempUploadDir(), String.valueOf(caller.getId()), fileName);
             File f = dest.toFile();
             f.mkdirs();
             Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);

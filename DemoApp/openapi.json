@@ -880,9 +880,6 @@
           "displayName" : {
             "type" : "string"
           },
-          "uid" : {
-            "type" : "string"
-          },
           "jti" : {
             "type" : "string"
           },
@@ -892,6 +889,9 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "uid" : {
+            "type" : "string"
           },
           "tenantName" : {
             "type" : "string"

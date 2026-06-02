@@ -28,6 +28,9 @@ import org.eclipse.paho.mqttv5.common.MqttMessage;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public class MqttClient {
     public static void send(String... messages) throws MqttException {
         MqttConnectionOptions connOpts = MyMqttClientConfig.cfg.buildConnectionOptions();

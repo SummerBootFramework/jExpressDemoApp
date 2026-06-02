@@ -21,9 +21,12 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
-import org.summerboot.jexpress.grpc.client.GrpcClient;
-import org.summerboot.jexpress.grpc.interceptor.BearerAuthCredential;
+import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
+import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public class Hello2ClientImpl extends GrpcClient<Hello2ClientImpl> {
     private Hello2ServiceGrpc.Hello2ServiceBlockingStub blockingStub;
 

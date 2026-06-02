@@ -24,6 +24,9 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public record MyRequest(
         @NotBlank String creditCardNumber,
         String ownerPwd,

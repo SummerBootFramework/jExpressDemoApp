@@ -5,8 +5,11 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
-import org.summerboot.jexpress.grpc.client.GrpcClient;
+import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public class Hello2Service_gRPCClient extends GrpcClient<Hello2Service_gRPCClient> {
     private Hello2ServiceGrpc.Hello2ServiceBlockingStub blockingStub;
 

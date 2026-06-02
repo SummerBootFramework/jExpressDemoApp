@@ -22,7 +22,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.security.auth.Caller;
+import org.summerboot.jexpress.api.auth.Caller;
 import org.summerboot.jexpress.util.io.FileUtil;
 
 import java.io.File;
@@ -30,6 +30,9 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @ChannelHandler.Sharable
 @Singleton
 @Service(binding = ChannelHandler.class, named = "/ws/chatroom1", type = Service.ChannelHandlerType.Websocket)

@@ -35,15 +35,15 @@ import org.jexpress.demoapp.processor.template.DataProcessor;
 import org.jexpress.demoapp.service.BusinessService;
 import org.jexpress.demoapp.service.MyErrorCode;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.boot.BootPoi;
-import org.summerboot.jexpress.core.error.Err;
-import org.summerboot.jexpress.core.session.SessionContext;
-import org.summerboot.jexpress.integration.mail.PostOffice;
+import org.summerboot.jexpress.api.common.BootPoi;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.mail.PostOffice;
+import org.summerboot.jexpress.infra.netty.config.NioConfig;
 import org.summerboot.jexpress.integration.pdf.PdfBuilder;
 import org.summerboot.jexpress.integration.pdf.PdfBuilderConfig;
 import org.summerboot.jexpress.integration.pdf.ProtectionSpec;
 import org.summerboot.jexpress.integration.template.freemarker.FreeMarker;
-import org.summerboot.jexpress.web.netty.server.NioConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +54,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Singleton
 @Service // default bind to the interface it is implemented
 public class BusinessServiceImpl1 implements BusinessService {

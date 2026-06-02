@@ -32,14 +32,16 @@ import io.netty.handler.codec.stomp.StompHeaders;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.security.auth.Caller;
-import org.summerboot.jexpress.websocket.handler.WebSocketAuthHandlerOtt;
+import org.summerboot.jexpress.api.auth.Caller;
+import org.summerboot.jexpress.infra.websocket.handler.WebSocketAuthHandlerOtt;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * client - /run/websocket_client.html
+ *
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
 @ChannelHandler.Sharable
 @Singleton

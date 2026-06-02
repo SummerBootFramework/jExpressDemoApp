@@ -20,9 +20,11 @@ package org.jexpress.demoapp.controller.mqtt;
 import org.summerboot.jexpress.annotation.config.Config;
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
 import org.summerboot.jexpress.annotation.config.ConfigHeader;
-import org.summerboot.jexpress.integration.messaging.mqtt.MqttClientConfig;
+import org.summerboot.jexpress.integration.messaging.mqtt.config.MqttClientConfig;
 
-
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @ConfigFilename("cfg_mqttclient.properties")
 public class MyMqttClientConfig extends MqttClientConfig {
 

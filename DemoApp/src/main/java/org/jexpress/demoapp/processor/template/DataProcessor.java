@@ -22,6 +22,9 @@ import org.jexpress.demoapp.dto.MyRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public abstract class DataProcessor {
     public static final String NAME1 = "invoice_v1";
     public static final String NAME2 = "invoice_v2";

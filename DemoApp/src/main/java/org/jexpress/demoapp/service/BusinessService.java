@@ -19,10 +19,13 @@ package org.jexpress.demoapp.service;
 
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
-import org.summerboot.jexpress.core.session.SessionContext;
+import org.summerboot.jexpress.api.common.SessionContext;
 
 import java.io.IOException;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public interface BusinessService {
 
     MyResponse process(String greeting, MyRequest request, final SessionContext context) throws IOException;

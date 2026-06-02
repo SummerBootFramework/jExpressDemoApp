@@ -30,6 +30,9 @@ import org.summerboot.jexpress.integration.jpa.AbstractEntity;
 
 import java.util.Objects;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"tenant_ID", "name"})

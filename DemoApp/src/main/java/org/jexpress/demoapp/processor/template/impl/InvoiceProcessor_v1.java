@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Singleton
 @Service(binding = DataProcessor.class, named = DataProcessor.NAME1)
 public class InvoiceProcessor_v1 extends DataProcessor {

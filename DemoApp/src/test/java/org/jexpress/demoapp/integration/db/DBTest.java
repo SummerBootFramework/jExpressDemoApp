@@ -23,7 +23,7 @@ import jakarta.persistence.TypedQuery;
 import org.jexpress.demoapp.model.FileLocation;
 import org.jexpress.demoapp.model.Tenant;
 import org.summerboot.jexpress.boot.config.ConfigUtil;
-import org.summerboot.jexpress.security.crypto.EncryptorUtil;
+import org.summerboot.jexpress.security.EncryptorUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

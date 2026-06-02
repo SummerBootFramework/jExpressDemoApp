@@ -27,6 +27,9 @@ import org.summerboot.jexpress.boot.config.ConfigUtil;
 import java.io.File;
 import java.util.Properties;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @ConfigFilename("cfg_app.properties")
 public class MyConfig extends BootConfig {
 

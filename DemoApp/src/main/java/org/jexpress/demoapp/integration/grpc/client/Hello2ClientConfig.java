@@ -18,8 +18,11 @@
 package org.jexpress.demoapp.integration.grpc.client;
 
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
-import org.summerboot.jexpress.grpc.client.GrpcClientConfig;
+import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @ConfigFilename("cfg_grpcclient2.properties")
 public class Hello2ClientConfig extends GrpcClientConfig {
 

@@ -20,6 +20,9 @@ package org.jexpress.demoapp.integration.db;
 import org.summerboot.jexpress.annotation.config.ConfigFilename;
 import org.summerboot.jexpress.integration.jpa.config.JpaHibernateConfig;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @ConfigFilename(value = "cfg_db.properties", whenUseAlternative = "mockdb", thenLoadConfig = true)
 public class DBConfig extends JpaHibernateConfig {
 

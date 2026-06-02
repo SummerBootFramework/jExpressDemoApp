@@ -49,15 +49,18 @@ import org.jexpress.demoapp.integration.healthcheck.MyHealthChecker3;
 import org.jexpress.demoapp.integration.healthcheck.PauseChecker;
 import org.jexpress.demoapp.service.BusinessService;
 import org.summerboot.jexpress.annotation.Controller;
-import org.summerboot.jexpress.annotation.Daemon;
-import org.summerboot.jexpress.annotation.Log;
-import org.summerboot.jexpress.annotation.RequiresHealthCheck;
-import org.summerboot.jexpress.core.error.ServiceError;
-import org.summerboot.jexpress.core.session.SessionContext;
-import org.summerboot.jexpress.web.controller.BootController;
+import org.summerboot.jexpress.annotation.rest.Daemon;
+import org.summerboot.jexpress.annotation.rest.Log;
+import org.summerboot.jexpress.annotation.rest.RequiresHealthCheck;
+import org.summerboot.jexpress.api.common.ServiceError;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.rest.BootController;
 
 import java.io.IOException;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @OpenAPIDefinition(//OAS v3
         info = @Info(
                 title = "jExpress Sample App",

@@ -21,11 +21,14 @@ import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
-import org.summerboot.jexpress.grpc.client.GrpcClient;
-import org.summerboot.jexpress.grpc.interceptor.BearerAuthCredential;
+import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
+import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
 
     private Hello1ServiceGrpc.Hello1ServiceBlockingStub blockingStub;

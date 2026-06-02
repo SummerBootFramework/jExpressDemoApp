@@ -3,16 +3,20 @@ package org.jexpress.demo.grpc;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
-import org.summerboot.jexpress.annotation.HealthCheck;
-import org.summerboot.jexpress.core.error.BootErrorCode;
-import org.summerboot.jexpress.core.error.Err;
-import org.summerboot.jexpress.core.session.SessionContext;
-import org.summerboot.jexpress.grpc.client.GrpcClientConfig;
-import org.summerboot.jexpress.observability.health.HealthChecker;
-import org.summerboot.jexpress.observability.health.HealthMonitor;
+import org.summerboot.jexpress.annotation.health.HealthCheck;
+import org.summerboot.jexpress.api.common.BootErrorCode;
+import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.health.HealthChecker;
+import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
+import org.summerboot.jexpress.integration.HealthMonitor;
+
 
 import java.util.List;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @HealthCheck(name = "gRPC.hello2")
 public abstract class Hello2Service_BizClient implements HealthChecker {
     private Hello2Service_gRPCClient gRPCAgent;

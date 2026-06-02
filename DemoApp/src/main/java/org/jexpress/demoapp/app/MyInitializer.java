@@ -23,10 +23,13 @@ import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.summerboot.jexpress.annotation.Order;
-import org.summerboot.jexpress.boot.lifecycle.AppInitializer;
+import org.summerboot.jexpress.boot.lifecycle.app.AppInitializer;
 
 import java.io.File;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Order(1)
 public class MyInitializer implements AppInitializer {
 

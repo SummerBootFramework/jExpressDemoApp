@@ -20,8 +20,8 @@ package org.jexpress.demoapp.controller.grpc.impl;
 import io.grpc.Status;
 import org.jexpress.demoapp.controller.grpc.Hello1Service;
 import org.summerboot.jexpress.annotation.Service;
+import org.summerboot.jexpress.api.common.BootErrorCode;
 import org.summerboot.jexpress.boot.BootConstants;
-import org.summerboot.jexpress.core.error.BootErrorCode;
 
 @Service(binding = Hello1Service.class)
 public class Hello1ServiceImpl_A extends Hello1Service {

@@ -18,11 +18,14 @@
 package org.jexpress.demoapp.integration.cache;
 
 import com.google.inject.Singleton;
-import org.summerboot.jexpress.annotation.HealthCheck;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.integration.cache.api.AuthTokenCache;
+import org.summerboot.jexpress.annotation.health.HealthCheck;
+import org.summerboot.jexpress.api.cache.AuthTokenCache;
 import org.summerboot.jexpress.integration.cache.local.AuthTokenCacheLocalImpl;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Singleton
 @Service(binding = AuthTokenCache.class, AlternativeName = "myCacheImpl")
 @HealthCheck(name = "cache")

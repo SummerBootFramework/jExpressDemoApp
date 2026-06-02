@@ -17,6 +17,9 @@
 
 package org.jexpress.demoapp.app;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 public interface Constant {
     String VERSION = "jExpress App 1.0.0";
     String HC_NAME1 = "MyHealthChecker1"; // default name  = class.simpleName

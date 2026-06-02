@@ -24,6 +24,9 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import org.summerboot.jexpress.integration.jpa.EntityEx;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Entity
 @Table(name = "tenant")
 @NamedQueries({

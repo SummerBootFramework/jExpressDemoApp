@@ -20,6 +20,9 @@ package org.jexpress.demoapp.service;
 
 import org.summerboot.jexpress.annotation.validation.Unique;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Unique(name = "AppErrorCode", type = int.class)// try cli: java -jar SampleApp-1.0.0.jar -list AppErrorCode
 public interface MyErrorCode {
     int SystemError = 500;

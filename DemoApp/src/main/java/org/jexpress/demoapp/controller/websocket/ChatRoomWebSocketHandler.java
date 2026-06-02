@@ -33,11 +33,11 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.summerboot.jexpress.security.auth.Caller;
+import org.summerboot.jexpress.api.auth.Caller;
+import org.summerboot.jexpress.infra.netty.config.NioConfig;
+import org.summerboot.jexpress.infra.websocket.handler.WebSocketAuthHandlerOtt;
 import org.summerboot.jexpress.util.io.FileUtil;
 import org.summerboot.jexpress.util.lang.BeanUtil;
-import org.summerboot.jexpress.web.netty.server.NioConfig;
-import org.summerboot.jexpress.websocket.handler.WebSocketAuthHandlerOtt;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -174,7 +174,7 @@ public abstract class ChatRoomWebSocketHandler extends SimpleChannelInboundHandl
             // Initialize on first frame only
             if (fileChannel == null) {
                 String fileName = ctx.channel().attr(TARGET_FILE_NAME_KEY).getAndSet(null);
-                Path targetPath = Paths.get(NioConfig.instance(NioConfig.class).getTempUoloadDir(), String.valueOf(caller.getId()), fileName).toAbsolutePath();
+                Path targetPath = Paths.get(NioConfig.instance(NioConfig.class).getTempUploadDir(), String.valueOf(caller.getId()), fileName).toAbsolutePath();
                 Path parent = targetPath.getParent();
                 if (parent != null) {
                     Files.createDirectories(parent);

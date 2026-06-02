@@ -24,10 +24,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import org.jexpress.demoapp.controller.restful.AppURI;
 import org.summerboot.jexpress.annotation.Controller;
-import org.summerboot.jexpress.annotation.Daemon;
-import org.summerboot.jexpress.core.session.SessionContext;
-import org.summerboot.jexpress.web.controller.WebResourceController;
-import org.summerboot.jexpress.web.netty.server.NioConfig;
+import org.summerboot.jexpress.annotation.rest.Daemon;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.web.WebResourceController;
+import org.summerboot.jexpress.infra.netty.config.NioConfig;
 
 
 import java.io.File;
@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Controller
 public class WebController extends WebResourceController {
 

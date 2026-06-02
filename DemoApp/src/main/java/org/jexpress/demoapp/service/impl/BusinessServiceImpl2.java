@@ -22,8 +22,11 @@ import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.jexpress.demoapp.service.BusinessService;
 import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.core.session.SessionContext;
+import org.summerboot.jexpress.api.common.SessionContext;
 
+/**
+ * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
+ */
 @Singleton
 @Service(AlternativeName = "impl2")// give it a try to start app with arg: -use impl2
 public class BusinessServiceImpl2 implements BusinessService {
