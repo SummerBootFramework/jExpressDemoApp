@@ -880,7 +880,20 @@
           "displayName" : {
             "type" : "string"
           },
+          "tenantId" : {
+            "type" : "number"
+          },
+          "tenantName" : {
+            "type" : "string"
+          },
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
           "jti" : {
+            "type" : "string"
+          },
+          "uid" : {
             "type" : "string"
           },
           "groups" : {
@@ -889,19 +902,6 @@
             "items" : {
               "type" : "string"
             }
-          },
-          "uid" : {
-            "type" : "string"
-          },
-          "tenantName" : {
-            "type" : "string"
-          },
-          "tenantId" : {
-            "type" : "number"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
           }
         }
       },

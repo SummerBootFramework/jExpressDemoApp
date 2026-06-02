@@ -22,10 +22,10 @@ import io.grpc.ServerInterceptor;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.auth.Authenticator;
 import org.summerboot.jexpress.api.auth.Caller;
+import org.summerboot.jexpress.api.auth.User;
 import org.summerboot.jexpress.api.common.SessionContext;
 import org.summerboot.jexpress.boot.lifecycle.auth.AuthenticatorListener;
 import org.summerboot.jexpress.security.auth.BootAuthenticator;
-import org.summerboot.jexpress.security.auth.User;
 
 import javax.naming.NamingException;
 

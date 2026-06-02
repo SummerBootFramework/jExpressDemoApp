@@ -29,9 +29,9 @@ import org.summerboot.jexpress.annotation.GrpcController;
 import org.summerboot.jexpress.annotation.rest.Ping;
 import org.summerboot.jexpress.api.common.BootErrorCode;
 import org.summerboot.jexpress.api.common.Err;
+import org.summerboot.jexpress.api.common.ProcessorSettings;
 import org.summerboot.jexpress.api.common.SessionContext;
-import org.summerboot.jexpress.infra.grpc.server.GrpcConstants;
-import org.summerboot.jexpress.webserver.domain.ProcessorSettings;
+import org.summerboot.jexpress.api.grpc.GrpcConstants;
 
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
