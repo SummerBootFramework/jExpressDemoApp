@@ -55,6 +55,7 @@ import org.summerboot.jexpress.annotation.rest.RequiresHealthCheck;
 import org.summerboot.jexpress.api.common.ServiceError;
 import org.summerboot.jexpress.api.common.SessionContext;
 import org.summerboot.jexpress.api.rest.BootController;
+import org.summerboot.jexpress.integration.HealthMonitor;
 
 import java.io.IOException;
 
@@ -172,12 +173,12 @@ public class RestController extends BootController {
     }
 
     @POST
-    @Path(AppURI.URL_MockHealthStatus)
+    @Path(AppURI.URL_MockError)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Daemon
     //@RequiresHealthCheck("")
-    public void mockHealCheck(@PathParam("target") String target, @PathParam("error") int errorCode, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
+    public void mockHealthCheckError(@PathParam("target") String target, @PathParam("error") int errorCode, MyRequest myRequest, @Parameter(hidden = true) final SessionContext context) throws IOException {
         switch (target) {
             case Constant.HC_NAME1 -> MyHealthChecker1.error = errorCode;
             case Constant.HI_NAME2 -> MyHealthChecker2.error = errorCode;
@@ -186,5 +187,6 @@ public class RestController extends BootController {
             default ->
                     throw new IllegalArgumentException("unknown target: " + target + ", valid target: " + Constant.HC_NAME1 + ", " + Constant.HI_NAME2 + ", " + Constant.HI_NAME3 + ", " + Constant.PC_NAME);
         }
+        HealthMonitor.inspect();
     }
 }

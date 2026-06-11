@@ -52,8 +52,8 @@ async function handlePingClick() {
         if (xReference) {
             feature3State.lastReference = xReference;
         }
-
-        const statusText = `HTTP Status: ${response.status} ${response.statusText}`;
+        const body = await response.text();
+        const statusText = `HTTP Status: ${response.status} ${response.statusText} ${body}`;
 
         if (responseContainer) {
             // Add error-status class if HTTP status >= 400

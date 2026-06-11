@@ -89,8 +89,8 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
      * @param nextInspectionIntervalSeconds
      */
     @Override
-    public void onHealthInspectionFailed(SummerApplication.AppContext context, boolean healthOk, boolean paused, long retryIndex, int nextInspectionIntervalSeconds) throws Exception {
-        super.onHealthInspectionFailed(context, healthOk, paused, retryIndex, nextInspectionIntervalSeconds);
+    public void onHealthCheckFinished(SummerApplication.AppContext context, boolean healthOk, boolean paused, long retryIndex, int nextInspectionIntervalSeconds) throws Exception {
+        super.onHealthCheckFinished(context, healthOk, paused, retryIndex, nextInspectionIntervalSeconds);
         System.out.println("My health inspection failed");
     }
 
@@ -98,10 +98,10 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
         switch (idleEventMonitor.getName()) {
             case GrpcServer.IDLE_EVENT_MONITOR_ID -> {
-                //System.out.println("GRPCServer is idling");
+                log.debug("GRPCServer is idling");
             }
             case NioServer.IDLE_EVENT_MONITOR_ID -> {
-                //System.out.println("GRPCServer is idling");
+                log.debug("NioServer is idling");
             }
             case MY_IDLE_EVENT_MONITOR_ID -> {
                 log.debug("MyMonitor is idling");

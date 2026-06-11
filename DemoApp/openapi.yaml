@@ -396,7 +396,7 @@ paths:
                 $ref: "#/components/schemas/ServiceError"
   /sampleapp/service/v1/mock/health/{target}/{error}:
     post:
-      operationId: mockHealCheck
+      operationId: mockHealthCheckError
       parameters:
       - name: target
         in: path
@@ -645,13 +645,13 @@ components:
           format: int64
         jti:
           type: string
-        uid:
-          type: string
         groups:
           uniqueItems: true
           type: array
           items:
             type: string
+        uid:
+          type: string
     LoginVo:
       required:
       - password

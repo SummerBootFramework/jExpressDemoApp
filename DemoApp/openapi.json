@@ -549,7 +549,7 @@
     },
     "/sampleapp/service/v1/mock/health/{target}/{error}" : {
       "post" : {
-        "operationId" : "mockHealCheck",
+        "operationId" : "mockHealthCheckError",
         "parameters" : [ {
           "name" : "target",
           "in" : "path",
@@ -893,15 +893,15 @@
           "jti" : {
             "type" : "string"
           },
-          "uid" : {
-            "type" : "string"
-          },
           "groups" : {
             "uniqueItems" : true,
             "type" : "array",
             "items" : {
               "type" : "string"
             }
+          },
+          "uid" : {
+            "type" : "string"
           }
         }
       },
