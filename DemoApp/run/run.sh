@@ -12,7 +12,6 @@ fi
 echo "Starting with Java: ${JAVA_PATH}"
 
 "${JAVA_PATH}/bin/java" \
-  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005 \
   --enable-native-access=ALL-UNNAMED \
   -Dio.netty.native.workdir=./ \
   -Dio.grpc.netty.shaded.io.netty.native.workdir=./ \
@@ -35,4 +34,4 @@ echo "Starting with Java: ${JAVA_PATH}"
   -Dio.netty.handler.ssl.openssl.engine.enable=true \
   -Dio.netty.leakDetectionLevel=SIMPLE \
   -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
-  -jar jExpressApp.jar -domain "$1" -debug
+  -jar jExpressApp.jar -domain "$1"

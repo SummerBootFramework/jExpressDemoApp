@@ -21,13 +21,13 @@
         <maven-surefire.version>3.5.5</maven-surefire.version>
         <maven-failsafe.version>3.5.5</maven-failsafe.version>
         <swagger-maven.version>2.2.48</swagger-maven.version>
-        <jexpress.version>2.7.1</jexpress.version>
+        <jexpress.version>2.7.2</jexpress.version>
         <testng.version>7.12.0</testng.version>
 
         <!-- application properties and dependencies-->
         <!-- protobuf and gRPC -->
-        <protobuf.version>4.34.1</protobuf.version>
-        <grpc.version>1.81.0</grpc.version>
+        <protobuf.version>4.35.1</protobuf.version>
+        <grpc.version>1.83.1</grpc.version>
     </properties>
 
     <dependencies>
