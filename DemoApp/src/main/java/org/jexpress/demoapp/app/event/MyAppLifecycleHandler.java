@@ -59,13 +59,14 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         log.info("onCron: " + jobExecutionContext);
         String lastTransactionId = jobExecutionContext.getFireTime().toString();
-        myIdleEventMonitor.onCall("cron@" + lastTransactionId);
+        //myIdleEventMonitor.onCall("cron@" + lastTransactionId);
     }
 
     @Override
     public void beforeApplicationStart(SummerApplication.AppContext context) throws Exception {
         super.beforeApplicationStart(context);
         BusinessServiceImpl1.init(context.guiceInjector());
+        IdleEventMonitor.start(myIdleEventMonitor, this);
     }
 
     /**
