@@ -1,0 +1,45 @@
+/*
+ * Copyright 2005-2026 Du Law Office - jExpress, The Summer Boot Framework Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://apache.org
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.jexpress.demoapp.controller.grpc.impl;
+
+import io.grpc.Status;
+import org.jexpress.demoapp.controller.grpc.MyHello1Service;
+import org.summerboot.jexpress.annotation.Service;
+import org.summerboot.jexpress.api.common.BootErrorCode;
+import org.summerboot.jexpress.boot.BootConstants;
+
+@Service(binding = MyHello1Service.class)
+public class MyHello1ServiceImpl_A extends MyHello1Service {
+
+    @Override
+    protected int ping() {
+        return BootErrorCode.OK;
+    }
+
+    @Override
+    protected String hello(String firstName, String lastName) throws Throwable {
+        if (firstName.equals("err1")) {
+            Status status = Status.INVALID_ARGUMENT.withDescription("my status ex");
+            throw status.asException();
+        } else if (firstName.equals("err2")) {
+            throw new RuntimeException("my RuntimeException");
+        }
+        return BootConstants.APP_ID + " Hello1 " + firstName + " " + lastName;
+    }
+
+}

@@ -31,6 +31,7 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.RenderDestination;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
+import org.jexpress.demoapp.integration.httpclient.MyHttpClient;
 import org.jexpress.demoapp.processor.template.DataProcessor;
 import org.jexpress.demoapp.service.BusinessService;
 import org.jexpress.demoapp.service.MyErrorCode;
@@ -67,6 +68,9 @@ public class BusinessServiceImpl1 implements BusinessService {
 
     @Inject
     protected PostOffice postOffice;
+
+    @Inject
+    protected MyHttpClient myHttpClient;
 
     public static void init(Injector _injector) throws IOException {
         injector = _injector;
@@ -113,14 +117,19 @@ public class BusinessServiceImpl1 implements BusinessService {
             TimeUnit.MILLISECONDS.sleep(randomMillis);
             context.poi(BootPoi.DB_END);
 
-            // step 3a: build HTML template with FreeMarker
+            // step 3: call http client to get a response from another service
+            MyResponse myResponse = myHttpClient.getHello("name", "body", context);
+            System.out.println("myResponse=" + myResponse);
+
+
+            // step 4a: build HTML template with FreeMarker
             String templateName = DataProcessor.NAME1;
             DataProcessor processor = injector.getInstance(Key.get(DataProcessor.class, Names.named(templateName)));
             Map<String, Object> dataModel = processor.buildModel(context.txId(), greeting, myRequest);
             Template template = FreeMarkerTemplates.get(templateName);
             String htmlContent = freeMarker.generate(template, dataModel);
 
-            // step 3b: build PDF with protection
+            // step 4b: build PDF with protection
             PdfBuilderConfig cfg = PdfBuilderConfig.buildProtectedConfig();
             cfg.setOwnerPwd(myRequest.ownerPwd());
             cfg.setUserPwd(myRequest.userPwd());
@@ -138,7 +147,7 @@ public class BusinessServiceImpl1 implements BusinessService {
                 imageBase64List.add(imageBase64);
             }
 
-            // step 4a: build GOOD return status and response
+            // step 5a: build GOOD return status and response
             context.status(HttpResponseStatus.CREATED);// override, default is 200 OK
             return new MyResponse("impl1.public." + greeting + myRequest.creditCardNumber(), "impl1.private." + greeting + myRequest.creditCardNumber(),
                     myRequest.shoppingList(), pdfBase64, pdfCrc, imageBase64List);
@@ -146,7 +155,7 @@ public class BusinessServiceImpl1 implements BusinessService {
             // Restore interrupted status
             Thread.currentThread().interrupt();
 
-            // step 4b: build ERROR return status and response
+            // step 5b: build ERROR return status and response
             Err error = new Err(MyErrorCode.SystemError, null, "Interrupted", ex);
             context.error(error).status(HttpResponseStatus.INTERNAL_SERVER_ERROR);// override, default is 200 OK
             return null;

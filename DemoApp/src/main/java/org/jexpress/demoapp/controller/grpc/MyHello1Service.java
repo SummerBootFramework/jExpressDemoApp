@@ -22,11 +22,13 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.logging.log4j.Level;
-import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
-import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
-import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
-import org.summerboot.jexpress.annotation.GrpcController;
+import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
+import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
+import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
+import org.jexpress.demoapp.integration.healthcheck.MyHttpClientHealthChecker;
+import org.summerboot.jexpress.annotation.GrpcService;
 import org.summerboot.jexpress.annotation.rest.Ping;
+import org.summerboot.jexpress.annotation.rest.RequiresHealthCheck;
 import org.summerboot.jexpress.api.common.BootErrorCode;
 import org.summerboot.jexpress.api.common.Err;
 import org.summerboot.jexpress.api.common.ProcessorSettings;
@@ -36,8 +38,9 @@ import org.summerboot.jexpress.api.grpc.GrpcConstants;
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
-@GrpcController
-public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplBase {
+@GrpcService
+public abstract class MyHello1Service extends Hello1ServiceGrpc.Hello1ServiceImplBase {
+
 
     static ProcessorSettings settings = new ProcessorSettings();
 
@@ -46,10 +49,10 @@ public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplB
     }
 
 
-    protected final Hello2Response PONG = pong(BootErrorCode.OK, "");
+    protected final Hello1Response PONG = pong(BootErrorCode.OK, "");
 
-    protected static Hello2Response pong(int errorCode, String errorDesc) {
-        return Hello2Response.newBuilder()
+    protected static Hello1Response pong(int errorCode, String errorDesc) {
+        return Hello1Response.newBuilder()
                 .setErrorCode(errorCode)
                 .setErrorDesc(errorDesc)
                 .setVersion("1.0.0")
@@ -57,7 +60,8 @@ public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplB
     }
 
     @Override
-    public void ping(Empty e, StreamObserver<Hello2Response> responseObserver) {
+    @Ping
+    public void ping(Empty e, StreamObserver<Hello1Response> responseObserver) {
         try {
             int errorCode = ping();
             if (errorCode == BootErrorCode.OK) {
@@ -73,9 +77,9 @@ public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplB
     }
 
 
-    @Ping
     @Override
-    public void hello2(Hello2Request request, StreamObserver<Hello2Response> responseObserver) {
+    @RequiresHealthCheck(MyHttpClientHealthChecker.NAME)
+    public void hello1(Hello1Request request, StreamObserver<Hello1Response> responseObserver) {
         /*SessionContext serviceContext = GRPCServer.SessionContext.get();
         SocketAddress addr = Authenticator.GrpcCallerAddr.get();
         Caller caller = Authenticator.GrpcCaller.get();
@@ -105,7 +109,7 @@ public abstract class Hello2Service extends Hello2ServiceGrpc.Hello2ServiceImplB
         }
         long cost = System.currentTimeMillis() - start;
 
-        Hello2Response helloResponse = Hello2Response.newBuilder()
+        Hello1Response helloResponse = Hello1Response.newBuilder()
                 .setServerTxId(serverTxId)
                 .setErrorCode(errorCode)
                 .setErrorDesc(errorDesc)

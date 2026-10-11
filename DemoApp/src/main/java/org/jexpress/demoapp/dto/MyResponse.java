@@ -17,13 +17,15 @@
 
 package org.jexpress.demoapp.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
 public record MyResponse(
-        String publicInfo,
+        @NotNull String publicInfo,
         String privateInfo,
         List<String> secretList,
         List<String> emptyList,

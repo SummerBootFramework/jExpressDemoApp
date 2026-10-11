@@ -31,7 +31,10 @@ paths:
             the error seems to have been caused by the client. Client normally should
             not retransmit the same request again.
           content:
-            text/html:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+            application/xml:
               schema:
                 $ref: "#/components/schemas/ServiceError"
         "5xx":
@@ -40,7 +43,10 @@ paths:
             of performing the request. The client can continue and try again with
             the request without modification.
           content:
-            text/html:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+            application/xml:
               schema:
                 $ref: "#/components/schemas/ServiceError"
       security:
@@ -445,10 +451,7 @@ paths:
               schema:
                 type: string
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Caller"
-            application/xml:
+            text/plain:
               schema:
                 $ref: "#/components/schemas/Caller"
         "4xx":
@@ -456,10 +459,7 @@ paths:
             the error seems to have been caused by the client. Client normally should
             not retransmit the same request again.
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ServiceError"
-            application/xml:
+            text/plain:
               schema:
                 $ref: "#/components/schemas/ServiceError"
         "5xx":
@@ -468,10 +468,7 @@ paths:
             of performing the request. The client can continue and try again with
             the request without modification.
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ServiceError"
-            application/xml:
+            text/plain:
               schema:
                 $ref: "#/components/schemas/ServiceError"
   /sampleapp/service/v1/ping:
@@ -532,7 +529,7 @@ paths:
             the error seems to have been caused by the client. Client normally should
             not retransmit the same request again.
           content:
-            text/html:
+            text/plain:
               schema:
                 $ref: "#/components/schemas/ServiceError"
         "5xx":
@@ -541,7 +538,7 @@ paths:
             of performing the request. The client can continue and try again with
             the request without modification.
           content:
-            text/html:
+            text/plain:
               schema:
                 $ref: "#/components/schemas/ServiceError"
       security:
@@ -572,6 +569,8 @@ components:
           items:
             $ref: "#/components/schemas/Err"
     MyResponse:
+      required:
+      - publicInfo
       type: object
       properties:
         publicInfo:
@@ -636,15 +635,6 @@ components:
           format: int32
         displayName:
           type: string
-        jti:
-          type: string
-        uid:
-          type: string
-        groups:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
         tenantName:
           type: string
         tokenTtlSec:
@@ -652,6 +642,15 @@ components:
           format: int64
         tenantId:
           type: number
+        jti:
+          type: string
+        groups:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        uid:
+          type: string
     LoginVo:
       required:
       - password

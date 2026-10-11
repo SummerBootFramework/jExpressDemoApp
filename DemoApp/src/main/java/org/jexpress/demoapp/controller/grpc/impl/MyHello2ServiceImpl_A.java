@@ -17,29 +17,21 @@
 
 package org.jexpress.demoapp.controller.grpc.impl;
 
-import io.grpc.Status;
-import org.jexpress.demoapp.controller.grpc.Hello1Service;
+import org.jexpress.demoapp.controller.grpc.MyHello2Service;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.common.BootErrorCode;
 import org.summerboot.jexpress.boot.BootConstants;
 
-@Service(binding = Hello1Service.class)
-public class Hello1ServiceImpl_A extends Hello1Service {
-
+@Service(binding = MyHello2Service.class)
+public class MyHello2ServiceImpl_A extends MyHello2Service {
     @Override
     protected int ping() {
         return BootErrorCode.OK;
     }
 
     @Override
-    protected String hello(String firstName, String lastName) throws Throwable {
-        if (firstName.equals("err1")) {
-            Status status = Status.INVALID_ARGUMENT.withDescription("my status ex");
-            throw status.asException();
-        } else if (firstName.equals("err2")) {
-            throw new RuntimeException("my RuntimeException");
-        }
-        return BootConstants.APP_ID + " Hello1 " + firstName + " " + lastName;
+    protected String hello(String firstName, String lastName) {
+        return BootConstants.APP_ID + " Hello2 " + firstName + " " + lastName;
     }
 
 }

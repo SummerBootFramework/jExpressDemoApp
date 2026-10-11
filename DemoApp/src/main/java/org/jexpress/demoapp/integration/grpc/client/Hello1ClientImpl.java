@@ -17,6 +17,7 @@
 
 package org.jexpress.demoapp.integration.grpc.client;
 
+import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
@@ -27,6 +28,8 @@ import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredentia
 import java.util.concurrent.TimeUnit;
 
 /**
+ * make it package access class, only MyGrpcClient interface is exposed to the caller, so that the caller does not need to know the implementation details of GrpcClient
+ *
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
 public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
@@ -43,6 +46,18 @@ public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
         String jwt = "jwt1";
         BearerAuthCredential bearerAuthCredential = new BearerAuthCredential(jwt);
         this.blockingStub = Hello1ServiceGrpc.newBlockingStub(channel);//.withCallCredentials(bearerAuthCredential);
+    }
+
+    public int ping() {
+        lock();
+        int ret = 0;
+        try {
+            Hello1Response response = blockingStub.ping(Empty.getDefaultInstance());
+            ret = response.getErrorCode();
+        } finally {
+            unlock();
+        }
+        return ret;
     }
 
     public String hello(String firstName, String lastName) {

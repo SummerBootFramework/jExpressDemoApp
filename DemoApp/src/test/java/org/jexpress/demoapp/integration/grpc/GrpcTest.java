@@ -19,8 +19,8 @@ package org.jexpress.demoapp.integration.grpc;
 
 import io.grpc.BindableService;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
-import org.jexpress.demoapp.controller.grpc.impl.Hello1ServiceImpl_A;
-import org.jexpress.demoapp.controller.grpc.impl.Hello2ServiceImpl_A;
+import org.jexpress.demoapp.controller.grpc.impl.MyHello1ServiceImpl_A;
+import org.jexpress.demoapp.controller.grpc.impl.MyHello2ServiceImpl_A;
 import org.jexpress.demoapp.integration.grpc.client.Hello1ClientImpl;
 import org.jexpress.demoapp.integration.grpc.client.Hello2ClientImpl;
 import org.summerboot.jexpress.boot.BootConstants;
@@ -63,8 +63,8 @@ public class GrpcTest extends GrpcTestHelper {
 
     @Override
     protected BindableService[] getServerImpls() {
-        BindableService impl1 = new Hello1ServiceImpl_A();
-        BindableService impl2 = new Hello2ServiceImpl_A();
+        BindableService impl1 = new MyHello1ServiceImpl_A();
+        BindableService impl2 = new MyHello2ServiceImpl_A();
         return new BindableService[]{impl1, impl2};
     }
 

@@ -15,23 +15,18 @@
  *
  */
 
-package org.jexpress.demoapp.controller.grpc.impl;
+package org.jexpress.demoapp.integration.httpclient;
 
-import org.jexpress.demoapp.controller.grpc.Hello2Service;
-import org.summerboot.jexpress.annotation.Service;
-import org.summerboot.jexpress.api.common.BootErrorCode;
-import org.summerboot.jexpress.boot.BootConstants;
+import org.jexpress.demoapp.dto.MyResponse;
+import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.rpc.RpcResult;
 
-@Service(binding = Hello2Service.class)
-public class Hello2ServiceImpl_A extends Hello2Service {
-    @Override
-    protected int ping() {
-        return BootErrorCode.OK;
-    }
+import java.io.IOException;
 
-    @Override
-    protected String hello(String firstName, String lastName) {
-        return BootConstants.APP_ID + " Hello2 " + firstName + " " + lastName;
-    }
+public interface MyHttpClient {
+    RpcResult ping() throws IOException;
 
+    RpcResult<MyResponse> getHelloRpcResult(String name, String body, SessionContext context) throws IOException;
+
+    MyResponse getHello(String name, String body, SessionContext context) throws IOException;
 }

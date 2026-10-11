@@ -15,7 +15,7 @@
  *
  */
 
-package org.jexpress.demoapp.integration.healthcheck;
+package org.jexpress.demoapp.integration.healthcheck.mock;
 
 
 import org.jexpress.demoapp.app.Constant;

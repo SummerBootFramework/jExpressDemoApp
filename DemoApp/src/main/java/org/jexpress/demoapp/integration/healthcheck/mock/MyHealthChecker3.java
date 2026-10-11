@@ -15,7 +15,7 @@
  *
  */
 
-package org.jexpress.demoapp.integration.healthcheck;
+package org.jexpress.demoapp.integration.healthcheck.mock;
 
 
 import org.summerboot.jexpress.annotation.health.HealthCheck;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
 @HealthCheck
-public class MyHealthChecker2 implements HealthChecker {
+public class MyHealthChecker3 implements HealthChecker {
     public static int error = 0;
 
     @Override
@@ -37,6 +37,6 @@ public class MyHealthChecker2 implements HealthChecker {
             return null;
         }
 
-        return List.of(new Err(error, "checker2.etag", "checker2.eDesc", new Exception("checker2.mock exception")));
+        return List.of(new Err(error, "checker3.etag", "checker3.eDesc", new Exception("checker3.mock exception")));
     }
 }

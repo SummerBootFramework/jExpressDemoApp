@@ -20,6 +20,7 @@ package org.jexpress.demoapp.app.event;
 import com.google.inject.Singleton;
 import org.jexpress.demoapp.app.MyConfig;
 import org.jexpress.demoapp.app.MyInitializer;
+import org.jexpress.demoapp.integration.healthcheck.MyHttpClientHealthChecker;
 import org.jexpress.demoapp.service.impl.BusinessServiceImpl1;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -33,8 +34,6 @@ import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.infra.grpc.server.GrpcServer;
 import org.summerboot.jexpress.infra.netty.NioServer;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
@@ -46,27 +45,19 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
 
 
     private static final java.util.logging.Logger jul = java.util.logging.Logger.getLogger(MyInitializer.class.getName());
-    private static final String MY_IDLE_EVENT_MONITOR_ID = "MyIdleEventMonitor";
 
-    private IdleEventMonitor myIdleEventMonitor = new IdleEventMonitor(MY_IDLE_EVENT_MONITOR_ID) {
-        @Override
-        public long getIdleIntervalMillis() {
-            return TimeUnit.SECONDS.toMillis(MyConfig.cfg.getMyIdleThresholdSecond());
-        }
-    };
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         log.info("onCron: " + jobExecutionContext);
         String lastTransactionId = jobExecutionContext.getFireTime().toString();
-        //myIdleEventMonitor.onCall("cron@" + lastTransactionId);
     }
 
     @Override
     public void beforeApplicationStart(SummerApplication.AppContext context) throws Exception {
         super.beforeApplicationStart(context);
         BusinessServiceImpl1.init(context.guiceInjector());
-        IdleEventMonitor.start(myIdleEventMonitor, this);
+        IdleEventMonitor.start(MyHttpClientHealthChecker.IDLE_EVENT_MONITOR, this);
     }
 
     /**
@@ -92,7 +83,7 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     @Override
     public void onHealthCheckFinished(SummerApplication.AppContext context, boolean healthOk, boolean paused, long retryIndex, int nextInspectionIntervalSeconds) throws Exception {
         super.onHealthCheckFinished(context, healthOk, paused, retryIndex, nextInspectionIntervalSeconds);
-        System.out.println("My health inspection failed");
+        System.out.println("My health inspection finished");
     }
 
     @Override
@@ -104,8 +95,8 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
             case NioServer.IDLE_EVENT_MONITOR_ID -> {
                 log.debug("NioServer is idling");
             }
-            case MY_IDLE_EVENT_MONITOR_ID -> {
-                log.debug("MyMonitor is idling");
+            case MyHttpClientHealthChecker.NAME -> {
+                log.debug("MyHttpClientHealthChecker is idling");
             }
         }
     }

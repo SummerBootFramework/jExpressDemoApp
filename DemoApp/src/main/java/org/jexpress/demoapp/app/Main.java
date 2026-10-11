@@ -20,10 +20,7 @@ package org.jexpress.demoapp.app;
 import org.summerboot.jexpress.annotation.Version;
 import org.summerboot.jexpress.boot.SummerApplication;
 
-/**
- * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
- */
-@Version(value = Constant.VERSION, logFileName = "jExpressApp")
+@Version(value = "1.0.0", logFileName = "MyApp")
 public class Main {
     public static void main(String[] args) {
         SummerApplication.run();
