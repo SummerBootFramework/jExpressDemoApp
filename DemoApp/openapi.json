@@ -879,12 +879,15 @@
           "tenantName" : {
             "type" : "string"
           },
+          "tenantId" : {
+            "type" : "number"
+          },
           "tokenTtlSec" : {
             "type" : "integer",
             "format" : "int64"
           },
-          "tenantId" : {
-            "type" : "number"
+          "uid" : {
+            "type" : "string"
           },
           "jti" : {
             "type" : "string"
@@ -895,9 +898,6 @@
             "items" : {
               "type" : "string"
             }
-          },
-          "uid" : {
-            "type" : "string"
           }
         }
       },
