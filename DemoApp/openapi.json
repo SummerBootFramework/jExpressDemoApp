@@ -876,7 +876,17 @@
           "displayName" : {
             "type" : "string"
           },
-          "tenantName" : {
+          "uid" : {
+            "type" : "string"
+          },
+          "groups" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "jti" : {
             "type" : "string"
           },
           "tenantId" : {
@@ -886,18 +896,8 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "uid" : {
+          "tenantName" : {
             "type" : "string"
-          },
-          "jti" : {
-            "type" : "string"
-          },
-          "groups" : {
-            "uniqueItems" : true,
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
           }
         }
       },
