@@ -25,21 +25,21 @@
         <maven-resources.version>3.5.0</maven-resources.version>
         <maven-surefire.version>3.5.5</maven-surefire.version>
         <maven-failsafe.version>3.5.5</maven-failsafe.version>
-        <swagger-maven.version>2.2.54</swagger-maven.version>
-        <jexpress.version>2.7.4-SNAPSHOT</jexpress.version>
+        <swagger-maven.version>2.2.55</swagger-maven.version>
+        <jexpress.version>2.7.4</jexpress.version>
         <testng.version>7.12.0</testng.version>
 
         <!-- application properties and dependencies-->
         <main.class>${api.package}.app.Main</main.class>
         <api.package>org.jexpress.demoapp</api.package>
         <!-- protobuf and gRPC -->
-        <protobuf.version>4.36.1</protobuf.version>
-        <grpc.version>1.84.0</grpc.version>
-        <jdbc.version>26.7.0</jdbc.version>
+        <protobuf.version>4.36.2</protobuf.version>
+        <grpc.version>1.85.1</grpc.version>
+        <jdbc.version>26.10.0</jdbc.version>
 
         <!-- PDF - iText -->
-        <itext-core.version>9.7.1</itext-core.version>
-        <itext-html2pdf.version>6.3.3</itext-html2pdf.version>
+        <itext-core.version>9.8.0</itext-core.version>
+        <itext-html2pdf.version>6.3.4</itext-html2pdf.version>
     </properties>
 
     <dependencies>

@@ -637,20 +637,20 @@ components:
           type: string
         uid:
           type: string
-        jti:
-          type: string
         groups:
           uniqueItems: true
           type: array
           items:
             type: string
+        jti:
+          type: string
+        tenantId:
+          type: number
         tokenTtlSec:
           type: integer
           format: int64
         tenantName:
           type: string
-        tenantId:
-          type: number
     LoginVo:
       required:
       - password
