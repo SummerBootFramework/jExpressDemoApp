@@ -33,13 +33,13 @@ import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
 import org.jexpress.demoapp.integration.httpclient.MyHttpClient;
 import org.jexpress.demoapp.processor.template.DataProcessor;
+import org.jexpress.demoapp.processor.template.SinglePageHeightCalculationListener;
 import org.jexpress.demoapp.service.BusinessService;
 import org.jexpress.demoapp.service.MyErrorCode;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.common.BootPoi;
 import org.summerboot.jexpress.api.common.Err;
 import org.summerboot.jexpress.api.common.SessionContext;
-import org.summerboot.jexpress.api.mail.PostOffice;
 import org.summerboot.jexpress.infra.netty.config.NioConfig;
 import org.summerboot.jexpress.integration.pdf.PdfBuilder;
 import org.summerboot.jexpress.integration.pdf.PdfBuilderConfig;
@@ -67,9 +67,6 @@ public class BusinessServiceImpl1 implements BusinessService {
     protected final static Map<String, Template> FreeMarkerTemplates = new HashMap<>();
 
     @Inject
-    protected PostOffice postOffice;
-
-    @Inject
     protected MyHttpClient myHttpClient;
 
     public static void init(Injector _injector) throws IOException {
@@ -80,6 +77,8 @@ public class BusinessServiceImpl1 implements BusinessService {
         File fontDir = new File(domainRoot + File.separator + "templates" + File.separator + "fonts").getAbsoluteFile();
         File fontCacheDir = new File(domainRoot + File.separator + "templates" + File.separator + "fontCache").getAbsoluteFile();
         pdfBuilder = PdfBuilder.init(htmlTemplateDir, fontDir, fontCacheDir);
+        PdfBuilder.SinglePageHeightCalculationListener listener = injector.getInstance(SinglePageHeightCalculationListener.class);
+        pdfBuilder.addListener(listener);
         freeMarker = freeMarker.init(htmlTemplateDir);
 
         // build FreeMarker (processor <--> templates)
@@ -136,7 +135,7 @@ public class BusinessServiceImpl1 implements BusinessService {
             cfg.setPdfVersion(myRequest.pdfVersion());
             cfg.getDocInfo().setProducer("jExpress");
             cfg.setProtectionSpec(ProtectionSpec.PROTECTED);
-            byte[] pdf = pdfBuilder.html2PDF(context.txId(), htmlContent, false, cfg, postOffice, context);
+            byte[] pdf = pdfBuilder.htmlToPdf(context.txId(), htmlContent, cfg, context);
             String pdfBase64 = PdfBuilder.base64Encode(pdf);
             Long pdfCrc = PdfBuilder.crc(pdf);
 

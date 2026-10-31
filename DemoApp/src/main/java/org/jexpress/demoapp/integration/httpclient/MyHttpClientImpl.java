@@ -66,6 +66,6 @@ public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHtt
         if (!rpcResult.isRemoteSuccess()) {
             return null; // errors are already set in the context by rpcEx() method
         }
-        return rpcResult.deserialize(MyResponse.class, context);
+        return rpcResult.deserialize(MyResponse.class);
     }
 }
