@@ -45,13 +45,17 @@ import org.summerboot.jexpress.integration.pdf.PdfBuilder;
 import org.summerboot.jexpress.integration.pdf.PdfBuilderConfig;
 import org.summerboot.jexpress.integration.pdf.ProtectionSpec;
 import org.summerboot.jexpress.integration.template.freemarker.FreeMarker;
+import org.summerboot.jexpress.util.concurrent.ConcurrentUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -117,8 +121,25 @@ public class BusinessServiceImpl1 implements BusinessService {
             context.poi(BootPoi.DB_END);
 
             // step 3: call http client to get a response from another service
-            MyResponse myResponse = myHttpClient.getHello("name", "body", context);
-            System.out.println("myResponse=" + myResponse);
+            // 3.1 set request.limiter.max.concurrent=2 and request.limiter.queuing.timeout.ms=0 and request.timeout.ms=6000 in run/standalone_prod/configuration folder to control the http client concurrency limit, default is no limit
+            // 3.2 set Response_Delay_Second=5 in MockService\run\mock_response\mockservice\myservice\hello_POST.properties to simulate a slow response from the mock service
+            // 3.3 add JSON text of MyResponse (see bottom of this file) into MockService\run\mock_response\mockservice\myservice\hello_POST.txt to simulate a static response from the mock service
+            int size = 3;
+            List<MyResponse> myResults = new ArrayList<>(size);
+            List<Callable<MyResponse>> tasks = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                final int idx = i; // capture at task-creation time, not execution time
+                Callable<MyResponse> task = () -> httpRpc(idx, myHttpClient, context);
+                tasks.add(task);
+            }
+            long start = System.currentTimeMillis();
+            try {
+                ConcurrentUtil.runAndWaitForAllResults(tasks, myResults);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            long cost = System.currentTimeMillis() - start;
+            System.out.println("cost=" + cost);
 
 
             // step 4a: build HTML template with FreeMarker
@@ -160,4 +181,35 @@ public class BusinessServiceImpl1 implements BusinessService {
             return null;
         }
     }
+
+    private static MyResponse httpRpc(int index, MyHttpClient myHttpClient, SessionContext context) throws IOException {
+        MyResponse myResponse = myHttpClient.getHello("name" + index, "body" + index, context);
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now + " [" + index + "]: myResponse=" + myResponse);
+        return myResponse;
+    }
+
+    /* Sample JSON text of MyResponse:
+    {
+  "publicInfo": "This is pulic information",
+  "privateInfo": "This is private sensitive information",
+  "secretList": [
+    "secret-token-123",
+    "secret-key-456"
+  ],
+  "emptyList": [],
+  "nullList": null,
+  "dataList": [
+    "item1",
+    "item2",
+    "item3"
+  ],
+  "pdfBase64": "JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmlsdGVyIC9GbGF0ZURlY29kZT4+CnN0cmVhbQp4nA==",
+  "pdfCrc": 3847291045,
+  "imageBase64": [
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+  ]
+}
+     */
 }

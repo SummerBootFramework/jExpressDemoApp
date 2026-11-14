@@ -44,7 +44,7 @@ public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHtt
         final URI uri = URI.create(MyHttpClientConfig.cfg.getEndpoint() + "/ping");
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(uri).GET();
         HttpResponseStatus[] expectedStatus = {HttpResponseStatus.OK, HttpResponseStatus.NO_CONTENT};
-        return rpc(SessionContext.build(-1), reqBuilder.build(), false, expectedStatus);
+        return rpc(SessionContext.build(-1), reqBuilder, false, expectedStatus);
     }
 
     @Override
@@ -56,13 +56,13 @@ public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHtt
         final URI uri = URI.create(MyHttpClientConfig.cfg.getEndpoint() + "/hello?name=" + name);
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(uri).POST(HttpRequest.BodyPublishers.ofString(body));
         HttpResponseStatus[] expectedStatus = {HttpResponseStatus.OK};
-        boolean isStreaming = true; // new to jExpress v2.7.4: set to true to enable streaming processing of large response bodies
-        return rpc(context, reqBuilder.build(), isStreaming, expectedStatus);
+        boolean isStreaming = false; // new to jExpress v2.7.4: set to true to enable streaming processing of large response bodies
+        return rpc(context, reqBuilder, isStreaming, expectedStatus);
     }
 
     @Override
     public MyResponse getHello(String name, String body, SessionContext context) throws IOException {
-        RpcResult<MyResponse> rpcResult = getHelloRpcResult("name", "body", context);
+        RpcResult<MyResponse> rpcResult = getHelloRpcResult(name, body, context);
         if (!rpcResult.isRemoteSuccess()) {
             return null; // errors are already set in the context by rpcEx() method
         }

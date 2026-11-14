@@ -481,8 +481,8 @@ paths:
         \ sending new request to this service.<br>Below is an example of F5 config:\
         \ Basically it's one monitor that does the check to each member in the pool\
         \ . It will mark each server within the pool member down if it does not receive\
-        \ a 200. <br><i>GET /myservices/myapp/ping HTTP/1.1\\r\\nConnection: Close\\\
-        r\\n\\r\\n</i>"
+        \ a 200. <br><i>GET /myservices/myapp/ping HTTP/1.1\\nConnection: Close\\\
+        n\\n</i>"
       operationId: ping
       responses:
         "200":
@@ -635,13 +635,8 @@ components:
           format: int32
         displayName:
           type: string
-        tenantName:
+        jti:
           type: string
-        tenantId:
-          type: number
-        tokenTtlSec:
-          type: integer
-          format: int64
         uid:
           type: string
         groups:
@@ -649,8 +644,13 @@ components:
           type: array
           items:
             type: string
-        jti:
+        tenantId:
+          type: number
+        tenantName:
           type: string
+        tokenTtlSec:
+          type: integer
+          format: int64
     LoginVo:
       required:
       - password
