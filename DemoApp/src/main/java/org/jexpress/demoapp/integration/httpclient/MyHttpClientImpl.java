@@ -24,7 +24,7 @@ import org.jexpress.demoapp.integration.healthcheck.MyHttpClientHealthChecker;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.common.SessionContext;
 import org.summerboot.jexpress.api.rpc.RpcResult;
-import org.summerboot.jexpress.integration.rpc.http.RpcDelegateHttpClientImpl;
+import org.summerboot.jexpress.integration.rpc.http.HttpRpcClient;
 import org.summerboot.jexpress.integration.rpc.http.config.HttpClientConfig;
 
 import java.io.IOException;
@@ -33,9 +33,9 @@ import java.net.http.HttpRequest;
 
 @Service(binding = MyHttpClient.class)
 @Singleton
-public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHttpClient {
+public class MyHttpClientImpl extends HttpRpcClient implements MyHttpClient {
     @Override
-    protected HttpClientConfig getHttpClientConfig() {
+    public HttpClientConfig getConfig() {
         return MyHttpClientConfig.cfg;
     }
 
@@ -44,7 +44,7 @@ public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHtt
         final URI uri = URI.create(MyHttpClientConfig.cfg.getEndpoint() + "/ping");
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(uri).GET();
         HttpResponseStatus[] expectedStatus = {HttpResponseStatus.OK, HttpResponseStatus.NO_CONTENT};
-        return rpc(SessionContext.build(-1), reqBuilder, false, expectedStatus);
+        return rpc(null, reqBuilder, expectedStatus);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class MyHttpClientImpl extends RpcDelegateHttpClientImpl implements MyHtt
         final URI uri = URI.create(MyHttpClientConfig.cfg.getEndpoint() + "/hello?name=" + name);
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(uri).POST(HttpRequest.BodyPublishers.ofString(body));
         HttpResponseStatus[] expectedStatus = {HttpResponseStatus.OK};
-        boolean isStreaming = false; // new to jExpress v2.7.4: set to true to enable streaming processing of large response bodies
-        return rpc(context, reqBuilder, isStreaming, expectedStatus);
+        return rpc(context, reqBuilder, expectedStatus);
+        //return rpc(context, true, reqBuilder, HttpResponse.BodyHandlers.ofInputStream(), expectedStatus);
     }
 
     @Override
