@@ -19,10 +19,13 @@ package org.jexpress.demoapp.integration.grpc.client;
 
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
+import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
+import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
 import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
 
 /**
@@ -32,6 +35,14 @@ import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredentia
  */
 public class Hello2ClientImpl extends GrpcClient<Hello2ClientImpl> {
     private Hello2ServiceGrpc.Hello2ServiceBlockingStub blockingStub;
+
+    protected Hello2ClientImpl(GrpcClientConfig cfg) {
+        super(cfg);
+    }
+
+    public Hello2ClientImpl(NettyChannelBuilder channelBuilder, String idleEventMonitorName, int idleThresholdSecond) {
+        super(channelBuilder, idleEventMonitorName, idleThresholdSecond);
+    }
 
     @Override
     protected void onConnected(ManagedChannel channel) {
@@ -59,5 +70,10 @@ public class Hello2ClientImpl extends GrpcClient<Hello2ClientImpl> {
                 .build();
         Hello2Response response = blockingStub.hello2(request);
         return response.getGreeting();
+    }
+
+    @Override
+    public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
+        System.out.println(idleEventMonitor.report("gRPC client2"));
     }
 }

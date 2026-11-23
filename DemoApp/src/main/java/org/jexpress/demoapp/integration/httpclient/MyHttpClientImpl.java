@@ -20,10 +20,11 @@ package org.jexpress.demoapp.integration.httpclient;
 import com.google.inject.Singleton;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.jexpress.demoapp.dto.MyResponse;
-import org.jexpress.demoapp.integration.healthcheck.MyHttpClientHealthChecker;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.common.SessionContext;
+import org.summerboot.jexpress.api.rpc.RpcClient;
 import org.summerboot.jexpress.api.rpc.RpcResult;
+import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.integration.rpc.http.HttpRpcClient;
 import org.summerboot.jexpress.integration.rpc.http.config.HttpClientConfig;
 
@@ -31,7 +32,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 
-@Service(binding = MyHttpClient.class)
+@Service(binding = {MyHttpClient.class, RpcClient.class})
 @Singleton
 public class MyHttpClientImpl extends HttpRpcClient implements MyHttpClient {
     @Override
@@ -49,10 +50,6 @@ public class MyHttpClientImpl extends HttpRpcClient implements MyHttpClient {
 
     @Override
     public RpcResult<MyResponse> getHelloRpcResult(String name, String body, SessionContext context) throws IOException {
-        // reset idle event monitor
-        MyHttpClientHealthChecker.IDLE_EVENT_MONITOR.onCall(context.txId());
-
-        // rpc
         final URI uri = URI.create(MyHttpClientConfig.cfg.getEndpoint() + "/hello?name=" + name);
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(uri).POST(HttpRequest.BodyPublishers.ofString(body));
         HttpResponseStatus[] expectedStatus = {HttpResponseStatus.OK};
@@ -67,5 +64,10 @@ public class MyHttpClientImpl extends HttpRpcClient implements MyHttpClient {
             return null; // errors are already set in the context by rpcEx() method
         }
         return rpcResult.deserialize(MyResponse.class);
+    }
+
+    @Override
+    public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
+        System.out.println(idleEventMonitor.report("Http client"));
     }
 }

@@ -635,15 +635,13 @@ components:
           format: int32
         displayName:
           type: string
+        tenantId:
+          type: number
         tenantName:
           type: string
         tokenTtlSec:
           type: integer
           format: int64
-        tenantId:
-          type: number
-        jti:
-          type: string
         uid:
           type: string
         groups:
@@ -651,6 +649,8 @@ components:
           type: array
           items:
             type: string
+        jti:
+          type: string
     LoginVo:
       required:
       - password

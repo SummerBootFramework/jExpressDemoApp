@@ -17,22 +17,21 @@
 
 package org.jexpress.demoapp.app.event;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jexpress.demoapp.app.MyConfig;
 import org.jexpress.demoapp.app.MyInitializer;
-import org.jexpress.demoapp.integration.healthcheck.MyHttpClientHealthChecker;
 import org.jexpress.demoapp.service.impl.BusinessServiceImpl1;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.summerboot.jexpress.annotation.Scheduled;
 import org.summerboot.jexpress.annotation.Service;
+import org.summerboot.jexpress.api.rpc.RpcClient;
 import org.summerboot.jexpress.boot.SummerApplication;
 import org.summerboot.jexpress.boot.lifecycle.app.AppLifecycleHandler;
 import org.summerboot.jexpress.boot.lifecycle.app.AppLifecycleListener;
 import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
-import org.summerboot.jexpress.infra.grpc.server.GrpcServer;
-import org.summerboot.jexpress.infra.netty.NioServer;
 
 /**
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
@@ -43,9 +42,11 @@ import org.summerboot.jexpress.infra.netty.NioServer;
 public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     private static String[] cronSettings = MyConfig.cfg.getCronExpressions();
 
-
     private static final java.util.logging.Logger jul = java.util.logging.Logger.getLogger(MyInitializer.class.getName());
 
+
+    @Inject
+    protected RpcClient myHttpClient;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -57,7 +58,7 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
     public void beforeApplicationStart(SummerApplication.AppContext context) throws Exception {
         super.beforeApplicationStart(context);
         BusinessServiceImpl1.init(context.guiceInjector());
-        IdleEventMonitor.start(MyHttpClientHealthChecker.IDLE_EVENT_MONITOR, this);
+        myHttpClient.monitorIdleEvent();
     }
 
     /**
@@ -88,7 +89,8 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
 
     @Override
     public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
-        switch (idleEventMonitor.getName()) {
+        log.debug(idleEventMonitor.report("AppLifecycle"));
+        /*switch (idleEventMonitor.getName()) {
             case GrpcServer.IDLE_EVENT_MONITOR_ID -> {
                 log.debug("GRPCServer is idling");
             }
@@ -98,6 +100,6 @@ public class MyAppLifecycleHandler extends AppLifecycleHandler implements Job {
             case MyHttpClientHealthChecker.NAME -> {
                 log.debug("MyHttpClientHealthChecker is idling");
             }
-        }
+        }*/
     }
 }

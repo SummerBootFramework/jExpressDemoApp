@@ -18,17 +18,14 @@
 package org.jexpress.demoapp.integration.healthcheck;
 
 import com.google.inject.Inject;
-import org.jexpress.demoapp.app.MyConfig;
 import org.jexpress.demoapp.integration.httpclient.MyHttpClient;
 import org.summerboot.jexpress.annotation.health.HealthCheck;
 import org.summerboot.jexpress.api.common.BootErrorCode;
 import org.summerboot.jexpress.api.common.Err;
 import org.summerboot.jexpress.api.health.HealthChecker;
 import org.summerboot.jexpress.api.rpc.RpcResult;
-import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @HealthCheck(name = MyHttpClientHealthChecker.NAME)
 public class MyHttpClientHealthChecker implements HealthChecker {
@@ -49,12 +46,4 @@ public class MyHttpClientHealthChecker implements HealthChecker {
         }
         return null;
     }
-
-    public static final IdleEventMonitor IDLE_EVENT_MONITOR = new IdleEventMonitor(NAME) {
-
-        @Override
-        public long getIdleIntervalMillis() {
-            return TimeUnit.SECONDS.toMillis(MyConfig.cfg.getMyIdleThresholdSecond());// dynamic value, can be changed at runtime
-        }
-    };
 }

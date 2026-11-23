@@ -30,7 +30,7 @@
         <maven-surefire.version>3.6.1</maven-surefire.version>
         <maven-failsafe.version>3.6.1</maven-failsafe.version>
         <testng.version>7.12.0</testng.version>
-        <jexpress.version>2.7.6-SNAPSHOT</jexpress.version>
+        <jexpress.version>2.7.6</jexpress.version>
 
         <!-- application dependencies-->
         <!-- protobuf and gRPC -->
@@ -264,10 +264,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire.version}</version>
                 <configuration>
+                    <excludes>
+                        <exclude>**/test/integration/**</exclude>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                     <argLine>-Djava.awt.headless=true -Xms2G -Xmx2G -XX:+UseZGC -XX:ZUncommitDelay=300
-                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem
-                        -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
-                        -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
+                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem -XX:+EnableDynamicAgentLoading
+                        -XX:+ZUncommit -XX:-DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
+                        -XX:HeapDumpPath=heapdump.hprof -XX:-ExitOnOutOfMemoryError
                         -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
                         -Duser.timezone=America/Toronto
                         -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
@@ -284,17 +288,39 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe.version}</version>
                 <configuration>
-                    <argLine>-Djava.awt.headless=true -Xms2G -Xmx2G -XX:+UseZGC -XX:ZUncommitDelay=300
-                        -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+PerfDisableSharedMem
-                        -XX:+ZUncommit -XX:+DisableExplicitGC -XX:MaxDirectMemorySize=1g -XX:+HeapDumpOnOutOfMemoryError
-                        -XX:HeapDumpPath=heapdump.hprof -XX:+ExitOnOutOfMemoryError
-                        -Xlog:gc*:file=gc.log:time,level,tags:filecount=5,filesize=10M -Dfile.encoding=UTF-8
+                    <includes>
+                        <include>**/test/integration/**/*Test.java</include>
+                        <include>**/test/integration/**/*IT.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <argLine>
+                        -Djava.awt.headless=true
+                        -Xms512m -Xmx1G
+                        -XX:+UseZGC -XX:+ZGenerational
+                        -XX:-DisableExplicitGC
+                        -XX:-ExitOnOutOfMemoryError
+                        -XX:+EnableDynamicAgentLoading
+                        -Dfile.encoding=UTF-8
                         -Duser.timezone=America/Toronto
-                        -Dio.netty.handler.ssl.openssl.engine.enable=true -Dio.netty.leakDetectionLevel=SIMPLE
+                        -Dio.netty.handler.ssl.openssl.engine.enable=true
+                        -Dio.netty.leakDetectionLevel=SIMPLE
                         -Dio.netty.native.workdir=lib
                         -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                        --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+                        --add-opens java.net.http/jdk.internal.net.http=ALL-UNNAMED
                     </argLine>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>

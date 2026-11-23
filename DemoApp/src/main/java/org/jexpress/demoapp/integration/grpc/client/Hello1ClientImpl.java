@@ -19,10 +19,13 @@ package org.jexpress.demoapp.integration.grpc.client;
 
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
+import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
+import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
 import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
 
 import java.util.concurrent.TimeUnit;
@@ -32,9 +35,17 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
-public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
+public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> implements IdleEventMonitor.IdleEventListener {
 
     private Hello1ServiceGrpc.Hello1ServiceBlockingStub blockingStub;
+
+    protected Hello1ClientImpl(GrpcClientConfig cfg) {
+        super(cfg);
+    }
+
+    public Hello1ClientImpl(NettyChannelBuilder channelBuilder, String idleEventMonitorName, int idleThresholdSecond) {
+        super(channelBuilder, idleEventMonitorName, idleThresholdSecond);
+    }
 
     @Override
     protected void onConnected(ManagedChannel channel) {
@@ -76,4 +87,8 @@ public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> {
         return ret;
     }
 
+    @Override
+    public void onIdle(IdleEventMonitor idleEventMonitor) throws Exception {
+        System.out.println(idleEventMonitor.report("gRPC client1"));
+    }
 }

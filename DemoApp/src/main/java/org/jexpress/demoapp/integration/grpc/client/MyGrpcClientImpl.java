@@ -23,8 +23,8 @@ import org.summerboot.jexpress.annotation.Service;
 @Service
 @Singleton
 public class MyGrpcClientImpl implements MyGrpcClient {
-    private static final Hello1ClientImpl hello1Client = new Hello1ClientImpl().withConfig(Hello1ClientConfig.cfg).connect();
-    private static final Hello2ClientImpl hello2Client = new Hello2ClientImpl().withConfig(Hello2ClientConfig.cfg).connect();
+    private static final Hello1ClientImpl hello1Client = new Hello1ClientImpl(Hello1ClientConfig.cfg).connect();
+    private static final Hello2ClientImpl hello2Client = new Hello2ClientImpl(Hello2ClientConfig.cfg).connect();
 
     @Override
     public int ping1() {

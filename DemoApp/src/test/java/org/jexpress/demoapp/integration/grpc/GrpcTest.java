@@ -71,8 +71,8 @@ public class GrpcTest extends GrpcTestHelper {
     @Override
     protected void runClient(NettyChannelBuilder channelBuilder) {
         // connect to server
-        Hello1ClientImpl client1 = new Hello1ClientImpl().withNettyChannelBuilder(channelBuilder).connect();
-        Hello2ClientImpl client2 = new Hello2ClientImpl().withNettyChannelBuilder(channelBuilder).connect();
+        Hello1ClientImpl client1 = new Hello1ClientImpl(channelBuilder, "", 60).connect();
+        Hello2ClientImpl client2 = new Hello2ClientImpl(channelBuilder, "", 60).connect();
         try {
             String g1 = client1.hello("firstName", "lastName");
             System.out.println("g1=" + g1);

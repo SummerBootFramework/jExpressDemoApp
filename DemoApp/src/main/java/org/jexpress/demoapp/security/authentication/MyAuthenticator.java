@@ -18,7 +18,6 @@
 package org.jexpress.demoapp.security.authentication;
 
 import com.google.inject.Singleton;
-import io.grpc.ServerInterceptor;
 import org.summerboot.jexpress.annotation.Service;
 import org.summerboot.jexpress.api.auth.Authenticator;
 import org.summerboot.jexpress.api.auth.Caller;
@@ -33,7 +32,7 @@ import javax.naming.NamingException;
  * @author Changski Tie Zheng Zhang 张铁铮, 魏泽北, 杜旺财, 杜富贵
  */
 @Singleton
-@Service(binding = {Authenticator.class, ServerInterceptor.class})
+@Service(binding = {Authenticator.class})
 public class MyAuthenticator extends BootAuthenticator {
 
     @Override

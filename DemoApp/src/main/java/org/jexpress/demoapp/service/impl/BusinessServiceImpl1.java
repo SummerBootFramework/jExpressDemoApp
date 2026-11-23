@@ -31,6 +31,7 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.RenderDestination;
 import org.jexpress.demoapp.dto.MyRequest;
 import org.jexpress.demoapp.dto.MyResponse;
+import org.jexpress.demoapp.integration.grpc.client.MyGrpcClient;
 import org.jexpress.demoapp.integration.httpclient.MyHttpClient;
 import org.jexpress.demoapp.processor.template.DataProcessor;
 import org.jexpress.demoapp.processor.template.SinglePageHeightCalculationListener;
@@ -73,6 +74,9 @@ public class BusinessServiceImpl1 implements BusinessService {
     @Inject
     protected MyHttpClient myHttpClient;
 
+    @Inject
+    private MyGrpcClient myGrpcClient;
+
     public static void init(Injector _injector) throws IOException {
         injector = _injector;
         // init
@@ -110,13 +114,12 @@ public class BusinessServiceImpl1 implements BusinessService {
         try {
             // step 1: call gRPC for a transaction
             context.poi(BootPoi.GRPC_BEGIN);// about POI, see section8.3
-            long randomMillis = ThreadLocalRandom.current().nextLong(100, 501);
-            TimeUnit.MILLISECONDS.sleep(randomMillis);
+            greeting = myGrpcClient.hello1(greeting, "lastName222");
             context.poi(BootPoi.GRPC_END);
 
             // step 2: update result in DB
             context.poi(BootPoi.DB_BEGIN);// about POI, see section8.3
-            randomMillis = ThreadLocalRandom.current().nextLong(100, 501);
+            long randomMillis = ThreadLocalRandom.current().nextLong(100, 501);
             TimeUnit.MILLISECONDS.sleep(randomMillis);
             context.poi(BootPoi.DB_END);
 
