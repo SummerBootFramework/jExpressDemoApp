@@ -876,15 +876,15 @@
           "displayName" : {
             "type" : "string"
           },
+          "tokenTtlSec" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
           "tenantId" : {
             "type" : "number"
           },
           "tenantName" : {
             "type" : "string"
-          },
-          "tokenTtlSec" : {
-            "type" : "integer",
-            "format" : "int64"
           },
           "uid" : {
             "type" : "string"

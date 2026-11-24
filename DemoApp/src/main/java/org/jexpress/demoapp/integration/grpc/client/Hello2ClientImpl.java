@@ -20,13 +20,13 @@ package org.jexpress.demoapp.integration.grpc.client;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.stub.AbstractStub;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Request;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2Response;
 import org.jexpress.demoapp.grpc.proto.generated2.Hello2ServiceGrpc;
 import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
 import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
-import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
 
 /**
  * make it package access class, only MyGrpcClient interface is exposed to the caller, so that the caller does not need to know the implementation details of GrpcClient
@@ -45,10 +45,9 @@ public class Hello2ClientImpl extends GrpcClient<Hello2ClientImpl> {
     }
 
     @Override
-    protected void onConnected(ManagedChannel channel) {
-        String jwt = "jwt2";
-        BearerAuthCredential bearerAuthCredential = new BearerAuthCredential(jwt);
-        this.blockingStub = Hello2ServiceGrpc.newBlockingStub(channel);//.withCallCredentials(bearerAuthCredential);
+    protected AbstractStub onConnected(ManagedChannel channel) {
+        this.blockingStub = Hello2ServiceGrpc.newBlockingStub(channel);
+        return this.blockingStub;
     }
 
     public int ping() {

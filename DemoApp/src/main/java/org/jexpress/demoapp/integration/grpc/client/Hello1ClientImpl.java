@@ -20,15 +20,13 @@ package org.jexpress.demoapp.integration.grpc.client;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.stub.AbstractStub;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Request;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1Response;
 import org.jexpress.demoapp.grpc.proto.generated1.Hello1ServiceGrpc;
 import org.summerboot.jexpress.boot.lifecycle.app.IdleEventMonitor;
 import org.summerboot.jexpress.infra.grpc.client.GrpcClient;
 import org.summerboot.jexpress.infra.grpc.client.config.GrpcClientConfig;
-import org.summerboot.jexpress.infra.grpc.server.interceptor.BearerAuthCredential;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * make it package access class, only MyGrpcClient interface is exposed to the caller, so that the caller does not need to know the implementation details of GrpcClient
@@ -48,15 +46,9 @@ public class Hello1ClientImpl extends GrpcClient<Hello1ClientImpl> implements Id
     }
 
     @Override
-    protected void onConnected(ManagedChannel channel) {
-        try {
-            TimeUnit.SECONDS.sleep(0);// to test read lock
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        String jwt = "jwt1";
-        BearerAuthCredential bearerAuthCredential = new BearerAuthCredential(jwt);
-        this.blockingStub = Hello1ServiceGrpc.newBlockingStub(channel);//.withCallCredentials(bearerAuthCredential);
+    protected AbstractStub onConnected(ManagedChannel channel) {
+        this.blockingStub = Hello1ServiceGrpc.newBlockingStub(channel);
+        return this.blockingStub;
     }
 
     public int ping() {

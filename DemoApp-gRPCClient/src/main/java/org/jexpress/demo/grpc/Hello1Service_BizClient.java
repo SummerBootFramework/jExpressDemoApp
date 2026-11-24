@@ -17,16 +17,9 @@ import java.util.List;
  */
 @HealthCheck(name = "gRPC.hello1")
 public abstract class Hello1Service_BizClient implements HealthChecker {
-    private Hello1Service_gRPCClient gRPCAgent;
+    private Hello1Service_gRPCClient gRPCAgent = new Hello1Service_gRPCClient(getGRPCClientConfig()).connect();
 
     abstract protected GrpcClientConfig getGRPCClientConfig();
-
-    protected Hello1Service_gRPCClient getAgent() {
-        if (gRPCAgent == null) {
-            gRPCAgent = new Hello1Service_gRPCClient().withConfig(getGRPCClientConfig()).connect();
-        }
-        return gRPCAgent;
-    }
 
     private static final String TAG = "Hello1";
 
@@ -34,7 +27,7 @@ public abstract class Hello1Service_BizClient implements HealthChecker {
     public List<Err> ping(Object[] objects) {
         List pingError = null;
         try {
-            Hello1Response gRPCResponse = getAgent().ping();
+            Hello1Response gRPCResponse = gRPCAgent.ping();
             int errorCode = gRPCResponse.getErrorCode();
             if (errorCode != 0) {
                 String gRPCErrorDesc = gRPCResponse.getErrorDesc();
@@ -53,7 +46,7 @@ public abstract class Hello1Service_BizClient implements HealthChecker {
 
         // process IO
         try {
-            gRPCResponse = getAgent().hello(callerTxId, firstName, lastName);
+            gRPCResponse = gRPCAgent.hello(callerTxId, firstName, lastName);
             context.memo(TAG + ".response", gRPCResponse.toString());
         } catch (Throwable ex) {
             var e = new Err(BootErrorCode.ACCESS_ERROR_RPC, null, null, ex, TAG + ".exception");
